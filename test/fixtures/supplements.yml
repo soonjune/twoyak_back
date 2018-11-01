@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  production_code: MyString
+  product_name: MyString
+  enterprise_name: MyString
+  benefits: 
+  suggested_use: MyText
+  ingredients: MyText
+  storage: 
+  shelf_life: MyString
+  description: MyString
+  warnings: 
+  standard: 
+  approval_date: 2018-11-01
+
+two:
+  production_code: MyString
+  product_name: MyString
+  enterprise_name: MyString
+  benefits: 
+  suggested_use: MyText
+  ingredients: MyText
+  storage: 
+  shelf_life: MyString
+  description: MyString
+  warnings: 
+  standard: 
+  approval_date: 2018-11-01

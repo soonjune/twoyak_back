@@ -1,0 +1,2 @@
+class DurIngr < ApplicationRecord
+end

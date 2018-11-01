@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  item_seq: 1
+  item_name: MyString
+  ingr_kor_name: 
+  package_insert: 
+  ingr_eng_name: 
+  atc_code: MyString
+
+two:
+  item_seq: 1
+  item_name: MyString
+  ingr_kor_name: 
+  package_insert: 
+  ingr_eng_name: 
+  atc_code: MyString

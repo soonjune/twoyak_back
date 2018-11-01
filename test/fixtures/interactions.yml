@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  interaction_type: 1
+  first_ingr: 
+  second_ingr: 
+  review: MyString
+  note: MyString
+  more_info: MyText
+
+two:
+  interaction_type: 1
+  first_ingr: 
+  second_ingr: 
+  review: MyString
+  note: MyString
+  more_info: MyText

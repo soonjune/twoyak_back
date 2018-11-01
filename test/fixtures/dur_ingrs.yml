@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dur_code: MyString
+  ingr_eng_name: MyString
+  ingr_kor_name: MyString
+  related_ingr_code: MyString
+  related_ingr_kor_name: MyString
+  related_ingr_eng_name: MyString
+
+two:
+  dur_code: MyString
+  ingr_eng_name: MyString
+  ingr_kor_name: MyString
+  related_ingr_code: MyString
+  related_ingr_kor_name: MyString
+  related_ingr_eng_name: MyString

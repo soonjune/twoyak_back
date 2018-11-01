@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  approval_no: MyString
+  ingr_name: MyString
+  enterprise_name: MyString
+  benefits: 
+  warnings: 
+  daily_intake: MyString
+  daily_intake_max: MyString
+  daily_intake_min: MyString
+  active_ingr: MyString
+
+two:
+  approval_no: MyString
+  ingr_name: MyString
+  enterprise_name: MyString
+  benefits: 
+  warnings: 
+  daily_intake: MyString
+  daily_intake_max: MyString
+  daily_intake_min: MyString
+  active_ingr: MyString
