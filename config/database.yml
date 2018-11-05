@@ -52,4 +52,5 @@ production: &production
   host: twoyak-db-demo.cmp8crvhm5xg.ap-northeast-2.rds.amazonaws.com
   username: tino7060
   password: <%= ENV['DB_PASSWORD'] %>
-  database: test_production
+  database: twoyak_db_development
+  port: 3306
