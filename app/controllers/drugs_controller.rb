@@ -42,6 +42,7 @@ class DrugsController < ApplicationController
     @drug=params[:id]
     query = "SELECT * FROM drugs WHERE item_name = " + "'" + @drug + "'"
     @rep = Drug.find_by_sql(query)
+    
     @infomation = @rep[0]['package_insert']['DRB_ITEM']
     # CLASS_NO string
     @CLASS_NO = @infomation['CLASS_NO']
@@ -54,7 +55,7 @@ class DrugsController < ApplicationController
     # VALID_TERM
     @VALID_TERM = @infomation['VALID_TERM']
     # 효능효과 array
-    @Benefit = @infomation['EE_DOC_DATA']['DOC']['SECTION']
+    @Benefit = @infomation['EE_DOC_DATA']['DOC']['SECTION'] if !@infomation['EE_DOC_DATA'].nil?
     @Benefit_ARTICLE_TITLE = []
     @Benefit_ARTICLE_PARAGRAPH = []
     begin

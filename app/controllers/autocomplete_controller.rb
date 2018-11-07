@@ -37,7 +37,7 @@ class AutocompleteController < ApplicationController
       e = {category: "기능성원료(국문)", title: x}
       arr6 << e
     end
-    search_terms = arr1 + arr2 + arr3 + arr4 + arr5 + arr6
+    search_terms = arr1
     @search_terms = search_terms.uniq
 
     render json: @search_terms
