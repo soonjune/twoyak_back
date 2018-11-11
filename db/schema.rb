@@ -68,6 +68,12 @@ ActiveRecord::Schema.define(version: 2018_10_30_051535) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "search_terms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.json "terms"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "supplement_ingrs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "approval_no"
     t.string "ingr_name"
