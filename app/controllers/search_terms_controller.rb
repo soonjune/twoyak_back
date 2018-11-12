@@ -5,7 +5,7 @@ class SearchTermsController < ApplicationController
   def index
     @search_terms = SearchTerm.all
 
-    render json: @search_terms
+    render json: @search_terms[0]['terms']
   end
 
   # GET /search_terms/1
