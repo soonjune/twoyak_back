@@ -4,6 +4,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.5.3'
 gem 'figaro'
 gem 'rack-cors'
+#Use elasticsearch
+gem 'elasticsearch'
+gem 'searchkick'
+gem 'faraday_middleware-aws-sigv4'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
 # Use mysql as the database for Active Record
