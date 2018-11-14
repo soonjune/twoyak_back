@@ -10,11 +10,12 @@
 #   https://dev.mysql.com/doc/refman/5.7/en/password-hashing.html
 #
 default: &default
-  host: twoyak-db-demo.cmp8crvhm5xg.ap-northeast-2.rds.amazonaws.com
-  username: tino7060
-  password: <%= ENV['DB_PASSWORD'] %>
-  database: twoyak_db_development
-  port: 3306
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: MyNewPass
+  socket: /tmp/mysql.sock
 
 development:
   <<: *default
