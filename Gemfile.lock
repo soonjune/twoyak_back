@@ -55,6 +55,11 @@ GEM
       elasticsearch-transport (= 6.1.0)
     elasticsearch-api (6.1.0)
       multi_json
+    elasticsearch-model (6.0.0)
+      activesupport (> 3)
+      elasticsearch (> 1)
+      hashie
+    elasticsearch-rails (6.0.0)
     elasticsearch-transport (6.1.0)
       faraday
       multi_json
@@ -160,6 +165,8 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   byebug
   elasticsearch
+  elasticsearch-model
+  elasticsearch-rails
   faraday_middleware-aws-sigv4
   figaro
   listen (>= 3.0.5, < 3.2)

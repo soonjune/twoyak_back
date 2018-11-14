@@ -6,6 +6,8 @@ gem 'figaro'
 gem 'rack-cors'
 #Use elasticsearch
 gem 'elasticsearch'
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
 gem 'searchkick'
 gem 'faraday_middleware-aws-sigv4'
 
