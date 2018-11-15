@@ -1,18 +1,21 @@
 class Drug < ApplicationRecord
     require 'json'
-
-    def my_map(enumerable)
-        result = []
-        enumerable.each { |element| result.push *(element) }
-        result
-      end
       
-      def eng_map(enumerable)
+      def kor_map(enumerable)
         result = []
-        enumerable.each do |element| 
-          element.ingr_eng_name.nil? ? next : result.push(*(JSON.parse(element.ingr_eng_name)))
+        if(!enumerable.nil?)
+            JSON.parse(enumerable).each do |element| 
+            element.nil? ? next : result.push(*(element))
+            end
         end
         result
+      end
+
+      def eng_map(enumerable)
+        if(!enumerable.nil?)
+            a = JSON.parse(enumerable)
+        end
+        a
       end
 
     has_and_belongs_to_many :dur_ingrs
@@ -22,8 +25,8 @@ class Drug < ApplicationRecord
     def search_data
         {
             name: item_name,
-            ingr_kor_name: eng_map(my_map(ingr_kor_name)),
-            ingr_eng_name: JSON.parse(ingr_eng_name)
+            ingr_kor_name: kor_map(ingr_kor_name),
+            ingr_eng_name: eng_map(ingr_eng_name)
         }
     end
 end
