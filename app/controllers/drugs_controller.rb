@@ -39,6 +39,8 @@ class DrugsController < ApplicationController
   end
 
   def find_each_drug
+    require 'json'
+
     search= params[:id].present? ? params[:id] : nil
     # query = "SELECT * FROM drugs WHERE item_name = " + "'" + search + "'"
     # @rep = Drug.find_by_sql(query) //이전 searchkick 쓰고나서 다음과 같다.
@@ -230,7 +232,7 @@ class DrugsController < ApplicationController
       @data << @EE_DOC_DATA
       @data << @UD_DOC_DATA
       @data << @NB_DOC_DATA
-      @data << @rep.ingr_kor_name
+      @data << JSON.parse(@rep.ingr_kor_name)
     elsif(!@sup.nil?)
       @data = @sup
     else
