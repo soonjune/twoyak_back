@@ -230,6 +230,7 @@ class DrugsController < ApplicationController
       @data << @EE_DOC_DATA
       @data << @UD_DOC_DATA
       @data << @NB_DOC_DATA
+      @data << @rep.ingr_kor_name
     elsif(!@sup.nil?)
       @data = @sup
     else
