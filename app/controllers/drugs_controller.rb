@@ -39,9 +39,14 @@ class DrugsController < ApplicationController
   end
 
   def find_each_drug
-    @drug=params[:id]
-    query = "SELECT * FROM drugs WHERE item_name = " + "'" + @drug + "'"
-    @rep = Drug.find_by_sql(query)
+    search= params[:id].present? params[:id] : nil
+    # query = "SELECT * FROM drugs WHERE item_name = " + "'" + search + "'"
+    # @rep = Drug.find_by_sql(query) //이전 searchkick 쓰고나서 다음과 같다.
+    @rep = if search
+      Searchkick.search @search_term, index_name: [Drug, Supplement]
+    else
+      return nil
+    end
     
     @infomation = @rep[0]['package_insert']['DRB_ITEM']
     # CLASS_NO string
