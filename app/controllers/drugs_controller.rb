@@ -46,8 +46,7 @@ class DrugsController < ApplicationController
     # @rep = Drug.find_by_sql(query) //이전 searchkick 쓰고나서 다음과 같다.
     # Searchkick.search(search, where: {name: /.*#{search}.*/, ingredients: /.*#{search}.*/})
     searched = if search
-      Searchkick.search(search, fields: [:name, :ingredients],
-        index_name: [Drug, Supplement])
+      Searchkick.search(search, index_name: [Drug, Supplement])
     end
 
     # 뭐 검색됐는지 확인용
