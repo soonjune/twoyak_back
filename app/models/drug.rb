@@ -5,9 +5,9 @@ class Drug < ApplicationRecord
 
     def search_data
         {
-            item_name: item_name,
-            ingr_kor_name: ingr_kor_name,
-            ingr_eng_name: ingr_eng_name
+            name: item_name,
+            ingredients: ingr_kor_name,
+            ingredients: ingr_eng_name
         }
     end
 end
