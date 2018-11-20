@@ -8,7 +8,7 @@ gem 'rack-cors'
 gem 'elasticsearch'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
-gem 'searchkick', path: '~/searchkick_for_aws_es_korean'
+gem 'searchkick', path: '~/searchkick_forked'
 gem 'faraday_middleware-aws-sigv4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
