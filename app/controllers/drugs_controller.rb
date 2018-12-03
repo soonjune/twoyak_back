@@ -72,6 +72,7 @@ class DrugsController < ApplicationController
     
     if(!@rep.nil?)
       @infomation = @rep['package_insert']['DRB_ITEM']
+      @ITEM_NAME = @rep.item_name
       # CLASS_NO string
       @CLASS_NO = @infomation['CLASS_NO']
       # ETC_OTC_CODE
@@ -223,6 +224,7 @@ class DrugsController < ApplicationController
         end
       end
 
+      @data << @ITEM_NAME
       @data << @CLASS_NO
       @data << @ETC_OTC_CODE
       @data << @ENTP_NAME
@@ -231,7 +233,6 @@ class DrugsController < ApplicationController
       @data << @EE_DOC_DATA
       @data << @UD_DOC_DATA
       @data << @NB_DOC_DATA
-      @data << JSON.parse(@rep.ingr_kor_name)
     elsif(!@sup.nil?)
       @data = @sup
     else
