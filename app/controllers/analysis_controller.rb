@@ -10,12 +10,9 @@ class AnalysisController < ApplicationController
     ingr2 = []
     cautions = []
     alerts =[]
-
-    hash = [{"query1":{"search_type":"drug_name","search_term":"유한메토트렉세이트정"}},{"query2":{"search_type":"drug_name","search_term":"경동아스피린장용정"}}].to_json
     
-    searches = JSON.parse(hash)
-    puts searches
-    puts searches[0]['query1']['search_type']
+    searches =  JSON.parse(params[:search])
+    
     i = 0
     searches.each do |term|
       i += 1
