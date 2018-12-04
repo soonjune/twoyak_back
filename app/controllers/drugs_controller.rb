@@ -39,9 +39,8 @@ class DrugsController < ApplicationController
   end
 
   def find_each_drug
-    require 'json'
 
-    search= params[:id].present? ? params[:id] : nil
+    search= params[:search_term]
     # query = "SELECT * FROM drugs WHERE item_name = " + "'" + search + "'"
     # @rep = Drug.find_by_sql(query) //이전 searchkick 쓰고나서 다음과 같다.
     # Searchkick.search(search, where: {name: /.*#{search}.*/, ingredients: /.*#{search}.*/})
