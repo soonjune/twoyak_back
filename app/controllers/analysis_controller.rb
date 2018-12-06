@@ -15,11 +15,10 @@ class AnalysisController < ApplicationController
     
     i = 0
     searches.each do |term|
-      i += 1
-      search_term = term["query#{i}"]["search_term"]
+      search_term = term["search_term"]
 
       #검색 타입이 의약품 이름인 경우
-      if term["query#{i}"]["search_type"] == 'drug_name'
+      if term["search_type"] == 'drug_name'
         #검색어 넣기
         searched = if search_term
           Drug.search(search_term, fields: [name: :exact])
@@ -34,7 +33,7 @@ class AnalysisController < ApplicationController
             }
         }
       #검색 타입이 의약품 성분(한글)인 경우
-      elsif term["query#{i}"]["search_type"] == 'drug_ingr_kor'
+      elsif term["search_type"] == 'drug_ingr_kor'
         searched = if search_term
           DurIngr.search(search_term, fields: [{ingr_kor_name: :exact}, {related_ingr_kor_name: :exact}])
         end
@@ -48,7 +47,7 @@ class AnalysisController < ApplicationController
         }
 
       #검색 타입이 의약품 성분(영문)인 경우
-      elsif term["query#{i}"]["search_type"] == 'drug_ingr_eng'
+      elsif term["search_type"] == 'drug_ingr_eng'
         searched = if search_term
           DurIngr.search(search_term, fields: [{ingr_eng_name: :exact}])
         end
@@ -62,7 +61,7 @@ class AnalysisController < ApplicationController
         }
       
       #검색 타입이 건강기능식품 제품인 경우
-      elsif term["query#{i}"]["search_type"] == 'sup'
+      elsif term["search_type"] == 'sup'
         searched = if search_term
           Supplement.search(search_term, fields: [{name: :exact}])
         end
@@ -77,7 +76,7 @@ class AnalysisController < ApplicationController
         }
       
       #검색 타입이 건강기능식품 성분인 경우
-      elsif term["query#{i}"]["search_type"] == 'sup_ingr'
+      elsif term["search_type"] == 'sup_ingr'
         searched = if search_term
           SupplementIngr.search(search_term, fields: [{ingr_name: :exact}])
         end
