@@ -12,9 +12,8 @@ class AnalysisController < ApplicationController
     alerts =[]
     
     searches =  JSON.parse(params[:search])
-    
-    i = 0
-    searches.each do |term|
+    for i in 1..searches.length
+      term = searches["query#{i}"]
       search_term = term["search_term"]
 
       #검색 타입이 의약품 이름인 경우
