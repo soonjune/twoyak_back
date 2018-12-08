@@ -57,9 +57,14 @@ class DrugsController < ApplicationController
     #   end
     # }
   
+    @data = []
+  
     searched.each { |item|
       if item.class == Drug && search == item.item_name
         @rep = item
+        if(!item.drug_imprint.nil?)
+          @data << item.drug_imprint
+        end
         break
       elsif item.class == Supplement && search == item.product_name
         @sup = item
@@ -67,7 +72,7 @@ class DrugsController < ApplicationController
       end
     }
 
-    @data = []
+
     
     if(!@rep.nil?)
       @infomation = @rep['package_insert']['DRB_ITEM']
@@ -232,6 +237,7 @@ class DrugsController < ApplicationController
       @data << @EE_DOC_DATA
       @data << @UD_DOC_DATA
       @data << @NB_DOC_DATA
+
     elsif(!@sup.nil?)
       @data = @sup
     else

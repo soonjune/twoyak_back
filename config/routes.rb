@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :drug_imprints
   get 'analysis/interaction'
   resources :search_terms
   resources :supplements

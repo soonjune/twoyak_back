@@ -1,0 +1,47 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  drug: one
+  item_name: MyString
+  description: MyText
+  dosage_form: MyString
+  drug_image: MyString
+  print_front: MyString
+  print_back: MyString
+  drug_shape: MyString
+  color_front: MyString
+  color_back: MyString
+  line_front: MyString
+  line_back: MyString
+  length_long: 9.99
+  length_short: 9.99
+  thickness: 9.99
+  mark_content_front: MyString
+  mark_content_back: MyString
+  mark_img_front: MyString
+  mark_img_back: MyString
+  mark_code_front: MyString
+  mark_code_back: MyString
+
+two:
+  drug: two
+  item_name: MyString
+  description: MyText
+  dosage_form: MyString
+  drug_image: MyString
+  print_front: MyString
+  print_back: MyString
+  drug_shape: MyString
+  color_front: MyString
+  color_back: MyString
+  line_front: MyString
+  line_back: MyString
+  length_long: 9.99
+  length_short: 9.99
+  thickness: 9.99
+  mark_content_front: MyString
+  mark_content_back: MyString
+  mark_img_front: MyString
+  mark_img_back: MyString
+  mark_code_front: MyString
+  mark_code_back: MyString
