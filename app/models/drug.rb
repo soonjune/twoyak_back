@@ -21,7 +21,9 @@ class Drug < ApplicationRecord
     has_and_belongs_to_many :dur_ingrs
     has_one :drug_imprint
 
-    searchkick language: "korean", word_middle: [:item_name, :ingr_kor_name, :ingr_eng_name], synonyms: [["Aspirin", "acetylsalicylic acid"]]
+    searchkick language: "korean", synonyms: [["Aspirin", "acetylsalicylic acid"]], word_middle: [:item_name, :ingr_kor_name, :ingr_eng_name]
+
+
     def search_data
         {
             name: item_name,
