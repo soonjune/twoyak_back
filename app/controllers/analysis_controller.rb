@@ -48,7 +48,7 @@ class AnalysisController < ApplicationController
       #검색 타입이 의약품 성분(영문)인 경우
       elsif term["search_type"] == 'drug_ingr_eng'
         searched = if search_term
-          DurIngr.search(search_term, fields: [{ingr_eng_name: :exact}])
+          DurIngr.search(search_term, fields: [{ingr_eng_name: :exact}, {ingr_eng_name_lo: :exact}])
         end
         @search_terms << "#{search_term}"
         @search_terms << "#{search_term}"
