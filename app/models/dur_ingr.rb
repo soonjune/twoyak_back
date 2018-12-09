@@ -7,6 +7,7 @@ class DurIngr < ApplicationRecord
         {
             dur_code: dur_code,
             ingr_eng_name: ingr_eng_name,
+            ingr_eng_name: ingr_eng_name.downcase,
             ingr_kor_name: ingr_kor_name,
             related_ingr_kor_name: related_ingr_kor_name
         }
