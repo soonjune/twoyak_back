@@ -51,7 +51,6 @@ class AnalysisController < ApplicationController
           DurIngr.search(search_term, fields: [{ingr_eng_name: :exact}, {ingr_eng_name_lo: :exact}])
         end
         @search_terms << "#{search_term}"
-        @search_terms << "#{search_term}"
         Interaction.search(searched.first.dur_code, fields: [{first_ingr: :exact}]).each { |interaction|
           interactions1.add(interaction)
         }  
