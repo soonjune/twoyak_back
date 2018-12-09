@@ -51,12 +51,24 @@ class AnalysisController < ApplicationController
           DurIngr.search(search_term, fields: [{ingr_eng_name: :exact}, {ingr_eng_name_lo: :exact}])
         end
         @search_terms << "#{search_term}"
+        #약물이 검색되지 않는 경우
+        if searched.first.nil?
+          searched.first.dur_ingrs.each { |ingr|
+            Interaction.search(ingr.dur_code, fields: [{first_ingr: :exact}]).each { |interaction|
+              interactions1.add(interaction)
+            }  
+            Interaction.search(ingr.dur_code, fields: [{second_ingr: :exact}]).each { |interaction|
+              interactions2.add(interaction)
+            }
+          }
+        else
         Interaction.search(searched.first.dur_code, fields: [{first_ingr: :exact}]).each { |interaction|
           interactions1.add(interaction)
         }  
         Interaction.search(searched.first.dur_code, fields: [{second_ingr: :exact}]).each { |interaction|
           interactions2.add(interaction)
         }
+      end
       
       #검색 타입이 건강기능식품 제품인 경우
       elsif term["search_type"] == 'sup'
