@@ -126,8 +126,12 @@ class AnalysisController < ApplicationController
             else
               first = alert["first_ingr"]
             end
-              inserts["first_ingr"] = first.map! {|dur| 
-                if(/D00\d{4}/ =~ dur)
+              inserts["first_ingr"] = first.map! {|dur|
+                if(inserts["id"] == 257)
+                  dur = "isosorbide dinitrate"
+                elsif(inserts["id"] == 258)
+                  dur = "isosorbide mononitrate"
+                elsif(/D00\d{4}/ =~ dur)
                   dur = DurIngr.search(dur, fields: [{dur_code: :exact}]).first.ingr_eng_name
                 else
                   dur = dur
