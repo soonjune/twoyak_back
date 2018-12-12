@@ -76,23 +76,46 @@ class AnalysisController < ApplicationController
         searched = if search_term
           Supplement.search(search_term, fields: [{name: :exact}])
         end
-        @search_terms << "#{search_term}의 성분"
+        @search_terms << "#{search_term}의 주요성분"
         searched.first.supplement_ingr.each { |ingr|
-            Interaction.search(ingr.strip, fields: [:first_ingr]).each { |interaction|
-              interactions1.add(interaction)
-            }
-            Interaction.search(ingr.strip, fields: [:second_ingr]).each { |interaction|
-              interactions2.add(interaction)
-            }
+            if(ingr.include?("홍삼"))
+              ingr = "인삼"
+              Interaction.search(ingr.strip, fields: [:first_ingr]).each { |interaction|
+                interactions1.add(interaction)
+              }
+              Interaction.search(ingr.strip, fields: [:second_ingr]).each { |interaction|
+                interactions2.add(interaction)
+              }
+            elsif((ingr.include?("오메가") && ingr.include?("오메가")) || ingr.downcase.include?("epa") || ingr.downcase.include?("dha"))
+              ingr = "오메가-3 지방산(EPA & DHA)"
+              Interaction.search(ingr.strip, fields: [:first_ingr]).each { |interaction|
+                interactions1.add(interaction)
+              }
+              Interaction.search(ingr.strip, fields: [:second_ingr]).each { |interaction|
+                interactions2.add(interaction)
+              }
+            else
+              [인삼, 프로바이오틱스, 알로에, 밀크씨슬, 감마리놀렌산, 당귀, 돌외잎, 대두, 카르니틴, 녹차, 키토산, 키토올리고당, 스피루리나, 글루코사민, 석류, 가시오가피, 클로렐라, 공액리놀레산, 코엔자임Q10, 은행, 쏘팔메토추출물, 포스파티딜세린, 크랜베리, 감초]. each { |test| 
+                if(sup.ingredients.include?(test))
+                  ingr = test
+                end
+                Interaction.search(ingr, fields: [:first_ingr]).each { |interaction|
+                  interactions1.add(interaction)
+                }
+                Interaction.search(ingr, fields: [:second_ingr]).each { |interaction|
+                  interactions2.add(interaction)
+                }
+              }
+            end
         }
       
       #검색 타입이 건강기능식품 성분인 경우
       elsif term["search_type"] == 'sup_ingr'
         searched = if search_term
-          SupplementIngr.search(search_term, fields: [{ingr_name: :exact}])
+          SupplementIngr.search(search_term, fields: [:ingr_name])
         end
         @search_terms << "#{search_term}"
-        searched.first.each { |ingr|
+        searched.each { |ingr|
             Interaction.search(ingr, fields: [:first_ingr]).each { |interaction|
               interactions1.add(interaction)
             }
