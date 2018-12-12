@@ -77,7 +77,8 @@ class AnalysisController < ApplicationController
           Supplement.search(search_term, fields: [{name: :exact}])
         end
         @search_terms << "#{search_term}의 주요성분"
-        searched.first.supplement_ingr.each { |ingr|
+        searched.first.supplement_ingrs.each { |supingr|
+            ingr = supingr.ingr_name
             if(ingr.include?("홍삼"))
               ingr = "인삼"
               Interaction.search(ingr.strip, fields: [:first_ingr]).each { |interaction|
@@ -95,8 +96,8 @@ class AnalysisController < ApplicationController
                 interactions2.add(interaction)
               }
             else
-              [인삼, 프로바이오틱스, 알로에, 밀크씨슬, 감마리놀렌산, 당귀, 돌외잎, 대두, 카르니틴, 녹차, 키토산, 키토올리고당, 스피루리나, 글루코사민, 석류, 가시오가피, 클로렐라, 공액리놀레산, 코엔자임Q10, 은행, 쏘팔메토추출물, 포스파티딜세린, 크랜베리, 감초]. each { |test| 
-                if(sup.ingredients.include?(test))
+              ["인삼", "프로바이오틱스", "알로에", "밀크씨슬", "감마리놀렌산", "당귀", "돌외잎", "대두", "카르니틴", "녹차", "키토산", "키토올리고당", "스피루리나", "글루코사민", "석류", "가시오가피", "클로렐라", "공액리놀레산", "코엔자임Q10", "은행", "쏘팔메토추출물", "포스파티딜세린", "크랜베리", "감초"]. each { |test| 
+                if(searched.first.ingredients.include?(test))
                   ingr = test
                 end
                 Interaction.search(ingr, fields: [:first_ingr]).each { |interaction|
@@ -130,62 +131,69 @@ class AnalysisController < ApplicationController
         interactions1 & interactions2
       end
 
+
+
       #주의해야할 사항들 보여주기
-      cautions = (interactions1 | interactions2) - alerts
+      if(alerts.nil?)
+        cautions = interactions1 | interactions2
+        puts cautions
+      else
+        cautions = (interactions1 | interactions2) - alerts
       #DUR 코드 성분 이름으로 변환
 
-      # 성분명 바꾸는 법 1
-      alerts = alerts.to_json
-      alerts_hash = JSON.parse(alerts)
-      name_alerts = []
-      if(!alerts.nil?)
-          alerts_hash.each { |alert|
-            inserts = Hash.new
-            inserts["id"] = alert["id"]
-            inserts["interaction_type"] = alert["interaction_type"]
-            #첫번째 성분
-            if(alert["first_ingr"].class != Array)
-              first = JSON.parse(alert["first_ingr"])
-            else
-              first = alert["first_ingr"]
-            end
-              inserts["first_ingr"] = first.map! {|dur|
-                if(inserts["id"] == 256)
-                  dur = "isosorbide dinitrate"
-                elsif(inserts["id"] == 257)
-                  dur = "isosorbide mononitrate"
-                elsif(/D00\d{4}/ =~ dur)
-                  dur = DurIngr.search(dur, fields: [{dur_code: :exact}]).first.ingr_eng_name
-                else
-                  dur = dur
-                end
-              }
-       
-            #두번째 성분
-            if(alert["second_ingr"].class != Array)
-              second = JSON.parse(alert["second_ingr"])
-            else
-              second = alert["second_ingr"]
-            end
-              inserts["second_ingr"] = second.map! {|dur| 
-                if(/D00\d{4}/ =~ dur)
-                  dur = DurIngr.search(dur, fields: [{dur_code: :exact}]).first.ingr_eng_name
-                else
-                  dur = dur
-                end
-              }
-              
-            inserts["review"] = alert["review"]
-            inserts["note"] = alert["note"]
-            inserts["more_info"] = alert["more_info"]
-            name_alerts << inserts
-          }
+        # 성분명 바꾸는 법 1
+        alerts = alerts.to_json
+        alerts_hash = JSON.parse(alerts)
+        name_alerts = []
+        if(!alerts.nil?)
+            alerts_hash.each { |alert|
+              inserts = Hash.new
+              inserts["id"] = alert["id"]
+              inserts["interaction_type"] = alert["interaction_type"]
+              #첫번째 성분
+              if(alert["first_ingr"].class != Array)
+                first = JSON.parse(alert["first_ingr"])
+              else
+                first = alert["first_ingr"]
+              end
+                inserts["first_ingr"] = first.map! {|dur|
+                  if(inserts["id"] == 256)
+                    dur = "isosorbide dinitrate"
+                  elsif(inserts["id"] == 257)
+                    dur = "isosorbide mononitrate"
+                  elsif(/D00\d{4}/ =~ dur)
+                    dur = DurIngr.search(dur, fields: [{dur_code: :exact}]).first.ingr_eng_name
+                  else
+                    dur = dur
+                  end
+                }
+        
+              #두번째 성분
+              if(alert["second_ingr"].class != Array)
+                second = JSON.parse(alert["second_ingr"])
+              else
+                second = alert["second_ingr"]
+              end
+                inserts["second_ingr"] = second.map! {|dur| 
+                  if(/D00\d{4}/ =~ dur)
+                    dur = DurIngr.search(dur, fields: [{dur_code: :exact}]).first.ingr_eng_name
+                  else
+                    dur = dur
+                  end
+                }
+                
+              inserts["review"] = alert["review"]
+              inserts["note"] = alert["note"]
+              inserts["more_info"] = alert["more_info"]
+              name_alerts << inserts
+            }
+        end
       end
       #성분명 바꾸는 법 2
       cautions = cautions.to_json
       cautions_hash = JSON.parse(cautions)
       name_cautions = []
-      if(!alerts.nil?)
+      if(!cautions.nil?)
           cautions_hash.each { |alert|
             inserts = Hash.new
             inserts["id"] = alert["id"]
