@@ -65,7 +65,7 @@ class DrugsController < ApplicationController
           @data << item.drug_imprint
         end
         @rep = item
-        @infomation = @rep['package_insert']['DRB_ITEM']
+        @infomation = @rep.nil? ? next : @rep['package_insert']['DRB_ITEM']
         @ITEM_NAME = @rep.item_name
         # CLASS_NO string
         @CLASS_NO = @infomation['CLASS_NO']
