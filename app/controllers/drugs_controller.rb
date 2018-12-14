@@ -62,6 +62,9 @@ class DrugsController < ApplicationController
     searched.each { |item|
       if item.class == Drug && search == item.item_name
         @rep = item
+        @data << item.ingr_kor_name
+        @data << item.ingr_eng_name
+        @data << item.atc_code
         if(!item.drug_imprint.nil?)
           @data << item.drug_imprint
         end
