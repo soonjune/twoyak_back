@@ -238,7 +238,7 @@ class DrugsController < ApplicationController
         end
       }
 
-      if(@data.nil?)
+      if(@data.empty?)
         searched.each { |item|
           if item.class == Drug
             @data << item.item_name
