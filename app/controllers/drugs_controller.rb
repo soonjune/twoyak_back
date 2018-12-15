@@ -40,7 +40,7 @@ class DrugsController < ApplicationController
 
   def find_each_drug
 
-    search= params[:search_term]
+    search = params[:search_term]
     # query = "SELECT * FROM drugs WHERE item_name = " + "'" + search + "'"
     # @rep = Drug.find_by_sql(query) //이전 searchkick 쓰고나서 다음과 같다.
     # Searchkick.search(search, where: {name: /.*#{search}.*/, ingredients: /.*#{search}.*/})
@@ -60,7 +60,7 @@ class DrugsController < ApplicationController
     @data = []
   
     searched.each { |item|
-      if item.class == Drug && search == item.item_name
+      if(item.class == Drug && search == item.item_name)
         @rep = item
         @data << item.ingr_kor_name
         @data << item.ingr_eng_name
@@ -69,7 +69,7 @@ class DrugsController < ApplicationController
           @data << item.drug_imprint
         end
         break
-      elsif item.class == Supplement && search == item.product_name
+      elsif(item.class == Supplement && search == item.product_name)
         @sup = item
         break
       end
