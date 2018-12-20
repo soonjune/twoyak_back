@@ -54,6 +54,9 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "twoyak_back_#{Rails.env}"
 
+  #default mailer
+  config.action_mailer.default_url_options = { :host => 'twoyak.com' }
+
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
