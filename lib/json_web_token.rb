@@ -1,3 +1,4 @@
+#무시 가능(20181220)
 # Your actual JWT Strategy
 # "config/initializers/core_extensions/devise/strategies/json_web_token.rb"
 
