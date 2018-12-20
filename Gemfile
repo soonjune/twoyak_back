@@ -11,6 +11,10 @@ gem 'elasticsearch-rails'
 gem 'searchkick', path: '~/searchkick_forked'
 gem 'faraday_middleware-aws-sigv4'
 
+#for user model and authentication
+gem 'devise'
+gem 'jwt'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
 # Use mysql as the database for Active Record
