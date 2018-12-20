@@ -21,11 +21,10 @@ development:
   <<: *default
   development:
   driver: mysql2
-  host: 127.0.0.1
-  username: TWOYAK
-  password: <%= ENV['DB_PASSWORD'] %>
+  username: root
+  password: MyNewPass
   database: twoyak_db_development
-  port: 1234
+  port: 3306
 
 
 # Warning: The database defined as "test" will be erased and

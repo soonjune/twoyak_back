@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  scope :api, defaults: { format: :json } do
+    devise_for :users, controllers: { sessions: :sessions },
+                       path_names: { sign_in: :login }
+    resource :user, only: [:show, :update]
+  end
   resources :drug_imprints
   get 'analysis/interaction'
   resources :search_terms
@@ -14,5 +19,7 @@ Rails.application.routes.draw do
   get 'search_terms' => 'search_terms#index'
   get 'singleSearch/' => 'drugs#find_each_drug'
   get '/multiSearch' => "analysis#interaction"
+  #jwt authentication
+  post 'auth_user' => 'authentication#authenticate_user'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

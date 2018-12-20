@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_07_125549) do
+ActiveRecord::Schema.define(version: 2018_12_18_052045) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -95,6 +95,14 @@ ActiveRecord::Schema.define(version: 2018_12_07_125549) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "efficacy"
+    t.integer "side_effect"
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "search_terms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.json "terms"
     t.datetime "created_at", null: false
@@ -137,6 +145,31 @@ ActiveRecord::Schema.define(version: 2018_12_07_125549) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_name"], name: "index_supplements_on_product_name"
+  end
+
+  create_table "user_infos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "user_name", null: false
+    t.string "profile_image"
+    t.date "birth_date"
+    t.boolean "drink"
+    t.boolean "smoke"
+    t.boolean "caffeine"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_infos_on_user_id"
+  end
+
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
 end
