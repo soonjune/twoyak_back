@@ -9,7 +9,7 @@ class SessionsController < Devise::SessionsController
         info.user_id = user.id
 
         if info.save
-            render json: { stauts: 'User created successfully', payload: JWT.encode(payload(user), ENV['JWT_SECRET'] )}, status: :created
+            render json: { stauts: 'User created successfully', payload: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'] )}, status: :created
         else
             render json: { errors1: user.errors.full_messages, errors2: info.errors.full_messages }, status: :bad_request
         end
@@ -18,7 +18,7 @@ class SessionsController < Devise::SessionsController
     def new
         user = User.find_for_database_authentication(email: params[:email])
 		if user.valid_password?(params[:password])
-				render json: JWT.encode(payload(user), ENV['JWT_SECRET']
+				render json: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'])
 		else
 				render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
         end
