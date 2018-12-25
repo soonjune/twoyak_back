@@ -19,7 +19,12 @@ default: &default
 
 development:
   <<: *default
-  database: twoyak_back_development
+  development:
+  driver: mysql2
+  username: root
+  password: MyNewPass
+  database: twoyak_db_development
+  port: 3306
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
