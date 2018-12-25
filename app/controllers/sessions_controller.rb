@@ -4,7 +4,6 @@ class SessionsController < Devise::SessionsController
     
     def create
         user = User.new(user_params)
-        byebug
         user.save
         info = UserInfo.new(info_params)
         info.user_id = user.id

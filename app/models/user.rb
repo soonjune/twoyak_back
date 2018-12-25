@@ -10,8 +10,8 @@ class User < ApplicationRecord
     has_many :watch_supplements, :class_name => "Supplement", :foreign_key => "watch_supplement_id"
   
   
-    #user당 최소 user_info 하나
-    validates :user_infos, presence: true
+    # #user당 최소 user_info 하나
+    # validates :user_infos, presence: true
     #이메일 형식
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
     validates :email, presence: true,
