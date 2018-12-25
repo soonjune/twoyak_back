@@ -44,7 +44,7 @@ class SessionsController < Devise::SessionsController
 	def payload(user)
 		return nil unless user and user.id
 		{
-				user: {id: user.id, email: user.email}
+				user: {id: user.id, email: user.email, user_name: user.user_infos.first }
 		}
 	end
 end
