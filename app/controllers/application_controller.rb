@@ -2,18 +2,18 @@ class ApplicationController < ActionController::API
     attr_reader :current_user
 
 
-    #Override Devise's authenticate_user! method
-    def authenticate_user!(options = {})
-        head :unauthorized unless signed_in?
-    end
+    # #Override Devise's authenticate_user! method
+    # def authenticate_user!(options = {})
+    #     head :unauthorized unless signed_in?
+    # end
     
-    def current_user
-        @current_user ||= super || User.find(@current_user_id)
-    end
+    # def current_user
+    #     @current_user ||= super || User.find(@current_user_id)
+    # end
 
-    def signed_in?
-        @current_user_id.present?
-    end
+    # def signed_in?
+    #     @current_user_id.present?
+    # end
 
     protected
     def authenticate_request!
