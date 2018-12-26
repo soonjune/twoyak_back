@@ -16,8 +16,8 @@ class SessionsController < Devise::SessionsController
     end
 
     def new
-        user = User.find_for_database_authentication(email: params[:email])
-		if user.valid_password?(params[:password])
+        user = User.find_for_database_authentication(login_params[:email])
+		if user.valid_password?(login_params[:password])
 				render json: {user: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'])}
 		else
 				render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
@@ -39,6 +39,10 @@ class SessionsController < Devise::SessionsController
     end
     def info_params
         params.permit(:user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine)
+    end
+
+    def login_params
+        params.permit(:email, :password)
     end
 
 	def payload(user)
