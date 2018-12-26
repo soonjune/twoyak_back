@@ -16,6 +16,8 @@ class SessionsController < Devise::SessionsController
     end
 
     def new
+        puts params
+        puts login_params
         user = User.find_for_database_authentication(email: login_params[:email])
 		if user.valid_password?(login_params[:password])
 				render json: {user: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'])}
