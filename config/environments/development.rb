@@ -28,7 +28,19 @@ Rails.application.configure do
   end
 
   #default mailer
+  #이메일 발송을 위한 환경 설정(인증용 이메일 발송)
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.gmail.com',
+    port: '587',
+    enable_starttls_auto: true,
+    user_name: ENV['EMAIL_USER'],
+    password: ENV['EMAIL_PASS'],
+    authentication: "plain",
+    domain: 'twoyak.com'
+  }
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :local

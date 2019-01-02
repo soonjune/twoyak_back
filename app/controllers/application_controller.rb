@@ -20,7 +20,7 @@ class ApplicationController < ActionController::API
     end
   
     def auth_token
-      @auth_token ||= JsonWebToken.decode(http_token)
+      @auth_token ||= JsonWebToken.decode(http_token, ENV['SECRET_KEY_BASE'], true, { algorithm: 'HS256' })
     end
   
     def user_id_in_token?

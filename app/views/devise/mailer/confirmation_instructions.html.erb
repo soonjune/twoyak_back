@@ -1,0 +1,5 @@
+<p>나의 투약 이력을 한눈에! 투약에 가입하신 것을 환영합니다 <%= @email %>!</p>
+
+<p>아래 링크를 통해서 이메일 확인을 해 주세요:</p>
+
+<p><%= link_to '이메일 확인하기', confirmation_url(@resource, confirmation_token: @token) %></p>
