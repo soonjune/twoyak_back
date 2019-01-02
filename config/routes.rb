@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   scope :api, defaults: { format: :json } do
-    devise_for :users, controllers: { sessions: :sessions },
+    devise_for :users, controllers: { sessions: :sessions, omniauth_callbacks: :omniauth_callbacks },
                        path_names: { sign_in: :login }
     resource :user, only: [:show, :update]
   end
@@ -22,4 +22,6 @@ Rails.application.routes.draw do
   #jwt authentication
   post 'auth_user' => 'authentication#authenticate_user'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  #social login
+  match 'finish_signup' => 'users#finish_signup', via: [:get, :patch], :as => :finish_signup
 end

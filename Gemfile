@@ -15,6 +15,11 @@ gem 'faraday_middleware-aws-sigv4'
 gem 'devise'
 gem 'jwt'
 
+#omniauth for social login
+gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-naver'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
 # Use mysql as the database for Active Record
