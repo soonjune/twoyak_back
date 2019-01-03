@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  respond_to :json
+
     attr_reader :current_user
 
     protected
