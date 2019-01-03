@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
   scope :api, defaults: { format: :json } do
-    devise_for :users, controllers: { sessions: :sessions, omniauth_callbacks: :omniauth_callbacks },
+    devise_for :users, controllers: { sessions: :sessions, omniauth_callbacks: :omniauth_callbacks, confirmations: :confirmations },
                        path_names: { sign_in: :login }
     resource :user, only: [:show, :update]
   end
+
+  root :to => redirect("http://twoyak.com/")
+
   resources :drug_imprints
   get 'analysis/interaction'
   resources :search_terms
