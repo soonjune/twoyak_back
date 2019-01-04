@@ -244,11 +244,13 @@ class DrugsController < ApplicationController
     elsif(!@sup.nil?)
       @data = @sup
     else
+      @data["item_name"] = []
+      @data["product_name"] = []
       searched.each { |item|
         if item.class == Drug
-          @data["item_name"] = item.item_name
+          @data["item_name"] << item.item_name
         elsif item.class == Supplement
-          @data["item_name"] = item.product_name
+          @data["item_name"] << item.product_name
         end
       }
     end
