@@ -57,16 +57,16 @@ class DrugsController < ApplicationController
     #   end
     # }
   
-    @data = []
+    @data = Hash.new
   
     searched.each { |item|
       if(item.class == Drug && search == item.item_name)
         @rep = item
-        @data << item.ingr_kor_name
-        @data << item.ingr_eng_name
-        @data << item.atc_code
+        @data["ingr_kor_name"] = item.ingr_kor_name
+        @data["ingr_eng_name"] = item.ingr_eng_name
+        @data["atc_code"] = item.atc_code
         if(!item.drug_imprint.nil?)
-          @data << item.drug_imprint
+          @data["drug_imprint"] = item.drug_imprint
         end
         break
       elsif(item.class == Supplement && search == item.product_name)
@@ -231,24 +231,24 @@ class DrugsController < ApplicationController
         end
       end
 
-      @data << @ITEM_NAME
-      @data << @CLASS_NO
-      @data << @ETC_OTC_CODE
-      @data << @ENTP_NAME
-      @data << @STORAGE_METHOD
-      @data << @VALID_TERM
-      @data << @EE_DOC_DATA
-      @data << @UD_DOC_DATA
-      @data << @NB_DOC_DATA
+      @data["item_name"] = @ITEM_NAME
+      @data["class_no"] =  @CLASS_NO
+      @data["etc_otc_code"] = @ETC_OTC_CODE
+      @data["entp_name"] = @ENTP_NAME
+      @data["storage_method"] = @STORAGE_METHOD
+      @data["valid_term"] = @VALID_TERM
+      @data["ee_doc_data"] = @EE_DOC_DATA
+      @data["ud_doc_data"] = @UD_DOC_DATA
+      @data["nb_doc_data"] = @NB_DOC_DATA
 
     elsif(!@sup.nil?)
       @data = @sup
     else
       searched.each { |item|
         if item.class == Drug
-          @data << item.item_name
+          @data["item_name"] = item.item_name
         elsif item.class == Supplement
-          @data << item.product_name
+          @data["item_name"] = item.product_name
         end
       }
     end
