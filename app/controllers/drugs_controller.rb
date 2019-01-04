@@ -1,5 +1,5 @@
 class DrugsController < ApplicationController
-  # before_action :set_drug, only: [:show, :update, :destroy]
+  before_action :set_drug, only: [:show, :update, :destroy]
 
   # GET /drugs
   def index
@@ -250,7 +250,7 @@ class DrugsController < ApplicationController
         if item.class == Drug
           @data["item_name"] << item.item_name
         elsif item.class == Supplement
-          @data["item_name"] << item.product_name
+          @data["product_name"] << item.product_name
         end
       }
     end

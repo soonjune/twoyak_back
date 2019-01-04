@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   root :to => redirect("http://twoyak.com/")
 
+  resources :drugs
   resources :drug_imprints
   get 'analysis/interaction'
   resources :search_terms
