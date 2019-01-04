@@ -1,5 +1,6 @@
 class DurIngrsController < ApplicationController
-  before_action :set_dur_ingr, only: [:show, :update, :destroy]
+  before_action :set_dur_ingr, only: [:update, :destroy]
+  before_action :set_search, only: [:show]
 
   # GET /dur_ingrs
   def index
@@ -47,5 +48,9 @@ class DurIngrsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def dur_ingr_params
       params.require(:dur_ingr).permit(:dur_code, :ingr_eng_name, :ingr_kor_name, :related_ingr_code, :related_ingr_kor_name, :related_ingr_eng_name)
+    end
+
+    def set_search
+      @dur_ingr = DurIngr.search(search_term)
     end
 end

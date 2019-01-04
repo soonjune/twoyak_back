@@ -1,5 +1,6 @@
 class DrugsController < ApplicationController
-  before_action :set_drug, only: [:show, :update, :destroy]
+  before_action :set_drug, only: [:update, :destroy]
+  before_action :set_search, only: [:show]
 
   # GET /drugs
   def index
@@ -267,5 +268,9 @@ class DrugsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def drug_params
       params.require(:drug).permit(:item_seq, :item_name, :ingr_kor_name, :package_insert, :ingr_eng_name, :atc_code)
+    end
+
+    def set_search
+      @drug = Drug.search(params[:search_term], fields: [name: :exact])
     end
 end
