@@ -267,7 +267,7 @@ class DrugsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def drug_params
-      params.require(:drug).permit(:item_seq, :item_name, :ingr_kor_name, :package_insert, :ingr_eng_name, :atc_code)
+      JSON.parse(params.require(:drug))
     end
 
     def set_search
