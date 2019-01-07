@@ -1,4 +1,5 @@
 class Supplement < ApplicationRecord
+    resourcify
 
     has_and_belongs_to_many :supplement_ingrs
     has_many :pasts, :class_name => "PastSupplement", :foreign_key => "past_supplement_id"

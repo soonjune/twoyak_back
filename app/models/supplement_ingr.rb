@@ -1,4 +1,6 @@
 class SupplementIngr < ApplicationRecord
+    resourcify
+
     has_and_belongs_to_many :supplements
 
     searchkick language: "korean", word_middle: [:ingr_name]

@@ -14,3 +14,14 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
 end
+
+# Rails.application.config.middleware.insert_before 0, Rack::Cors do
+#   allow do
+#     origins 'http://api.twoyak.com'
+#     resource '/api/*',
+#       headers: %w(Authorization),
+#       methods: :any,
+#       expose: %w(Authorization),
+#       max_age: 600
+#   end
+# end
