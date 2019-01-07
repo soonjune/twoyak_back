@@ -1,4 +1,6 @@
 class Interaction < ApplicationRecord
+    resourcify
+
     require 'json'
 
     def kor_map(enumerable)

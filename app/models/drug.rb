@@ -18,6 +18,8 @@ class Drug < ApplicationRecord
         a
       end
 
+    resourcify
+    
     has_and_belongs_to_many :dur_ingrs
     has_one :drug_imprint
     has_many :pasts, :class_name => "PastDrug", :foreign_key => "past_drug_id"

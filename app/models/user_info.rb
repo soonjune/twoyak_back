@@ -1,4 +1,7 @@
 class UserInfo < ApplicationRecord
+    #rolify 이용하기 위한 
+    resourcify
+
     belongs_to :user
     #이용자 정보 등록하기
     #가족력
