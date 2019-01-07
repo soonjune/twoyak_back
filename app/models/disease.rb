@@ -1,5 +1,5 @@
 class Disease < ApplicationRecord
-    belongs_to :med_his, :class_name => "UserInfo"
-    belongs_to :past_disease, :class_name => "UserInfo"
-    belongs_to :current_disease, :class_name => "UserInfo"
+    has_many :histories, :class_name => "FamilyMedHistory", :foreign_key => "med_his_id"
+    has_many :pasts, :class_name => "PastDisease", :foreign_key => "past_disease_id"
+    has_many :currents, :class_name => "CurrentDisease", :foreign_key => "current_disease_id"
 end
