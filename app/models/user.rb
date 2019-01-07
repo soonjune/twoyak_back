@@ -1,10 +1,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :confirmable, :trackable, :omniauthable,
@@ -12,8 +9,11 @@ class User < ApplicationRecord
 
   has_many :user_infos
   has_many :reviews
-  has_many :watch_drugs, :class_name => "Drug", :foreign_key => "watch_drug_id"
-  has_many :watch_supplements, :class_name => "Supplement", :foreign_key => "watch_supplement_id"
+  #관심 의약품/건강기능식품
+  has_many :watch_drugs
+  has_many :watch_drug, :through => :watch_drugs
+  has_many :watch_supplements
+  has_many :watch_supplement, :through => :watch_supplements
 
   has_many :identities, dependent: :destroy
 

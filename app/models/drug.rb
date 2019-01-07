@@ -20,10 +20,10 @@ class Drug < ApplicationRecord
 
     has_and_belongs_to_many :dur_ingrs
     has_one :drug_imprint
-    belongs_to :past_drug, :class_name => "UserInfo"
-    belongs_to :current_drug, :class_name => "UserInfo"
-    belongs_to :watch_drug, :class_name => "User"
-    belongs_to :watch_drug, :class_name => "User"
+    has_many :pasts, :class_name => "PastDrug", :foreign_key => "past_drug_id"
+    has_many :currents, :class_name => "CurrentDrug", :foreign_key => "current_drug_id"
+    has_many :watch_drugs, :class_name => "WatchDrug", :foreign_key => "watch_drug_id"
+    has_many :watch_supplements, :class_name => "WatchSupplement", :foreign_key => "watch_supplement_id"
 
 
 
