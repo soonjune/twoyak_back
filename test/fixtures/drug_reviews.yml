@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: 
+  drug: 
+  efficacy: 
+  side_effect: 
+  body: 
+  pics: 
+
+two:
+  user: 
+  drug: 
+  efficacy: 
+  side_effect: 
+  body: 
+  pics: 

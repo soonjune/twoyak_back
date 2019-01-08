@@ -1,20 +1,6 @@
 class ApplicationController < ActionController::API
   attr_reader :current_user
 
-
-  # #Override Devise's authenticate_user! method
-  def authenticate_user!(options = {})
-      head :unauthorized unless signed_in?
-  end
-  
-  def current_user
-      @current_user ||= super || User.find(@current_user_id)
-  end
-
-  def signed_in?
-      @current_user_id.present?
-  end
-
   protected
 
   def authenticate_request!
@@ -22,7 +8,7 @@ class ApplicationController < ActionController::API
       render json: { errors: ['Not Authenticated'] }, status: :unauthorized
       return
     end
-    @current_user = User.find(auth_token[:user_id])
+    @current_user = User.find(auth_token[:user][:id])
   rescue JWT::VerificationError, JWT::DecodeError
     render json: { errors: ['Not Authenticated'] }, status: :unauthorized
   end
@@ -36,10 +22,23 @@ class ApplicationController < ActionController::API
   end
 
   def auth_token
-      @auth_token ||= JsonWebToken.decode(http_token, ENV['SECRET_KEY_BASE'], true, { algorithm: 'HS256' })
+      @auth_token ||= HashWithIndifferentAccess.new(JWTWrapper.decode(http_token))
   end
 
   def user_id_in_token?
-    http_token && auth_token && auth_token[:user_id].to_i
+    http_token && auth_token && auth_token[:user][:id].to_i
   end
+
+  # #Override Devise's authenticate_user! method
+  # def authenticate_user!(options = {})
+  #   head :unauthorized unless signed_in?
+  # end
+
+  # def current_user
+  #   @current_user ||= super || User.find(@current_user_id)
+  # end
+
+  # def signed_in?
+  #   @current_user_id.present?
+  # end
 end

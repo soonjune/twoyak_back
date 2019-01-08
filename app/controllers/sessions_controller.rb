@@ -1,5 +1,5 @@
 class SessionsController < Devise::SessionsController
-
+    
     require 'jwt'
     
     def create
@@ -9,7 +9,7 @@ class SessionsController < Devise::SessionsController
         info.user_id = user.id
 
         if info.save
-            render json: { stauts: 'User created successfully', payload: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256')}, status: :created
+            render json: { stauts: 'User created successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
         else
             render json: { errors1: user.errors.full_messages, errors2: info.errors.full_messages }, status: :bad_request
         end
@@ -18,7 +18,7 @@ class SessionsController < Devise::SessionsController
     def new
         user = User.find_for_database_authentication(email: login_params[:email])
 		if user.valid_password?(login_params[:password])
-				render json: {payload: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256')}
+				render json: { auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }
 		else
 				render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
         end
@@ -49,8 +49,9 @@ class SessionsController < Devise::SessionsController
 		return nil unless user and user.id
 		{
                 :iss => "twoyak.com",
-                :user => {id: user.id, email: user.email, user_name: user.user_infos.first.user_name }
-                
+                :user => {id: user.id, email: user.email, user_name: user.user_infos.first.user_name },
+                :exp => Time.now.to_i + 604800, #1week from now
 		}
 	end
 end
+  

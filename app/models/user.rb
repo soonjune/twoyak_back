@@ -9,7 +9,10 @@ class User < ApplicationRecord
          :omniauth_providers => [:facebook, :google_oauth2, :naver]
 
   has_many :user_infos
-  has_many :reviews
+  #의약품/건강기능식품 리뷰
+  has_many :drug_reviews
+  has_many :sup_reviews
+
   #관심 의약품/건강기능식품
   has_many :watch_drugs
   has_many :watch_drug, :through => :watch_drugs

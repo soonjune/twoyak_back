@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_07_081307) do
+ActiveRecord::Schema.define(version: 2019_01_08_113257) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -72,6 +72,19 @@ ActiveRecord::Schema.define(version: 2019_01_07_081307) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["drug_id"], name: "index_drug_imprints_on_drug_id"
+  end
+
+  create_table "drug_reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "drug_id"
+    t.integer "efficacy"
+    t.integer "side_effect"
+    t.text "body"
+    t.json "pics"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["drug_id"], name: "index_drug_reviews_on_drug_id"
+    t.index ["user_id"], name: "index_drug_reviews_on_user_id"
   end
 
   create_table "drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -153,18 +166,23 @@ ActiveRecord::Schema.define(version: 2019_01_07_081307) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "efficacy"
-    t.integer "side_effect"
-    t.text "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "search_terms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.json "terms"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "sup_reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "supplement_id"
+    t.integer "efficacy"
+    t.integer "side_effect"
+    t.text "body"
+    t.json "pics"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["supplement_id"], name: "index_sup_reviews_on_supplement_id"
+    t.index ["user_id"], name: "index_sup_reviews_on_user_id"
   end
 
   create_table "supplement_ingrs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
