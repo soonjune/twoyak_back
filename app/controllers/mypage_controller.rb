@@ -5,7 +5,6 @@ class MypageController < ApplicationController
   end
 
   def show
-    byebug
     user_infos = current_user.user_infos
     @data_sent = Hash.new
     infos = []
