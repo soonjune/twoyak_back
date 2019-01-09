@@ -266,6 +266,7 @@ Devise.setup do |config|
   #
   config.warden do |manager|
     # Registering your new Strategy
+    # devise strategy 아닌 다른 방식의 JsonWebToken 이용
     manager.strategies.add(:jwt, Devise::Strategies::JsonWebToken)
 
     # Adding the new JWT Strategy to the top of Warden's list,

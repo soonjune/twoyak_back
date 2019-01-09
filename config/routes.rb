@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'mypage/create'
+  get 'mypage/show'
+  get 'mypage/update'
+  get 'mypage/destroy'
+  post 'auth_user' => 'authentication#authenticate_user'
+
   scope :api, defaults: { format: :json } do
     devise_for :users, controllers: { sessions: :sessions, omniauth_callbacks: :omniauth_callbacks, confirmations: :confirmations },
                        path_names: { sign_in: :login }

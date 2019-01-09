@@ -21,9 +21,9 @@ class UserInfo < ApplicationRecord
     has_many :current_drug, :through => :current_drugs
     #과거 건강기능식품 복용 내역
     has_many :past_supplements
-    has_many :past_sup, :through => :past_supplements
+    has_many :past_sup, :through => :past_supplements, :source => :past_supplement
     #현재 복용중인 건강기능식품
     has_many :current_supplements
-    has_many :current_sup, :through => :current_supplements
+    has_many :current_sup, :through => :current_supplements, :source => :current_supplement
 
 end
