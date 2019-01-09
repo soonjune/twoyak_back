@@ -17,10 +17,14 @@ class SessionsController < Devise::SessionsController
 
     def new
         user = User.find_for_database_authentication(email: login_params[:email])
-		if user.valid_password?(login_params[:password])
-				render json: { auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }
+        if user.valid_password?(login_params[:password])
+            if !user.confirmed?
+                User.send_confirmation_instructions({ email: user.email })
+            end
+            sign_in(user, store: false)
+            render json: { auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }
 		else
-				render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
+			render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
         end
     end
 
