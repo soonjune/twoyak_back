@@ -1,10 +1,10 @@
-class MypageController < ApplicationController
+class User::MypageController < ApplicationController
   before_action :authenticate_request!
 
   def create
   end
 
-  def show
+  def index
     user_infos = current_user.user_infos
     @data_sent = Hash.new
     infos = []
@@ -22,11 +22,8 @@ class MypageController < ApplicationController
   end
 
   def update
-    render json: current_user
   end
 
   def destroy
   end
-
-
 end

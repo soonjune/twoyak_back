@@ -14,7 +14,7 @@ module JWTWrapper
   
     def decode(token)
       begin
-        decoded_token = JWT.decode token, ENV['SECRET_KEY_BASE']
+        decoded_token = JWT.decode token, ENV['SECRET_KEY_BASE'], true, { iss: "twoyak.com", verify_iss: true }
   
         decoded_token.first
       rescue
