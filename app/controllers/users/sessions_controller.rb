@@ -4,14 +4,20 @@ class Users::SessionsController < Devise::SessionsController
     
     def create
         user = User.find_for_database_authentication(email: login_params[:email])
-        if user.valid_password?(login_params[:password])
+        if user.nil?
+            render json: { errors: "이메일을 찾을 수 없습니다. 가입 후 이용해 주세요." }
+            return
+        elsif user.valid_password?(login_params[:password])
             if !user.confirmed?
                 User.send_confirmation_instructions({ email: user.email })
+                render json: { errors: "이메일 인증을 해주세요. 인증 메일을 보내드렸습니다." }
+                return
             end
             sign_in(user, store: false)
             render json: { auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }
+            return
 		else
-			render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
+			render json: {errors: ['유효하지 않은 비밀번호입니다.']}, status: :unauthorized
         end
     end
 
