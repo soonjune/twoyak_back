@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     end
   end
 
-  root :to => redirect("http://api.twoyak.com/")
+  root :to => redirect("http://twoyak.com/")
 
   resources :drugs, :except => :show
   get "drugs/:search_term" => "drugs#show"
