@@ -27,7 +27,6 @@ class DrugsController < ApplicationController
 
   # PATCH/PUT /drugs/1
   def update
-    byebug
     if @drug.update(drug_params)
       render json: @drug
     else
