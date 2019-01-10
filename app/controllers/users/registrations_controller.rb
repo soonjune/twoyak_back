@@ -11,7 +11,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    if User.new(user_params).valid? && UserInfo.new(info_params).valid?
+    if User.new(user_params).valid? && UserInfo.new(info_params).user_name?
       user = User.new(user_params)
       user.save
       info = UserInfo.new(info_params)
