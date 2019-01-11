@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   scope :api, defaults: { format: :json } do
     devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks', confirmations: 'users/confirmations' },
                        path_names: { sign_in: :login }
-    resources :user, only: [:show, :update] do
-      resources :user_infos
+    resources :user, only: [:show, :update]
     end
   end
 
