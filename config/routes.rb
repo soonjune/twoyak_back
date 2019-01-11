@@ -6,7 +6,6 @@ Rails.application.routes.draw do
     devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks', confirmations: 'users/confirmations' },
                        path_names: { sign_in: :login }
     resources :user, only: [:show, :update]
-    end
   end
 
   root :to => redirect("http://twoyak.com/")
