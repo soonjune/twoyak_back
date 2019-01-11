@@ -16,7 +16,7 @@ class User::PastDiseasesController < ApplicationController
 
   # POST /past_diseases
   def create
-    @past_disease = << Disease.search(params[:disease_name], fields: [disease_name: :exact])
+    @past_disease << Disease.search(params[:disease_name], fields: [disease_name: :exact])
 
     if @past_disease.save
       render json: @past_disease, status: :created, location: @past_disease
