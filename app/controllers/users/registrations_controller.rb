@@ -11,24 +11,26 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    #유저 이메일 정보 확인
     if User.new(user_params).valid?
-      user = User.new(user_params)
+      nil
     else
-      render json: { errors: "이메일을 다시 한번 확인해주세요." }, status: :bad_request
+      render json: { errors: "이메일을 다시 한번 확인해 주세요." }, status: :bad_request
     end
+    #유저 필수 정보(닉네임) 입력 확인
     if UserInfo.new(info_params).user_name?
+      user = User.new(user_params)
       user.save
       info = UserInfo.new(info_params)
       info.user_id = user.id
     else
       render json: { errors: "필수 정보를 모두 채워주세요" }, status: :bad_request
     end
-    begin
-      if info.save
-        render json: { stauts: 'User created successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
-      end
-    rescue
-      render json: { errors1: user.errors.full_messages, errors2: info.errors.full_messages }, status: :bad_request
+    #생성 확인
+    if info.save
+      render json: { stauts: 'User created successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
+    else
+    render json: { errors1: user.errors.full_messages, errors2: info.errors.full_messages }, status: :bad_request
     end
   end
 
