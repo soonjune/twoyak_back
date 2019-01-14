@@ -14,7 +14,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if User.new(user_params).valid?
       nil
     else
-      render json: { errors: "이메일을 다시 한반 확인해 주세요." }, status: :bad_request
+      render json: { errors: "이메일을 다시 한번 확인해 주세요." }, status: :bad_request
     end
     begin
       if UserInfo.new(info_params).user_name?
