@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
 
   def authenticate_request!
     unless user_id_in_token?
-      render json: { errors: ['Not Authenticated'] }, status: :unauthorized
+      render json: { errors: ['재로그인이 필요합니다'] }, status: :unauthorized
       return
     end
     @current_user = User.find(auth_token[:user][:id])
@@ -22,7 +22,7 @@ class ApplicationController < ActionController::API
   end
 
   def auth_token
-      @auth_token ||= HashWithIndifferentAccess.new(JWTWrapper.decode(http_token))
+    @auth_token ||= HashWithIndifferentAccess.new(JWTWrapper.decode(http_token))
   end
 
   def user_id_in_token?

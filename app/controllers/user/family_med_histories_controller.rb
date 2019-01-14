@@ -1,6 +1,6 @@
 class User::FamilyMedHistoriesController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_family_med_history, only: [:show, :destroy]
+  before_action :set_family_med_history, :search_term, only: [:create, :show, :destroy]
 
   # GET /family_med_histories
   def index
@@ -16,10 +16,8 @@ class User::FamilyMedHistoriesController < ApplicationController
 
   # POST /family_med_histories
   def create
-    @family_med_history << Disease.search(search_term, fields: [disease_name: :exact]) 
-
-    if @family_med_history.save
-      render json: @family_med_history, status: :created, location: @family_med_history
+    if @family_med_history << Disease.find_by_disease_name(@search_term)
+      render json: @family_med_history, status: :created
     else
       render json: @family_med_history.errors, status: :unprocessable_entity
     end
@@ -36,13 +34,19 @@ class User::FamilyMedHistoriesController < ApplicationController
 
   # DELETE /family_med_histories/1
   def destroy
-    @family_med_history.destroy
+    @family_med_history.delete(Disease.find_by_disease_name(@search_term))
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_family_med_history
-      @family_med_history = UserInfo.find(params[:id]).med_his
+      if current_user.user_info_ids.include? params[:user_info_id].to_i
+        @family_med_history = UserInfo.find(params[:user_info_id]).med_his
+      end
+    end
+
+    def search_term
+      @search_term = params[:search_term]
     end
 
 end

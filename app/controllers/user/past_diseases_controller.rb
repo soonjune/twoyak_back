@@ -1,6 +1,6 @@
 class User::PastDiseasesController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_past_disease, only: [:show, :destroy]
+  before_action :set_past_disease, :search_term, only: [:create, :show, :destroy]
 
   # GET /past_diseases
   def index
@@ -16,10 +16,8 @@ class User::PastDiseasesController < ApplicationController
 
   # POST /past_diseases
   def create
-    @past_disease << Disease.search(params[:disease_name], fields: [disease_name: :exact])
-
-    if @past_disease.save
-      render json: @past_disease, status: :created, location: @past_disease
+    if @past_disease << Disease.find_by_disease_name(@search_term)
+      render json: @past_disease, status: :created
     else
       render json: @past_disease.errors, status: :unprocessable_entity
     end
@@ -36,12 +34,18 @@ class User::PastDiseasesController < ApplicationController
 
   # DELETE /past_diseases/1
   def destroy
-    @past_disease.destroy
+    @past_disease.delete(Disease.find_by_disease_name(@search_term))
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_past_disease
-      @past_disease = UserInfo.find(params[:id]).past_disease
+      if current_user.user_info_ids.include? params[:user_info_id].to_i
+        @past_disease = UserInfo.find(params[:user_info_id]).past_disease
+      end
+    end
+
+    def search_term
+      @search_term = params[:search_term]
     end
 end

@@ -16,15 +16,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
       user.save
       info = UserInfo.new(info_params)
       info.user_id = user.id
+      info.save
     else
-      render json: { errors: "필수 정보를 모두 채워주세요" }, status: :bad_request
+      render json: { errors1: user.errors.full_messages, errors2: info.errors.full_messages }, status: :bad_request
       return
-    end
-
-    if info.save
-        render json: { stauts: 'User created successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
-    else
-        render json: { errors1: user.errors.full_messages, errors2: info.errors.full_messages }, status: :bad_request
     end
   end
 
