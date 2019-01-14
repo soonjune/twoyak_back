@@ -11,12 +11,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    if User.new(user_params).valid?
+      nil
+    else
+      render json: { errors: "이메일을 다시 한반 확인해 주세요." }, status: :bad_request
+    end
     begin
-      User.new(user_params).valid? && UserInfo.new(info_params).user_name?
-      user = User.new(user_params)
-      user.save
-      info = UserInfo.new(info_params)
-      info.user_id = user.id
+      if UserInfo.new(info_params).user_name?
+        user = User.new(user_params)
+        user.save
+        info = UserInfo.new(info_params)
+        info.user_id = user.id
+      end
       if info.save
         render json: { stauts: 'User created successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
       end
