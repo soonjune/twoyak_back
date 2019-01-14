@@ -1,6 +1,6 @@
 class User::PastDrugsController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_past_drug, only: [:show, :destroy]
+  before_action :set_past_drug, :search_term, only: [:create, :show, :destroy]
 
   # GET /past_drugs
   def index
@@ -16,7 +16,7 @@ class User::PastDrugsController < ApplicationController
 
   # POST /past_drugs
   def create
-    @past_drug = Drug.search(params[:drug_name], fields: [name: :exact]) 
+    if @past_drug << Drug.search(@search_term, fields: [name: :exact]) 
 
     if @past_drug.save
       render json: @past_drug, status: :created, location: @past_drug
@@ -36,13 +36,19 @@ class User::PastDrugsController < ApplicationController
 
   # DELETE /past_drugs/1
   def destroy
-    @past_drug.destroy
+    @past_drug.delete(Drug.search(@search_term, fields: [name: :exact]))
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_past_drug
-      @past_drug = UserInfo.find(params[:id]).past_drug
+      if current_user.user_info_ids.include? params[:user_info_id].to_i
+        @past_drug = UserInfo.find(params[:user_info_id]).past_drug
+      end
+    end
+
+    def search_term
+      @search_term = params[:search_term]
     end
 
 end
