@@ -34,11 +34,11 @@ class User::CurrentSupplementsController < ApplicationController
 
   # DELETE /current_supplements/1
   def destroy
-    @current_supplement.delete(Supplement.find(@search_id)
+    @current_supplement.delete(Supplement.find(@search_id))
   end
 
   def destroy_to_past
-    @current_supplement.delete(Supplement.find(@search_id)
+    @current_supplement.delete(Supplement.find(@search_id))
     @past_supplements =  UserInfo.find(params[:user_info_id]).past_sup
     @past_supplements << Supplement.find(@search_id)
     render json: @past_supplements
