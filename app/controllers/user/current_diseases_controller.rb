@@ -1,6 +1,6 @@
 class User::CurrentDiseasesController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_current_disease, :search_term, only: [:create, :show, :destroy, :destroy_to_past]
+  before_action :set_current_disease, :search_id, only: [:create, :show, :destroy, :destroy_to_past]
 
   # GET /current_diseases
   def index
@@ -16,7 +16,7 @@ class User::CurrentDiseasesController < ApplicationController
 
   # POST /current_diseases
   def create
-    if @current_disease << Disease.find_by_disease_name(@search_term)
+    if @current_disease << Disease.find(@search_id)
       render json: @current_disease, status: :created
     else
       render json: @current_disease.errors, status: :unprocessable_entity
@@ -34,13 +34,13 @@ class User::CurrentDiseasesController < ApplicationController
 
   # DELETE /current_diseases/1
   def destroy
-    @current_disease.delete(Disease.find_by_disease_name(@search_term))
+    @current_disease.delete(Disease.find(@search_id))
   end
 
   def destroy_to_past
-    @current_disease.delete(Disease.find_by_disease_name(@search_term))
+    @current_disease.delete(Disease.find(@search_id))
     @past_diseases =  UserInfo.find(params[:user_info_id]).past_disease
-    @past_diseases << Disease.find_by_disease_name(@search_term)
+    @past_diseases << Disease.find(@search_id)
     render json: @past_diseases
   end
 
@@ -52,8 +52,8 @@ class User::CurrentDiseasesController < ApplicationController
       end
     end
 
-    def search_term
-      @search_term = params[:search_term]
+    def search_id
+      @search_id = params[:search_id]
     end
     
 end

@@ -1,6 +1,6 @@
 class User::PastSupplementsController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_past_supplement, :search_term, only: [:create, :show, :destroy]
+  before_action :set_past_supplement, :search_id, only: [:create, :show, :destroy]
 
   # GET /past_supplements
   def index
@@ -16,7 +16,7 @@ class User::PastSupplementsController < ApplicationController
 
   # POST /past_supplements
   def create
-    if @past_supplement << Supplement.search(@search_term, fields: [name: :exact])
+    if @past_supplement << Supplement.search(@search_id)
       render json: @past_supplement, status: :created
     else
       render json: @past_supplement.errors, status: :unprocessable_entity
@@ -34,7 +34,7 @@ class User::PastSupplementsController < ApplicationController
 
   # DELETE /past_supplements/1
   def destroy
-    @past_supplement.delete(Supplement.search(@search_term, fields: [name: :exact]))
+    @past_supplement.delete(Supplement.find(@search_id))
   end
 
   private
@@ -45,7 +45,7 @@ class User::PastSupplementsController < ApplicationController
       end
     end
 
-    def search_term
-      @search_term = params[:search_term]
+    def search_id
+      @search_id = params[:search_id]
     end
 end
