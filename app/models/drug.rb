@@ -26,6 +26,8 @@ class Drug < ApplicationRecord
     has_many :currents, :class_name => "CurrentDrug", :foreign_key => "current_drug_id"
     has_many :watch_drugs, :class_name => "WatchDrug", :foreign_key => "watch_drug_id"
     has_many :watch_supplements, :class_name => "WatchSupplement", :foreign_key => "watch_supplement_id"
+    #리뷰
+    has_many :reviews, :class_name => "DrugReview"
 
 
 

@@ -12,6 +12,9 @@ class User < ApplicationRecord
   #의약품/건강기능식품 리뷰
   has_many :drug_reviews
   has_many :sup_reviews
+  #리뷰 댓글 남기기
+  has_many :drug_review_comments
+  has_many :sup_review_comments
 
   #관심 의약품/건강기능식품
   has_many :watch_drugs
