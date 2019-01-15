@@ -49,7 +49,12 @@ Rails.application.routes.draw do
   get "drugs/:search_term" => "drugs#show"
   resources :drug_imprints
   get 'analysis/interaction'
-  resources :search_terms
+  # resources :search_terms
+  # 각각에 대한 autocomplete search_term 제공
+  get 'autocomplete/disease' => 'autocomplete#disease'
+  get 'autocomplete/drug' => 'autocomplete#drug'
+  get 'autocomplete/sup' => 'autocomplete#sup'
+
   resources :supplements, :except => [:show, :index]
   get "supplements/:search_term" => "supplements#show"
   # resources :supplement_ingrs_supplements
@@ -69,4 +74,6 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   #social login
   match 'finish_signup' => 'users#finish_signup', via: [:get, :patch], :as => :finish_signup
+  # #for generating search_terms
+  # get 'autocomplete/gen' => 'autocomplete#generate'
 end

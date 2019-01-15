@@ -17,9 +17,7 @@ class User::PastDrugsController < ApplicationController
   # POST /past_drugs
   def create
     if @past_drug << Drug.search(@search_term, fields: [name: :exact]) 
-
-    if @past_drug.save
-      render json: @past_drug, status: :created, location: @past_drug
+      render json: @past_drug, status: :created
     else
       render json: @past_drug.errors, status: :unprocessable_entity
     end
