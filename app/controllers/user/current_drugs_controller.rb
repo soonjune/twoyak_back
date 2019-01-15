@@ -33,7 +33,7 @@ class User::CurrentDrugsController < ApplicationController
 
   # DELETE /current_drugs/1
   def destroy
-    @current_drug.delete(Drug.find(@search_id)
+    @current_drug.delete(Drug.find(@search_id))
   end
 
   def destroy_to_past
