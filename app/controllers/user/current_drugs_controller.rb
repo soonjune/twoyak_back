@@ -37,7 +37,7 @@ class User::CurrentDrugsController < ApplicationController
   end
 
   def destroy_to_past
-    @current_drug.delete(Drug.find(@search_id)
+    @current_drug.delete(Drug.find(@search_id))
     @past_drugs =  UserInfo.find(params[:user_info_id]).past_drug
     @past_drugs << Drug.find(@search_id)
     render json: @past_drugs
