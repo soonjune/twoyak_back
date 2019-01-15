@@ -1,6 +1,6 @@
 class User::PastDrugsController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_past_drug, :search_term, only: [:create, :show, :destroy]
+  before_action :set_past_drug, :search_id, only: [:create, :show, :destroy]
 
   # GET /past_drugs
   def index
@@ -16,7 +16,7 @@ class User::PastDrugsController < ApplicationController
 
   # POST /past_drugs
   def create
-    if @past_drug << Drug.search(@search_term, fields: [name: :exact]) 
+    if @past_drug << Drug.find(@search_id) 
       render json: @past_drug, status: :created
     else
       render json: @past_drug.errors, status: :unprocessable_entity
@@ -34,7 +34,7 @@ class User::PastDrugsController < ApplicationController
 
   # DELETE /past_drugs/1
   def destroy
-    @past_drug.delete(Drug.search(@search_term, fields: [name: :exact]))
+    @past_drug.delete(Drug.find(@search_id))
   end
 
   private
@@ -45,8 +45,8 @@ class User::PastDrugsController < ApplicationController
       end
     end
 
-    def search_term
-      @search_term = params[:search_term]
+    def search_id
+      @search_id = params[:search_id]
     end
 
 end
