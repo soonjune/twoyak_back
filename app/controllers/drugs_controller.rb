@@ -66,6 +66,7 @@ class DrugsController < ApplicationController
         @data["ingr_kor_name"] = item.ingr_kor_name
         @data["ingr_eng_name"] = item.ingr_eng_name
         @data["atc_code"] = item.atc_code
+        @data["reviews"] = item.reviews
         if(!item.drug_imprint.nil?)
           @data["drug_imprint"] = item.drug_imprint
         end
@@ -244,6 +245,7 @@ class DrugsController < ApplicationController
 
     elsif(!@sup.nil?)
       @data = @sup
+      @data["reviews"] = @sup.reviews
     else
       @data["item_name"] = []
       @data["product_name"] = []
