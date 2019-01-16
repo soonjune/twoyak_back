@@ -244,7 +244,7 @@ class DrugsController < ApplicationController
       @data["nb_doc_data"] = @NB_DOC_DATA
 
     elsif(!@sup.nil?)
-      @data = @sup
+      @data["sup"] = @sup
       @data["reviews"] = @sup.reviews
     else
       @data["item_name"] = []
