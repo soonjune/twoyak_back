@@ -64,7 +64,8 @@ class DrugsController < ApplicationController
     searched.each { |item|
       if(item.class == Drug && search == item.item_name)
         @rep = item
-        @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq
+        @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
+        byebug
         @data["ingr_eng_name"] = item.ingr_eng_name
         @data["atc_code"] = item.atc_code
         @data["reviews"] = item.reviews
