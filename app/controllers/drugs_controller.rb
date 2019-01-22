@@ -194,10 +194,12 @@ class DrugsController < ApplicationController
           for i in 0...@CAUTION.length
               @CAUTION_TITLE = @CAUTION[i]['title']
               begin
+                if !@CAUTION[i]['ARTICLE'].nil?
                   for j in 0...@CAUTION[i]['ARTICLE'].length
                       @CAUTION_ARTICLE_TITLE << @CAUTION[i]['ARTICLE'][j]['title']
                       @CAUTION_ARTICLE_PARAGRAPH << @CAUTION[i]['ARTICLE'][j]['PARAGRAPH']
                   end
+                end
               rescue NoMethodError
                 @CAUTION_ARTICLE_TITLE = []
                 @CAUTION_ARTICLE_PARAGRAPH = []
