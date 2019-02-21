@@ -7,8 +7,6 @@ class Users::PasswordsController < Devise::PasswordsController
         render json: {error: ['Error occurred']}, status: :internal_server_error
         end
     end
-
-    def update
         
 
     private
