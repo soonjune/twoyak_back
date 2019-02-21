@@ -26,14 +26,12 @@ class User < ApplicationRecord
 
 
   #이메일 형식
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
-  validates :email, presence: true,
-  length: {maximum: 255}, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
+  # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  # validates :email, presence: true,
+  # length: {maximum: 255}, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
   
   # after_create :set_default_role, if: Proc.new { User.count > 1 }
 
-  TEMP_EMAIL_PREFIX = 'change@me'
-  TEMP_EMAIL_REGEX = /\Achange@me/
 
   #소셜 로그인시 두개로 로그인하지 않도록
   def self.find_for_oauth(auth, signed_in_resource = nil)
@@ -53,18 +51,24 @@ class User < ApplicationRecord
       # Get the existing user by email if the provider gives us a verified email.
       # If no verified email was provided we assign a temporary email and ask the
       # user to verify it on the next step via UsersController.finish_signup
-      email_is_verified = auth.info.email && (auth.info.verified || auth.info.verified_email)
-      email = auth.info.email if email_is_verified
-      user = User.where(:email => email).first if email
+      email = auth.info.email
+      user = User.where(:email => email).first
 
+      unless self.where(email: auth.info.email).exists?
+        #이메일 없으면 새로운 데이터 생성
+        if user.nil?
+          
             # Create the user if it's a new registration
-      if user.nil?
-        user = User.new(
-          email: email ? email : "#{TEMP_EMAIL_PREFIX}-#{auth.uid}-#{auth.provider}.com",
-          password: Devise.friendly_token[0,20]
-        )
-        user.skip_confirmation!
-        user.save!
+          user = User.new(
+            email: auth.info.email,
+            password: Devise.friendly_token[0,20]
+          )
+          user.skip_confirmation!
+          user.save!
+          info = UserInfo.new(user_name: auth.info.first_name)
+          info.user_id = user.id
+          info.save!
+        end
       end
     end
 
@@ -76,7 +80,7 @@ class User < ApplicationRecord
     
         user
     
-      end
+  end
     
       def email_verified?
         self.email && self.email !~ TEMP_EMAIL_REGEX
