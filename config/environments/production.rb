@@ -54,11 +54,13 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "twoyak_back_#{Rails.env}"
 
+  config.app_domain = 'twoyak.com'
+
   #default mailer
   #이메일 발송을 위한 환경 설정(인증용 이메일 발송)
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = { :host => 'api.twoyak.com' }
+  config.action_mailer.default_url_options = { :host => 'twoyak.com' }
   config.action_mailer.smtp_settings = {
     address: 'smtp.gmail.com',
     port: '587',

@@ -38,7 +38,7 @@ Rails.application.routes.draw do
     end
   end
   scope :api, defaults: { format: :json } do
-    devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks', confirmations: 'users/confirmations' },
+    devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks', confirmations: 'users/confirmations', passwords: 'users/passwords' },
                        path_names: { sign_in: :login }
     resources :user, only: [:show, :update]
   end
