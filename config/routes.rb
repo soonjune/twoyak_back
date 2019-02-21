@@ -42,7 +42,7 @@ Rails.application.routes.draw do
                        path_names: { sign_in: :login }
     resources :user, only: [:show, :update]
     # social login
-    post 'social' => 'social_login#sign_in'
+    post 'social' => 'users/social_login#sign_in'
   end
 
   root :to => redirect("http://twoyak.com/")
