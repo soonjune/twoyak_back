@@ -45,7 +45,7 @@ class User::MypageController < ApplicationController
   end
 
   def user_info_params
-    params.require([:user_info]).permit(:id, :user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine)
+    params.require([:user_info]).permit(:id, :user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine, :sex)
   end
 
   # def update_params
