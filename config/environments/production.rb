@@ -68,7 +68,7 @@ Rails.application.configure do
     user_name: ENV['EMAIL_USER'],
     password: ENV['EMAIL_PASS'],
     authentication: "plain",
-    domain: 'twoyak.com'
+    domain: 'api.twoyak.com'
   }
 
   config.action_mailer.perform_caching = false
