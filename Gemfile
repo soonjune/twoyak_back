@@ -4,6 +4,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.5.3'
 gem 'figaro'
 gem 'rack-cors'
+#http request
+gem "http"
+
 #Use elasticsearch
 gem 'elasticsearch'
 gem 'elasticsearch-model'

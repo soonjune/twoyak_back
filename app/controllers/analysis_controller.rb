@@ -1,4 +1,17 @@
 class AnalysisController < ApplicationController
+  before_action :set_code, only: [:get]
+
+  def get
+    require 'http'
+    require 'json'
+
+    @result = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@code}").body
+
+    render json: @result
+
+  end
+
+
   def interaction
     require 'set'
     require 'json'
@@ -243,4 +256,12 @@ class AnalysisController < ApplicationController
 
       render json: @result
   end
+
+  private
+
+    def set_code
+      @code = params[:codes]
+    end
 end
+
+
