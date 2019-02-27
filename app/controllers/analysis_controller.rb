@@ -5,7 +5,7 @@ class AnalysisController < ApplicationController
     require 'http'
     require 'json'
 
-    @result = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@code}").body
+    @result = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@code}")
 
     render json: @result
 
@@ -260,7 +260,12 @@ class AnalysisController < ApplicationController
   private
 
     def set_code
-      @code = params[:codes]
+      @code = ""
+      codes = params[:codes].split(",")
+
+      codes.each do |code|
+        @code << code.strip + ";"
+      end
     end
 end
 

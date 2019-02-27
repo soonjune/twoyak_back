@@ -51,7 +51,7 @@ Rails.application.routes.draw do
   # get "drugs/:search_term" => "drugs#show"
   resources :drug_imprints
   get 'analysis/interaction'
-  get 'analysis/get/:codes'  => "analysis#get"
+  get 'analysis/get'
   # resources :search_terms
   # 각각에 대한 autocomplete search_term 제공
   get 'autocomplete/disease' => 'autocomplete#disease'
