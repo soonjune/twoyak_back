@@ -17,7 +17,7 @@ class User::MypageController < ApplicationController
     @data_sent = Hash.new
     infos = []
     user_infos.each { |user_info|
-      info_data = { user_info: { basic_info: user_info, family_med_his: user_info.med_his.select(:id, :name), past_diseases: user_info.past_disease.select(:id, :name, :from, :to, :memo), current_diseases: user_info.current_disease.select(:id, :name, :from, :to, :memo), past_drugs: user_info.past_drug.select(:id, :name, :from, :to, :memo), current_drugs: user_info.current_drug.select(:id, :name, :from, :to, :memo),  past_supplements: user_info.past_sup.select(:id, :name, :from, :to, :memo), current_supplements: user_info.current_sup.select(:id, :name, :from, :to, :memo) } }
+      info_data = { user_info: { basic_info: user_info, family_med_his: user_info.med_his.select(:id, :name), past_diseases: user_info.past_disease.select(:id, :name, :from, :to), current_diseases: user_info.current_disease.select(:id, :name, :from, :to), past_drugs: user_info.past_drug.select(:id, :name, :from, :to, :memo), current_drugs: user_info.current_drug.select(:id, :name, :from, :to, :memo),  past_supplements: user_info.past_sup.select(:id, :name, :from, :to, :memo), current_supplements: user_info.current_sup.select(:id, :name, :from, :to, :memo) } }
       #각각의 데이터를 넣어줌
       infos << info_data
     }
