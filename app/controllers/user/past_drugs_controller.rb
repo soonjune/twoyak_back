@@ -17,7 +17,9 @@ class User::PastDrugsController < ApplicationController
   # POST /past_drugs
   def create
     if @past_drug << Drug.find(@search_id) 
-      render json: @past_drug, status: :created
+      set_time_memo = PastDrug.order("created_at").last
+      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo])
+      render json: @past_drug.pluck(:id, :name), status: :created
     else
       render json: @past_drug.errors, status: :unprocessable_entity
     end
@@ -42,6 +44,9 @@ class User::PastDrugsController < ApplicationController
     def set_past_drug
       if current_user.user_info_ids.include? params[:user_info_id].to_i
         @past_drug = UserInfo.find(params[:user_info_id]).past_drug
+      else
+        render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+        return
       end
     end
 

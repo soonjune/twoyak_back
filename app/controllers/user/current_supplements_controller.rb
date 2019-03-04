@@ -16,8 +16,12 @@ class User::CurrentSupplementsController < ApplicationController
 
   # POST /current_supplements
   def create
-    if @current_supplement << Supplement.find(@search_id) 
-      render json: @current_supplement, status: :created
+    if @current_supplement.include?(Supplement.find(@search_id))
+      render json: { errors: "이미 복용 중인 건강식품입니다." }, status: :unprocessable_entity
+    elsif @current_supplement << Supplement.find(@search_id)
+      set_time_memo = CurrentSupplement.order("created_at").last
+      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo])
+      render json: @current_supplement.pluck(:id, :name), status: :created
     else
       render json: @current_supplement.errors, status: :unprocessable_entity
     end
@@ -38,10 +42,13 @@ class User::CurrentSupplementsController < ApplicationController
   end
 
   def destroy_to_past
+    selected = CurrentSupplement.find_by(current_supplement_id: @search_id)
     @current_supplement.delete(Supplement.find(@search_id))
     @past_supplements =  UserInfo.find(params[:user_info_id]).past_sup
     @past_supplements << Supplement.find(@search_id)
-    render json: @past_supplements
+    set_time_memo = PastSupplement.order("created_at").last
+    set_time_memo.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, memo: selected.memo)
+    render json: @past_supplements.pluck(:id, :name)
   end
 
   private
@@ -49,6 +56,9 @@ class User::CurrentSupplementsController < ApplicationController
     def set_current_supplement
       if current_user.user_info_ids.include? params[:user_info_id].to_i
         @current_supplement = UserInfo.find(params[:user_info_id]).current_sup
+      else
+        render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+        return
       end
     end
 

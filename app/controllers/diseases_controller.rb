@@ -46,6 +46,6 @@ class DiseasesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def disease_params
-      params.require(:disease).permit(:disease_name)
+      params.require(:disease).permit(:name)
     end
 end

@@ -62,7 +62,7 @@ class DrugsController < ApplicationController
     @data = Hash.new
   
     searched.each { |item|
-      if(item.class == Drug && search == item.item_name)
+      if(item.class == Drug && search == item.name)
         @rep = item
         @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
         @data["ingr_eng_name"] = item.ingr_eng_name
@@ -82,7 +82,7 @@ class DrugsController < ApplicationController
     
     if(!@rep.nil?)
       @information = @rep['package_insert']['DRB_ITEM']
-      @ITEM_NAME = @rep.item_name
+      @ITEM_NAME = @rep.name
 
       @data["item_name"] = @ITEM_NAME
       @data["information"] =  @information
@@ -95,9 +95,9 @@ class DrugsController < ApplicationController
       @data["product_name"] = []
       searched.each { |item|
         if item.class == Drug
-          @data["item_name"] << item.item_name
+          @data["item_name"] << item.name
         elsif item.class == Supplement
-          @data["product_name"] << item.product_name
+          @data["product_name"] << item.name
         end
       }
     end
