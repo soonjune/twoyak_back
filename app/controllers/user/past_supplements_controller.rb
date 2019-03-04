@@ -16,8 +16,10 @@ class User::PastSupplementsController < ApplicationController
 
   # POST /past_supplements
   def create
-    if @past_supplement << Supplement.search(@search_id)
-      render json: @past_supplement, status: :created
+    if @past_supplement << Supplement.find(@search_id)
+      set_time_memo = PastSupplement.order("created_at").last
+      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo])
+      render json: @past_supplement.pluck(:id, :name), status: :created
     else
       render json: @past_supplement.errors, status: :unprocessable_entity
     end
@@ -43,6 +45,9 @@ class User::PastSupplementsController < ApplicationController
       if current_user.user_info_ids.include? params[:user_info_id].to_i
         @past_supplement = UserInfo.find(params[:user_info_id]).past_sup
       end
+    else
+      render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+      return
     end
 
     def search_id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_25_111034) do
+ActiveRecord::Schema.define(version: 2019_03_02_090036) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2019_02_25_111034) do
   create_table "current_diseases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "current_disease_id"
+    t.date "from"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -30,6 +31,7 @@ ActiveRecord::Schema.define(version: 2019_02_25_111034) do
   create_table "current_drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "current_drug_id"
+    t.date "from"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -37,6 +39,7 @@ ActiveRecord::Schema.define(version: 2019_02_25_111034) do
   create_table "current_supplements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "current_supplement_id"
+    t.date "from"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -160,6 +163,8 @@ ActiveRecord::Schema.define(version: 2019_02_25_111034) do
   create_table "past_diseases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "past_disease_id"
+    t.date "to"
+    t.date "from"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -167,6 +172,8 @@ ActiveRecord::Schema.define(version: 2019_02_25_111034) do
   create_table "past_drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "past_drug_id"
+    t.date "to"
+    t.date "from"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -174,6 +181,8 @@ ActiveRecord::Schema.define(version: 2019_02_25_111034) do
   create_table "past_supplements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "past_supplement_id"
+    t.date "to"
+    t.date "from"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

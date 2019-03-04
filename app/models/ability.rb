@@ -8,7 +8,8 @@ class Ability
           can :manage, :all
         else
           can :manage, UserInfo, user_id: user.id
-          can :manage, Review, user_id: user.id
+          can :manage, DrugReview, user_id: user.id
+          can :manage, SupReview, user_id: user.id
           can :read, :all
         end
       #

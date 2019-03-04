@@ -2,7 +2,7 @@ class AutocompleteController < ApplicationController
   require 'json'
 
   def search
-    name = Drug.select(:item_name).map(&:item_name)
+    name = Drug.select(:name).map(&:name)
     arr1 = []
     name.each do |x|
       b = {category: "의약품명", title: x}
@@ -27,7 +27,7 @@ class AutocompleteController < ApplicationController
       e = {category: "성분명(국문)", title: x}
       arr4 << e
     end
-    sup = Supplement.select(:product_name).map(&:product_name)
+    sup = Supplement.select(:name).map(&:name)
     arr5 = []
     sup.each do |x|
       e = {category: "건강기능식품 제품명", title: x}
@@ -45,6 +45,16 @@ class AutocompleteController < ApplicationController
     render json: @search_terms
   end
 
+  # def generate
+  #   y = SearchTerm.find(2)
+  #   y.diseases = Disease.select([:id, :disease_name]).to_json
+  #   y.drugs = Drug.select([:id, :item_name]).to_json
+  #   y.supplements = Supplement.select([:id, :product_name]).to_json
+    
+  #   puts y.diseases
+  #   y.save
+  # end
+
   def disease
     render json: SearchTerm.pluck(:diseases)[1]
   end
@@ -56,4 +66,5 @@ class AutocompleteController < ApplicationController
   def sup
     render json: SearchTerm.pluck(:supplements)[1]
   end
+
 end
