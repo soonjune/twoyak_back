@@ -1,6 +1,6 @@
 class DrugsController < ApplicationController
-  before_action :set_drug, only: [:update, :destroy]
-  before_action :set_search, only: [:show]
+  before_action :set_drug, only: [:show, :update, :destroy]
+  # before_action :set_search, only: [:show]
 
   # GET /drugs
   def index
@@ -116,7 +116,8 @@ class DrugsController < ApplicationController
       JSON.parse(params.require(:drug))
     end
 
-    def set_search
-      @drug = Drug.search(params[:search_term], fields: [name: :exact])
-    end
+    # using elastic
+    # def set_search
+    #   @drug = Drug.search(params[:search_term], fields: [name: :exact])
+    # end
 end

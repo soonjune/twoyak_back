@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_15_072013) do
+ActiveRecord::Schema.define(version: 2019_02_25_111034) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -260,6 +260,7 @@ ActiveRecord::Schema.define(version: 2019_01_15_072013) do
     t.boolean "caffeine"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "sex"
     t.index ["user_id"], name: "index_user_infos_on_user_id"
   end
 

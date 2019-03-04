@@ -41,12 +41,14 @@ Rails.application.routes.draw do
     devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks', confirmations: 'users/confirmations', passwords: 'users/passwords' },
                        path_names: { sign_in: :login }
     resources :user, only: [:show, :update]
+    # social login
+    post 'social' => 'users/social_login#sign_in'
   end
 
   root :to => redirect("http://twoyak.com/")
 
-  resources :drugs, :except => [:show, :index]
-  get "drugs/:search_term" => "drugs#show"
+  resources :drugs, :except => [:index]
+  # get "drugs/:search_term" => "drugs#show"
   resources :drug_imprints
   get 'analysis/interaction'
   # resources :search_terms
@@ -69,8 +71,9 @@ Rails.application.routes.draw do
   get 'search_terms' => 'search_terms#index'
   get 'singleSearch/' => 'drugs#find_each_drug'
   get '/multiSearch' => "analysis#interaction"
-  #jwt authentication
-  post 'auth_user' => 'authentication#authenticate_user'
+  # #jwt authentication
+  # post 'auth_user' => 'authentication#authenticate_user'
+  
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   #social login
   match 'finish_signup' => 'users#finish_signup', via: [:get, :patch], :as => :finish_signup
