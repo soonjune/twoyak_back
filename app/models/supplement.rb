@@ -7,12 +7,12 @@ class Supplement < ApplicationRecord
     #리뷰
     has_many :reviews, :class_name => "SupReview"
     
-    searchkick language: "korean", word_middle: [:product_name, :ingredients]
+    searchkick language: "korean", word_middle: [:name, :ingredients]
     
 
     def search_data
         {
-            name: product_name,
+            name: name,
             ingredients: ingredients
         }
     end
