@@ -17,7 +17,39 @@ class User::MypageController < ApplicationController
     @data_sent = Hash.new
     infos = []
     user_infos.each { |user_info|
-      info_data = { user_info: { basic_info: user_info, family_med_his: user_info.med_his.select(:id, :name), past_diseases: user_info.past_disease.select(:id, :name, :from, :to), current_diseases: user_info.current_disease.select(:id, :name, :from, :to), past_drugs: user_info.past_drug.select(:id, :name, :from, :to, :memo), current_drugs: user_info.current_drug.select(:id, :name, :from, :to, :memo),  past_supplements: user_info.past_sup.select(:id, :name, :from, :to, :memo), current_supplements: user_info.current_sup.select(:id, :name, :from, :to, :memo) } }
+      #각각의 이력 정렬
+      @past_diseases = []
+      user_info.past_diseases.each { |d|
+        @past_diseases << { id: d.id, name: d.past_disease.name, from: d.from, to: d.to }
+      }
+      @current_diseases = []
+      user_info.current_diseases.each { |d|
+        @current_diseases << { id: d.id, name: d.current_disease.name, from: d.from, to: d.to }
+      }
+      @past_drugs = []
+      user_info.past_drugs.each { |d|
+        @past_drugs << { id: d.id, name: d.past_drug.name, from: d.from, to: d.to, memo: d.memo }
+      }
+      @current_drugs = []
+      user_info.current_drugs.each { |d|
+        @current_diseases << { id: d.id, name: d.current_drug.name, from: d.from, to: d.to, memo: d.memo  }
+      }
+      @past_supplements = []
+      user_info.past_supplements.each { |d|
+        @past_supplements << { id: d.id, name: d.past_supplement.name, from: d.from, to: d.to, memo: d.memo  }
+      }
+      @current_supplements = []
+      user_info.current_supplements.each { |d|
+        @current_diseases << { id: d.id, name: d.current_supplement.name, from: d.from, to: d.to, memo: d.memo  }
+      }
+
+      info_data = { user_info: { basic_info: user_info, family_med_his: user_info.med_his.select(:id, :name), past_diseases: @past_diseases, 
+      current_diseases: @current_diseases, 
+      past_drugs: @past_drugs, 
+      current_drugs: @current_drugs,
+      past_supplements: @past_drugs,
+      current_supplements: @current_drugs }
+      }
       #각각의 데이터를 넣어줌
       infos << info_data
     }
