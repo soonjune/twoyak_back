@@ -47,7 +47,12 @@ Rails.application.routes.draw do
 
   root :to => redirect("http://twoyak.com/")
 
-  resources :drugs, :except => [:index]
+  resources :drugs, :except => [:index] do
+    resources :drug_reviews
+  end
+  resources :suppllements, :except => [:index] do
+    resources :sup_reviews
+  end
   # get "drugs/:search_term" => "drugs#show"
   resources :drug_imprints
   get 'analysis/interaction'
