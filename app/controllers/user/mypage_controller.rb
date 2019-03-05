@@ -9,7 +9,7 @@ class User::MypageController < ApplicationController
       render json: @user_info, status: :created, location: @user_info
     else
       render json: @user_info.errors, status: :unprocessable_entity
-    end
+    end 
   end
 
   def index
@@ -20,35 +20,35 @@ class User::MypageController < ApplicationController
       #각각의 이력 정렬
       @past_diseases = []
       user_info.past_diseases.each { |d|
-        @past_diseases << { id: d.id, name: d.past_disease.name, from: d.from, to: d.to }
+        @past_diseases << { id: d.id, parent_id: d.past_disease.id, name: d.past_disease.name, from: d.from, to: d.to }
       }
       @current_diseases = []
       user_info.current_diseases.each { |d|
-        @current_diseases << { id: d.id, name: d.current_disease.name, from: d.from, to: d.to }
+        @current_diseases << { id: d.id, parent_id: d.current_disease.id, name: d.current_disease.name, from: d.from, to: d.to }
       }
       @past_drugs = []
       user_info.past_drugs.each { |d|
-        @past_drugs << { id: d.id, name: d.past_drug.name, from: d.from, to: d.to, memo: d.memo }
+        @past_drugs << { id: d.id, parent_id: d.past_drug.id, name: d.past_drug.name, from: d.from, to: d.to, memo: d.memo }
       }
       @current_drugs = []
       user_info.current_drugs.each { |d|
-        @current_diseases << { id: d.id, name: d.current_drug.name, from: d.from, to: d.to, memo: d.memo  }
+        @current_diseases << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, from: d.from, to: d.to, memo: d.memo  }
       }
       @past_supplements = []
       user_info.past_supplements.each { |d|
-        @past_supplements << { id: d.id, name: d.past_supplement.name, from: d.from, to: d.to, memo: d.memo  }
+        @past_supplements << { id: d.id, parent_id: d.past_supplement.id, name: d.past_supplement.name, from: d.from, to: d.to, memo: d.memo  }
       }
       @current_supplements = []
       user_info.current_supplements.each { |d|
-        @current_diseases << { id: d.id, name: d.current_supplement.name, from: d.from, to: d.to, memo: d.memo  }
+        @current_supplements << { id: d.id, parent_id: d.current_supplement.id, name: d.current_supplement.name, from: d.from, to: d.to, memo: d.memo  }
       }
 
       info_data = { user_info: { basic_info: user_info, family_med_his: user_info.med_his.select(:id, :name), past_diseases: @past_diseases, 
       current_diseases: @current_diseases, 
       past_drugs: @past_drugs, 
       current_drugs: @current_drugs,
-      past_supplements: @past_drugs,
-      current_supplements: @current_drugs }
+      past_supplements: @past_supplements,
+      current_supplements: @current_supplements }
       }
       #각각의 데이터를 넣어줌
       infos << info_data
