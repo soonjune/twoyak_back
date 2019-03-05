@@ -9,14 +9,18 @@ class Users::SocialLoginController < ApplicationController
         # to prevent the identity being locked with accidentally created accounts.
         # Note that this may leave zombie accounts (with no associated identity) which
         # can be cleaned up at a later date.
-        user = signed_in_resource ? signed_in_resource : identity.user
+        user = current_user ? current_user : identity.user
+        if !user.nil?
+            render json: { stauts: 'Logged in successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
+            return
+        end
 
-        user = User.where(user_params => email).first
+        user = User.where(email: auth[:email]).first
         if user.nil?
           
             # Create the user if it's a new registration
           user = User.new(
-            email: user_params[:email],
+            email: auth[:email],
             password: Devise.friendly_token[0,20]
           )
           user.skip_confirmation!
@@ -25,27 +29,26 @@ class Users::SocialLoginController < ApplicationController
           info.user_id = user.id
           info.save!
 
-        if identity.user != user
+          if identity.user != user
             identity.user = user
             identity.save!
-        end
+          end
 
-        user
+          render json: { stauts: 'User created successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
 
         else
             render json: { errors: '이메일로 직접 가입하셨거나 다른 소셜 계정으로 가입한 이메일입니다.' }, status: :unauthorized
         end
+
+
     end
 
     protected
 
     def auth
-        params.permit(:auth)
+        params.permit(:uid, :provider, :email, :user_name)
     end
 
-    def user_params
-      params.permit(:email)
-    end
     def info_params
         params.permit(:user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine)
     end
