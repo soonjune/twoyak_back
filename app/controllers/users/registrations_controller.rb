@@ -2,7 +2,8 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
-  # before_action :configure_account_update_params, only: [:update]
+  prepend_before_action :authenticate_request!, only: [:edit, :update]
+  skip_before_action :authenticate_scope!, :only => [:edit, :update]
 
   # GET /resource/sign_up
   # def new
@@ -24,14 +25,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # GET /resource/edit
-  # def edit
-  #   super
-  # end
+  def edit
+    @user = current_user
+    @user_info = current_user.user_infos.first
+    render json: {user: @user, user_info: @user_info }
+  end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+    if current_user.update(user_params)
+      info = user.first.update(info_params)
+    else
+      render json: { errors1: user.errors.full_messages, errors2: info.errors.full_messages }, status: :bad_request
+    end
+  end
 
   # DELETE /resource
   # def destroy

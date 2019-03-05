@@ -2,7 +2,7 @@ class AutocompleteController < ApplicationController
   require 'json'
 
   def search
-    name = Drug.select(:item_name).map(&:item_name)
+    name = Drug.select(:name).map(&:name)
     arr1 = []
     name.each do |x|
       b = {category: "의약품명", title: x}
@@ -27,7 +27,7 @@ class AutocompleteController < ApplicationController
       e = {category: "성분명(국문)", title: x}
       arr4 << e
     end
-    sup = Supplement.select(:product_name).map(&:product_name)
+    sup = Supplement.select(:name).map(&:name)
     arr5 = []
     sup.each do |x|
       e = {category: "건강기능식품 제품명", title: x}

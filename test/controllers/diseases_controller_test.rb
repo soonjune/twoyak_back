@@ -12,7 +12,7 @@ class DiseasesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create disease" do
     assert_difference('Disease.count') do
-      post diseases_url, params: { disease: { disease_name: @disease.disease_name } }, as: :json
+      post diseases_url, params: { disease: { name: @disease.name } }, as: :json
     end
 
     assert_response 201
@@ -24,7 +24,7 @@ class DiseasesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update disease" do
-    patch disease_url(@disease), params: { disease: { disease_name: @disease.disease_name } }, as: :json
+    patch disease_url(@disease), params: { disease: { name: @disease.name } }, as: :json
     assert_response 200
   end
 

@@ -47,7 +47,7 @@ class SupplementsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def supplement_params
-      params.require(:supplement).permit(:production_code, :product_name, :enterprise_name, :benefits, :suggested_use, :ingredients, :storage, :shelf_life, :description, :warnings, :standard, :approval_date)
+      params.require(:supplement).permit(:production_code, :name, :enterprise_name, :benefits, :suggested_use, :ingredients, :storage, :shelf_life, :description, :warnings, :standard, :approval_date)
     end
 
     def set_search
