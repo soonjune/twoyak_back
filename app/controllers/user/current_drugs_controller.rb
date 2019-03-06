@@ -1,6 +1,9 @@
 class User::CurrentDrugsController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_current_drug, :search_id, only: [:create, :show, :destroy, :destroy_to_past]
+  before_action :set_current_drug, :search_id, only: [:create, :show, :update, :destroy, :destroy_to_past]
+  before_action :update_current_drug, only: [:update]
+  before_action :id_to_modify, only: [:update, :destroy, :destroy_to_past]
+  
   # GET /current_drugs
   def index
     @current_drugs = CurrentDrug.all
@@ -22,32 +25,31 @@ class User::CurrentDrugsController < ApplicationController
       set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo])
       render json: @current_drug.pluck(:id, :name), status: :created
     else
-      render json: @current_drug.pluck(:id, :name), status: :unprocessable_entity
+      render json: @current_drug.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /current_drugs/1
-  # def update
-  #   if @current_drug.update(current_drug_params)
-  #     render json: @current_drug
-  #   else
-  #     render json: @current_drug.errors, status: :unprocessable_entity
-  #   end
-  # end
+  def update
+    if @current_drug.update(@current_drug_params)
+      render json: @current_drug
+    else
+      render json: @current_drug.errors, status: :unprocessable_entity
+    end
+  end
 
   # DELETE /current_drugs/1
   def destroy
-    @current_drug.delete(Drug.find(@search_id))
+    CurrentDrug.find(@id_to_modify).delete
   end
 
   def destroy_to_past
-    selected = CurrentDrug.find_by(current_drug_id: @search_id)
-    @current_drug.delete(Drug.find(@search_id))
-    @past_drugs =  UserInfo.find(params[:user_info_id]).past_drug
-    @past_drugs << Drug.find(@search_id)
-    set_time_memo = PastDrug.order("created_at").last
-    set_time_memo.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, memo: selected.memo)
-    render json: @past_drugs.pluck(:id, :name)
+    selected = CurrentDrug.find(@id_to_modify)
+    CurrentDrug.find(@id_to_modify).delete
+    @user_info =  UserInfo.find(params[:user_info_id])
+    @user_info.past_drug << selected.current_drug
+    @user_info.past_drugs.order("created_at").last.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now)
+    render json: @user_info.past_drugs
   end
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -59,6 +61,25 @@ class User::CurrentDrugsController < ApplicationController
         return
       end
     end
+
+    # def set_result
+    #   @result = []
+    #   UserInfo.find(params[:user_info_id]).current_drugs.each { |d|
+    #     @result << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, from: d.from, to: d.to }
+    #   }
+    # end
+
+    def update_current_drug
+      @current_drug_params = params.permit(:from, :to, :memo)
+      if current_user.user_info_ids.include? params[:user_info_id].to_i
+        @current_drug = UserInfo.find(params[:user_info_id]).current_drugs.find(params[:id])
+      end
+    end
+
+    def id_to_modify
+      @id_to_modify = params[:id]
+    end
+
 
     def search_id
       @search_id = params[:search_id]
