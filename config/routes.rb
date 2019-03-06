@@ -14,8 +14,9 @@ Rails.application.routes.draw do
       #현재 앓고있는 질환
       get "current_diseases" => "current_diseases#show"
       post "current_diseases/:search_id" => "current_diseases#create"
-      delete "current_diseases/:search_id" => "current_diseases#destroy"
-      delete "current_diseases/:search_id/to_past" => "current_diseases#destroy_to_past"
+      patch "current_diseases/:id" => "current_diseases#update"
+      delete "current_diseases/:id" => "current_diseases#destroy"
+      delete "current_diseases/:id/to_past" => "current_diseases#destroy_to_past"
       #과거 복용 약물
       get "past_drugs" => "past_drugs#show"
       post "past_drugs/:search_id" => "past_drugs#create"
@@ -23,8 +24,9 @@ Rails.application.routes.draw do
       #현재 복용 약물
       get "current_drugs" => "current_drugs#show"
       post "current_drugs/:search_id" => "current_drugs#create"
-      delete "current_drugs/:search_id" => "current_drugs#destroy"
-      delete "current_drugs/:search_id/to_past" => "current_drugs#destroy_to_past"
+      patch "current_drugs/:id" => "current_drugs#update"
+      delete "current_drugs/:id" => "current_drugs#destroy"
+      delete "current_drugs/:id/to_past" => "current_drugs#destroy_to_past"
       #과거 복용 건강기능식품
       get "past_supplements" => "past_supplements#show"
       post "past_supplements/:search_id" => "past_supplements#create"
@@ -32,8 +34,9 @@ Rails.application.routes.draw do
       #현재 복용 건강기능식품
       get "current_supplements" => "current_supplements#show"
       post "current_supplements/:search_id" => "current_supplements#create"
-      delete "current_supplements/:search_id" => "current_supplements#destroy"
-      delete "current_supplements/:search_id/to_past" => "current_supplements#destroy_to_past"
+      patch "current_supplements/:id" => "current_supplements#update"
+      delete "current_supplements/:id" => "current_supplements#destroy"
+      delete "current_supplements/:id/to_past" => "current_supplements#destroy_to_past"
 
     end
   end
