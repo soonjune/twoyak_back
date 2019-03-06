@@ -26,7 +26,8 @@ class ApplicationController < ActionController::API
   end
 
   def user_id_in_token?
-    http_token && auth_token && auth_token[:user][:id].to_i
+    puts auth_token
+    http_token && auth_token && auth_token[:user][:id].to_ia
   end
 
   # #Override Devise's authenticate_user! method
