@@ -72,7 +72,7 @@ class DrugsController < ApplicationController
           @data["drug_imprint"] = item.drug_imprint
         end
         break
-      elsif(item.class == Supplement && search == item.product_name)
+      elsif(item.class == Supplement && search == item.name)
         @sup = item
         break
       end
