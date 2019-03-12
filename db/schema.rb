@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_05_024126) do
+ActiveRecord::Schema.define(version: 2019_03_11_071805) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 2019_03_05_024126) do
   create_table "current_drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "current_drug_id"
+    t.string "when"
+    t.string "how"
     t.date "to"
     t.date "from"
     t.string "memo"
@@ -110,6 +112,8 @@ ActiveRecord::Schema.define(version: 2019_03_05_024126) do
     t.integer "item_seq"
     t.string "name"
     t.json "ingr_kor_name"
+    t.string "short_description"
+    t.string "short_notice"
     t.json "package_insert"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -164,6 +168,11 @@ ActiveRecord::Schema.define(version: 2019_03_05_024126) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "title"
+    t.string "url"
+  end
+
   create_table "past_diseases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "past_disease_id"
@@ -176,6 +185,8 @@ ActiveRecord::Schema.define(version: 2019_03_05_024126) do
   create_table "past_drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "past_drug_id"
+    t.string "when"
+    t.string "how"
     t.date "to"
     t.date "from"
     t.string "memo"
@@ -191,6 +202,12 @@ ActiveRecord::Schema.define(version: 2019_03_05_024126) do
     t.string "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "prescription_photos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_info_id"
+    t.string "url"
+    t.index ["user_info_id"], name: "index_prescription_photos_on_user_info_id"
   end
 
   create_table "search_terms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

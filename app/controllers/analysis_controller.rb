@@ -3,10 +3,9 @@ class AnalysisController < ApplicationController
 
   def get
     require 'http'
-    require 'json'
 
-    @result = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@code}")
-
+    @result = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@codes}")
+    @result["Excluded"] = @excluded
     render json: @result
 
   end
@@ -260,11 +259,22 @@ class AnalysisController < ApplicationController
   private
 
     def set_code
-      @code = ""
-      codes = params[:codes].split(",")
+      require 'json'
+      @codes = ""
+      @excluded = ""
+      user_info_current_drugs = CurrentDrug.where(user_info_id: params[:user_info_id])
 
-      codes.each do |code|
-        @code << code.strip + ";"
+      user_info_current_drugs.each do |current_drug|
+        select_drug =  Drug.find(current_drug.current_drug_id)
+        select_code = select_drug.package_insert['DRB_ITEM']['EDI_CODE'] ? select_drug.package_insert['DRB_ITEM']['BAR_CODE'] : nil
+        if !select_code.nil?
+          edi_code = select_code + "0"
+          @codes << edi_code + ";"
+          edi_code = select_code + "1"
+          @codes << edi_code + ";"
+        else
+          @excluded << select_drug.name + ";"
+        end
       end
     end
 end
