@@ -53,7 +53,7 @@ Rails.application.routes.draw do
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end
-  resources :suppllements, :except => [:index] do
+  resources :supplements, :except => [:index] do
     resources :sup_reviews
   end
   # get "drugs/:search_term" => "drugs#show"
