@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_11_071805) do
+ActiveRecord::Schema.define(version: 2019_03_12_115137) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -103,7 +103,6 @@ ActiveRecord::Schema.define(version: 2019_03_11_071805) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "likes"
     t.index ["drug_id"], name: "index_drug_reviews_on_drug_id"
     t.index ["user_id"], name: "index_drug_reviews_on_user_id"
   end
@@ -238,7 +237,6 @@ ActiveRecord::Schema.define(version: 2019_03_11_071805) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "likes"
     t.index ["supplement_id"], name: "index_sup_reviews_on_supplement_id"
     t.index ["user_id"], name: "index_sup_reviews_on_user_id"
   end
