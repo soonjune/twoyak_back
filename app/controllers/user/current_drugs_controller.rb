@@ -21,8 +21,8 @@ class User::CurrentDrugsController < ApplicationController
     if @current_drug.include?(Drug.find(@search_id))
       render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
     elsif @current_drug << Drug.find(@search_id)
-      set_time_memo = CurrentDrug.order("created_at").last
-      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo])
+      set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
+      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:whern], how: params[:how])
       render json: @current_drug.pluck(:id, :name), status: :created
     else
       render json: @current_drug.errors, status: :unprocessable_entity
@@ -48,17 +48,21 @@ class User::CurrentDrugsController < ApplicationController
     CurrentDrug.find(@id_to_modify).delete
     @user_info =  UserInfo.find(params[:user_info_id])
     @user_info.past_drug << selected.current_drug
-    @user_info.past_drugs.order("created_at").last.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now)
+    @user_info.past_drugs.order("created_at").last.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, when: selected.when, how: selected.how)
     render json: @user_info.past_drugs
   end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_current_drug
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
+      if current_user.has_role? "admin"
         @current_drug = UserInfo.find(params[:user_info_id]).current_drug
       else
-        render json: { errors: "잘못된 접근입니다." }, status: :bad_request
-        return
+        if current_user.user_info_ids.include? params[:user_info_id].to_i
+          @current_drug = UserInfo.find(params[:user_info_id]).current_drug
+        else
+          render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+          return
+        end
       end
     end
 
@@ -70,7 +74,7 @@ class User::CurrentDrugsController < ApplicationController
     # end
 
     def update_current_drug
-      @current_drug_params = params.permit(:from, :to, :memo)
+      @current_drug_params = params.permit(:from, :to, :memo, :when, :how)
       if current_user.user_info_ids.include? params[:user_info_id].to_i
         @current_drug = UserInfo.find(params[:user_info_id]).current_drugs.find(params[:id])
       end

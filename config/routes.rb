@@ -10,7 +10,8 @@ Rails.application.routes.draw do
       #과거 병력
       get "past_diseases" => "past_diseases#show"
       post "past_diseases/:search_id" => "past_diseases#create"
-      delete "past_diseases/:search_id" => "past_diseases#destroy"
+      patch "past_diseases/:id" => "past_diseases#update"
+      delete "past_diseases/:id" => "past_diseases#destroy"
       #현재 앓고있는 질환
       get "current_diseases" => "current_diseases#show"
       post "current_diseases/:search_id" => "current_diseases#create"

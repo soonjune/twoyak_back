@@ -21,7 +21,7 @@ class User::CurrentDiseasesController < ApplicationController
     if @current_disease.include?(Disease.find(@search_id))
       render json: { errors: "이미 앓고 있는 질환입니다." }, status: :unprocessable_entity
     elsif @current_disease << Disease.find(@search_id)
-      set_time_memo = CurrentDisease.order("created_at").last
+      set_time_memo = CurrentDisease.where(user_info_id: params[:user_info_id], current_disease_id: @search_id).last
       set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now)
       render json: @current_disease, status: :created
     else
@@ -55,11 +55,15 @@ class User::CurrentDiseasesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_current_disease
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
+      if current_user.has_role? "admin"
         @current_disease = UserInfo.find(params[:user_info_id]).current_disease
       else
-        render json: { errors: "잘못된 접근입니다." }, status: :bad_request
-        return
+        if current_user.user_info_ids.include? params[:user_info_id].to_i
+          @current_disease = UserInfo.find(params[:user_info_id]).current_disease
+        else
+          render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+          return
+        end
       end
     end
 
