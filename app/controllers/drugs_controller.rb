@@ -118,7 +118,7 @@ class DrugsController < ApplicationController
     end
 
     def check_authority
-      unless current_user.has_role "admin"
+      unless current_user.has_role? "admin"
         render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized
         return
       end
