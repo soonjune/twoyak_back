@@ -1,5 +1,6 @@
 class DrugsController < ApplicationController
   before_action :set_drug, only: [:show, :update, :destroy]
+  before_action :authenticate_request!, :check_authority, only: [:update, :destroy]
   # before_action :set_search, only: [:show]
 
   # GET /drugs
@@ -114,6 +115,13 @@ class DrugsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def drug_params
       JSON.parse(params.require(:drug))
+    end
+
+    def check_authority
+      unless current_user.has_role "admin"
+        render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized
+        return
+      end
     end
 
     # using elastic
