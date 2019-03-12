@@ -21,7 +21,7 @@ class DrugReviewsController < ApplicationController
     @drug_review = DrugReview.new(drug_review_params)
 
     if @drug_review.save
-      render json: @drug_review, status: :created, location: drug_drug_review_url(@drug_review)
+      render json: @drug_review, status: :created, location: drug_drug_review_url(id: @drug_review.id)
     else
       render json: @drug_review.errors, status: :unprocessable_entity
     end
