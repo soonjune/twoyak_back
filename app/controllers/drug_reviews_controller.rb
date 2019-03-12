@@ -4,7 +4,7 @@ class DrugReviewsController < ApplicationController
   before_action :authority_check, only: [:update, :destroy]
 
 
-  # GET /drug_reviews/:drug_id
+  # GET /:drug_id/drug_reviews
   def index
     @drug_reviews = DrugReview.where(drug_id: params[:drug_id])
 
@@ -21,7 +21,7 @@ class DrugReviewsController < ApplicationController
     @drug_review = DrugReview.new(drug_review_params)
 
     if @drug_review.save
-      render json: @drug_review, status: :created, location: @drug_review
+      render json: @drug_review, status: :created, location: drug_drug_review_url(@drug_review)
     else
       render json: @drug_review.errors, status: :unprocessable_entity
     end
