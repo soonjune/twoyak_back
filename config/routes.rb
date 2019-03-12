@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :user do
     resources :mypage
-
+    resources :user_infos, :except => [:index]
     scope ':user_info_id' do
       #가족력
       get "family_med_histories" => "family_med_histories#show"
@@ -21,7 +21,8 @@ Rails.application.routes.draw do
       #과거 복용 약물
       get "past_drugs" => "past_drugs#show"
       post "past_drugs/:search_id" => "past_drugs#create"
-      delete "past_drugs/:search_id" => "past_drugs#destroy"
+      patch "past_drugs/:id" => "past_drugs#update"
+      delete "past_drugs/:id" => "past_drugs#destroy"
       #현재 복용 약물
       get "current_drugs" => "current_drugs#show"
       post "current_drugs/:search_id" => "current_drugs#create"
@@ -31,7 +32,8 @@ Rails.application.routes.draw do
       #과거 복용 건강기능식품
       get "past_supplements" => "past_supplements#show"
       post "past_supplements/:search_id" => "past_supplements#create"
-      delete "past_supplements/:search_id" => "past_supplements#destroy"
+      patch "past_supplements/:id" => "past_supplements#update"
+      delete "past_supplements/:id" => "past_supplements#destroy"
       #현재 복용 건강기능식품
       get "current_supplements" => "current_supplements#show"
       post "current_supplements/:search_id" => "current_supplements#create"
@@ -60,7 +62,7 @@ Rails.application.routes.draw do
   # get "drugs/:search_term" => "drugs#show"
   resources :drug_imprints
   get 'analysis/interaction'
-  get 'analysis/:user_info_id' => 'analysis#get'
+  get 'analysis/get'
   # resources :search_terms
   # 각각에 대한 autocomplete search_term 제공
   get 'autocomplete/disease' => 'autocomplete#disease'
