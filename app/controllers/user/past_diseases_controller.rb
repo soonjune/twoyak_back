@@ -1,6 +1,8 @@
 class User::PastDiseasesController < ApplicationController
   before_action :authenticate_request!
   before_action :set_past_disease, :search_id, only: [:create, :show, :destroy]
+  before_action :update_past_disease, only: [:update]
+  before_action :id_to_modify, only: [:update, :destroy]
 
   # GET /past_diseases
   def index
@@ -17,8 +19,8 @@ class User::PastDiseasesController < ApplicationController
   # POST /past_diseases
   def create
     if @past_disease << Disease.find(@search_id)
-      set_time_memo = PastDisease.order("created_at").last
-      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo])
+      set_time_memo = PastDisease.where(user_info_id: params[:user_info_id], past_disease_id: @search_id).last
+      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now)
       render json: @past_disease, status: :created
     else
       render json: @past_disease.errors, status: :unprocessable_entity
@@ -26,29 +28,45 @@ class User::PastDiseasesController < ApplicationController
   end
 
   # PATCH/PUT /past_diseases/1
-  # def update
-  #   if @past_disease.update(past_disease_params)
-  #     render json: @past_disease
-  #   else
-  #     render json: @past_disease.errors, status: :unprocessable_entity
-  #   end
-  # end
+  def update
+    if @past_disease.update(@past_disease_params)
+      render json: @past_disease
+    else
+      render json: @past_disease.errors, status: :unprocessable_entity
+    end
+  end
 
   # DELETE /past_diseases/1
   def destroy
-    @past_disease.delete(Disease.find(@search_id))
+    PastDisease.find(@id_to_modify).delete
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_past_disease
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
+      if current_user.has_role? "admin"
         @past_disease = UserInfo.find(params[:user_info_id]).past_disease
       else
-        render json: { errors: "잘못된 접근입니다." }, status: :bad_request
-        return
+        if current_user.user_info_ids.include? params[:user_info_id].to_i
+          @past_disease = UserInfo.find(params[:user_info_id]).past_disease
+        else
+          render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+          return
+        end
       end
     end
+
+    def update_past_disease
+      @past_disease_params = params.permit(:from, :to)
+      if current_user.user_info_ids.include? params[:user_info_id].to_i
+        @past_disease = UserInfo.find(params[:user_info_id]).past_diseases.find(params[:id])
+      end
+    end
+
+    def id_to_modify
+      @id_to_modify = params[:id]
+    end
+
 
     def search_id
       @search_id = params[:search_id]
