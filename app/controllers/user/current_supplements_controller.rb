@@ -50,7 +50,7 @@ class User::CurrentSupplementsController < ApplicationController
     @user_info =  UserInfo.find(params[:user_info_id])
     @user_info.past_sup << selected.current_supplement
     set_time_memo = PastSupplement.order("created_at").last
-    set_time_memo.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, memo: selected.memo, ,when: selecte.when, how: selected.how)
+    set_time_memo.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, memo: selected.memo, when: selecte.when, how: selected.how)
     render json: @user_info.past_supplements
   end
 
@@ -84,5 +84,4 @@ class User::CurrentSupplementsController < ApplicationController
     def search_id
       @search_id = params[:search_id]
     end
-
 end
