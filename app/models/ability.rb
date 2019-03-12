@@ -4,12 +4,12 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user here. For example:
     #
-      if user.has_role? :admin
+      if user.has_role? "admin"
         can :manage, :all
       else
         can :manage, UserInfo, user_id: user.id
-        can :manage, Review, user_id: user.id
-        can :read, :all
+        can :manage, DrugReview, user_id: user.id
+        can :manage, SupReview, user_id: user.id
       end
     #
     # The first argument to `can` is the action you are giving the user

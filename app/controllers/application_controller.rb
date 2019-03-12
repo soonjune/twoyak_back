@@ -9,6 +9,9 @@ class ApplicationController < ActionController::API
       return
     end
     @current_user = User.find(auth_token[:user][:id])
+    if @current_user.has_role? "admin"
+      return
+    end
   rescue JWT::VerificationError, JWT::DecodeError
     render json: { errors: ['Not Authenticated'] }, status: :unauthorized
   end

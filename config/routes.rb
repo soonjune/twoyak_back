@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :user do
     resources :mypage
-
+    resources :user_infos, :except => [:index]
     scope ':user_info_id' do
       #가족력
       get "family_med_histories" => "family_med_histories#show"
@@ -10,30 +10,36 @@ Rails.application.routes.draw do
       #과거 병력
       get "past_diseases" => "past_diseases#show"
       post "past_diseases/:search_id" => "past_diseases#create"
-      delete "past_diseases/:search_id" => "past_diseases#destroy"
+      patch "past_diseases/:id" => "past_diseases#update"
+      delete "past_diseases/:id" => "past_diseases#destroy"
       #현재 앓고있는 질환
       get "current_diseases" => "current_diseases#show"
       post "current_diseases/:search_id" => "current_diseases#create"
-      delete "current_diseases/:search_id" => "current_diseases#destroy"
-      delete "current_diseases/:search_id/to_past" => "current_diseases#destroy_to_past"
+      patch "current_diseases/:id" => "current_diseases#update"
+      delete "current_diseases/:id" => "current_diseases#destroy"
+      delete "current_diseases/:id/to_past" => "current_diseases#destroy_to_past"
       #과거 복용 약물
       get "past_drugs" => "past_drugs#show"
       post "past_drugs/:search_id" => "past_drugs#create"
-      delete "past_drugs/:search_id" => "past_drugs#destroy"
+      patch "past_drugs/:id" => "past_drugs#update"
+      delete "past_drugs/:id" => "past_drugs#destroy"
       #현재 복용 약물
       get "current_drugs" => "current_drugs#show"
       post "current_drugs/:search_id" => "current_drugs#create"
-      delete "current_drugs/:search_id" => "current_drugs#destroy"
-      delete "current_drugs/:search_id/to_past" => "current_drugs#destroy_to_past"
+      patch "current_drugs/:id" => "current_drugs#update"
+      delete "current_drugs/:id" => "current_drugs#destroy"
+      delete "current_drugs/:id/to_past" => "current_drugs#destroy_to_past"
       #과거 복용 건강기능식품
       get "past_supplements" => "past_supplements#show"
       post "past_supplements/:search_id" => "past_supplements#create"
-      delete "past_supplements/:search_id" => "past_supplements#destroy"
+      patch "past_supplements/:id" => "past_supplements#update"
+      delete "past_supplements/:id" => "past_supplements#destroy"
       #현재 복용 건강기능식품
       get "current_supplements" => "current_supplements#show"
       post "current_supplements/:search_id" => "current_supplements#create"
-      delete "current_supplements/:search_id" => "current_supplements#destroy"
-      delete "current_supplements/:search_id/to_past" => "current_supplements#destroy_to_past"
+      patch "current_supplements/:id" => "current_supplements#update"
+      delete "current_supplements/:id" => "current_supplements#destroy"
+      delete "current_supplements/:id/to_past" => "current_supplements#destroy_to_past"
 
     end
   end
@@ -47,7 +53,12 @@ Rails.application.routes.draw do
 
   root :to => redirect("http://twoyak.com/")
 
-  resources :drugs, :except => [:index]
+  resources :drugs, :except => [:index] do
+    resources :drug_reviews
+  end
+  resources :supplements, :except => [:index] do
+    resources :sup_reviews
+  end
   # get "drugs/:search_term" => "drugs#show"
   resources :drug_imprints
   get 'analysis/interaction'

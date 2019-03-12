@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_02_090036) do
+ActiveRecord::Schema.define(version: 2019_03_11_071805) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
   create_table "current_diseases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "current_disease_id"
+    t.date "to"
     t.date "from"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -31,7 +32,11 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
   create_table "current_drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "current_drug_id"
+    t.string "when"
+    t.string "how"
+    t.date "to"
     t.date "from"
+    t.string "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -39,13 +44,15 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
   create_table "current_supplements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "current_supplement_id"
+    t.date "to"
     t.date "from"
+    t.string "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "diseases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "disease_name"
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -94,7 +101,6 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
     t.integer "efficacy"
     t.integer "side_effect"
     t.text "body"
-    t.json "pics"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "likes"
@@ -104,14 +110,16 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
 
   create_table "drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "item_seq"
-    t.string "item_name"
+    t.string "name"
     t.json "ingr_kor_name"
+    t.string "short_description"
+    t.string "short_notice"
     t.json "package_insert"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.json "ingr_eng_name"
     t.string "atc_code"
-    t.index ["item_name"], name: "index_drugs_on_item_name"
+    t.index ["name"], name: "index_drugs_on_name"
   end
 
   create_table "drugs_dur_ingrs", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -160,6 +168,11 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "title"
+    t.string "url"
+  end
+
   create_table "past_diseases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "past_disease_id"
@@ -172,8 +185,11 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
   create_table "past_drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "past_drug_id"
+    t.string "when"
+    t.string "how"
     t.date "to"
     t.date "from"
+    t.string "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -183,8 +199,15 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
     t.integer "past_supplement_id"
     t.date "to"
     t.date "from"
+    t.string "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "prescription_photos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_info_id"
+    t.string "url"
+    t.index ["user_info_id"], name: "index_prescription_photos_on_user_info_id"
   end
 
   create_table "search_terms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -213,7 +236,6 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
     t.integer "efficacy"
     t.integer "side_effect"
     t.text "body"
-    t.json "pics"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "likes"
@@ -243,7 +265,7 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
 
   create_table "supplements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "production_code"
-    t.string "product_name"
+    t.string "name"
     t.string "enterprise_name"
     t.json "benefits"
     t.text "suggested_use"
@@ -256,7 +278,7 @@ ActiveRecord::Schema.define(version: 2019_03_02_090036) do
     t.date "approval_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_name"], name: "index_supplements_on_product_name"
+    t.index ["name"], name: "index_supplements_on_name"
   end
 
   create_table "user_infos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

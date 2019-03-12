@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  disease_name: MyString
+  name: MyString
 
 two:
-  disease_name: MyString
+  name: MyString

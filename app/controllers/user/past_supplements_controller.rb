@@ -1,6 +1,8 @@
 class User::PastSupplementsController < ApplicationController
   before_action :authenticate_request!
   before_action :set_past_supplement, :search_id, only: [:create, :show, :destroy]
+  before_action :update_past_supplement, only: [:update]
+  before_action :id_to_modify, only: [:update, :destroy]
 
   # GET /past_supplements
   def index
@@ -17,7 +19,7 @@ class User::PastSupplementsController < ApplicationController
   # POST /past_supplements
   def create
     if @past_supplement << Supplement.find(@search_id)
-      set_time_memo = PastSupplement.order("created_at").last
+      set_time_memo = PastSupplement.where(user_info_id: params[:user_info_id], past_supplement_id: @search_id).last
       set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo])
       render json: @past_supplement.pluck(:id, :name), status: :created
     else
@@ -26,29 +28,45 @@ class User::PastSupplementsController < ApplicationController
   end
 
   # PATCH/PUT /past_supplements/1
-  # def update
-  #   if @past_supplement.update(past_supplement_params)
-  #     render json: @past_supplement
-  #   else
-  #     render json: @past_supplement.errors, status: :unprocessable_entity
-  #   end
-  # end
+  def update
+    if @past_supplement.update(@past_supplement_params)
+      render json: @past_supplement
+    else
+      render json: @past_supplement.errors, status: :unprocessable_entity
+    end
+  end
 
   # DELETE /past_supplements/1
   def destroy
-    @past_supplement.delete(Supplement.find(@search_id))
+    PastSupplement.find(@id_to_modify).delete
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_past_supplement
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
+      if current_user.has_role? "admin"
         @past_supplement = UserInfo.find(params[:user_info_id]).past_sup
+      else
+        if current_user.user_info_ids.include? params[:user_info_id].to_i
+          @past_supplement = UserInfo.find(params[:user_info_id]).past_sup
+        else
+          render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+          return
+        end
       end
-    else
-      render json: { errors: "잘못된 접근입니다." }, status: :bad_request
-      return
     end
+
+    def update_past_supplement
+      @past_supplement_params = params.permit(:from, :to, :memo)
+      if current_user.user_info_ids.include? params[:user_info_id].to_i
+        @past_supplement = UserInfo.find(params[:user_info_id]).past_supplements.find(params[:id])
+      end
+    end
+
+    def id_to_modify
+      @id_to_modify = params[:id]
+    end
+
 
     def search_id
       @search_id = params[:search_id]

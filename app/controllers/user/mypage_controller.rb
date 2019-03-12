@@ -32,7 +32,7 @@ class User::MypageController < ApplicationController
       }
       @current_drugs = []
       user_info.current_drugs.each { |d|
-        @current_diseases << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, from: d.from, to: d.to, memo: d.memo  }
+        @current_drugs << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, from: d.from, to: d.to, memo: d.memo  }
       }
       @past_supplements = []
       user_info.past_supplements.each { |d|
