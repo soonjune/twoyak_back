@@ -56,6 +56,7 @@ Rails.application.routes.draw do
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end
+
   resources :supplements, :except => [:index] do
     resources :sup_reviews
   end

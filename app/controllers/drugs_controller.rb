@@ -1,5 +1,6 @@
 class DrugsController < ApplicationController
   before_action :set_drug, only: [:show, :update, :destroy]
+  before_action :authenticate_request!, :check_authority, only: [:update, :destroy]
   # before_action :set_search, only: [:show]
 
   # GET /drugs
@@ -64,6 +65,7 @@ class DrugsController < ApplicationController
     searched.each { |item|
       if(item.class == Drug && search == item.name)
         @rep = item
+        @data["drug_id"] = @rep.id
         @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
         @data["ingr_eng_name"] = item.ingr_eng_name
         @data["atc_code"] = item.atc_code
@@ -72,7 +74,7 @@ class DrugsController < ApplicationController
           @data["drug_imprint"] = item.drug_imprint
         end
         break
-      elsif(item.class == Supplement && search == item.product_name)
+      elsif(item.class == Supplement && search == item.name)
         @sup = item
         break
       end
@@ -114,6 +116,13 @@ class DrugsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def drug_params
       JSON.parse(params.require(:drug))
+    end
+
+    def check_authority
+      unless current_user.has_role? "admin"
+        render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized
+        return
+      end
     end
 
     # using elastic
