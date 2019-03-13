@@ -266,7 +266,7 @@ class AnalysisController < ApplicationController
 
       user_info_current_drugs.each do |current_drug|
         select_drug =  Drug.find(current_drug.current_drug_id)
-        select_code = select_drug.package_insert['DRB_ITEM']['EDI_CODE'] ? select_drug.package_insert['DRB_ITEM']['BAR_CODE'] : nil
+        select_code = select_drug.package_insert['DRB_ITEM']['EDI_CODE'] ? select_drug.package_insert['DRB_ITEM']['EDI_CODE'] : nil
         if !select_code.nil?
           edi_code = select_code + "0"
           @codes << edi_code + ";"
