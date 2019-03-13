@@ -1,4 +1,4 @@
-class AnalysisController < ApplicationController
+class User::AnalysisController < ApplicationController
   before_action :set_code, only: [:get]
 
   def get
