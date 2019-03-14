@@ -18,8 +18,12 @@ class DrugReviewsController < ApplicationController
 
   # POST /drug_reviews
   def create
-    @drug_review = DrugReview.new(drug_review_params)
-
+    if drug_review_params[:user_id] == current_user.id
+      @drug_review = DrugReview.new(drug_review_params)
+    else
+      render json: { errors: ['리뷰 작성 권한이 없습니다.'] }, status: :unauthorized
+      return
+    end
     if @drug_review.save
       render json: @drug_review, status: :created, location: drug_drug_review_url(id: @drug_review.id)
     else

@@ -1,17 +1,21 @@
 class User::WatchDrugsController < ApplicationController
-  before_action :set_watch_drug, only: [:show, :update, :destroy]
+  before_action :authenticate_request!, only: [:index, :create, :destroy]
+  before_action :authority_check, :watch_drug_params, only: [:create]
 
   # GET /watch_drugs
   def index
-    @watch_drugs = WatchDrug.all
-
-    render json: @watch_drugs
+    if current_user.has_role? "admin"
+      @watch_drugs = WatchDrug.all
+      render json: @watch_drugs
+    else
+      render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized
+    end
   end
 
   # GET /watch_drugs/1
-  def show
-    render json: @watch_drug
-  end
+  # def show
+  #   render json: @watch_drug
+  # end
 
   # POST /watch_drugs
   def create
@@ -20,32 +24,51 @@ class User::WatchDrugsController < ApplicationController
     if @watch_drug.save
       render json: @watch_drug, status: :created, location: @watch_drug
     else
+      @watch_drug.destroy
       render json: @watch_drug.errors, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /watch_drugs/1
-  def update
-    if @watch_drug.update(watch_drug_params)
-      render json: @watch_drug
-    else
-      render json: @watch_drug.errors, status: :unprocessable_entity
-    end
-  end
+  # # PATCH/PUT /watch_drugs/1
+  # def update
+  #   if @watch_drug.update(watch_drug_params)
+  #     render json: @watch_drug
+  #   else
+  #     render json: @watch_drug.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   # DELETE /watch_drugs/1
-  def destroy
-    @watch_drug.destroy
-  end
+  # def destroy
+  #   @watch_drug.destroy
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_watch_drug
-      @watch_drug = WatchDrug.find(params[:id])
+    # def set_watch_drug
+    #   @watch_drug = WatchDrug.find(params[:id])
+    # end
+
+    # def authority_check
+    #   if current_user.has_role? "admin"
+    #     @watch_drug = WatchDrug.find(params[:id])
+    #   elsif current_user.watch_drugs.include? params[:id].to_i
+    #       @drug_review = WatchDrug.find(params[:id])
+    #   else
+    #     render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized
+    #   end
+    # end
+
+    def authority_check
+      if current_user.has_role?("admin") || current_user.user_info_ids.include?(params[:user_info_id].to_i)
+        return
+      else
+        render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized
+      end
     end
 
     # Only allow a trusted parameter "white list" through.
     def watch_drug_params
-      params.fetch(:watch_drug, {})
+      params.require(:watch_drug).permit(:user_id, :watch_drug_id)
     end
 end
