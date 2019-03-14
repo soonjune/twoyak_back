@@ -3,6 +3,11 @@ Rails.application.routes.draw do
     resources :mypage
     resources :user_infos, :except => [:index]
     scope ':user_info_id' do
+      #DUR 정보
+      get 'analysis/get'
+      #관심약물 추가
+      resources :watch_drugs, :except => [:show, :update, :destroy]
+
       #가족력
       get "family_med_histories" => "family_med_histories#show"
       post "family_med_histories/:search_id" => "family_med_histories#create"
@@ -56,14 +61,12 @@ Rails.application.routes.draw do
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end
-
   resources :supplements, :except => [:index] do
     resources :sup_reviews
   end
   # get "drugs/:search_term" => "drugs#show"
   resources :drug_imprints
   get 'analysis/interaction'
-  get 'analysis/get'
   # resources :search_terms
   # 각각에 대한 autocomplete search_term 제공
   get 'autocomplete/disease' => 'autocomplete#disease'
