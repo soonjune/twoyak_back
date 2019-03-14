@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     scope ':user_info_id' do
       #DUR 정보
       get 'analysis/get'
+      #관심약물 추가
+      resources :watch_drugs, :except => [:show, :update, :destroy]
 
       #가족력
       get "family_med_histories" => "family_med_histories#show"
