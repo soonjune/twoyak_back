@@ -71,7 +71,7 @@ class DrugsController < ApplicationController
         @data["atc_code"] = item.atc_code
         @data["reviews"] = item.reviews
         @data["taking"] = item.currents.count
-        @data["watching"] = item.watch_drugs.count
+        @data["watching"] = item.watch_drugs.pluck(:user_id)
         if(!item.drug_imprint.nil?)
           @data["drug_imprint"] = item.drug_imprint
         end
