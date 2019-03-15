@@ -1,6 +1,6 @@
 class User::WatchDrugsController < ApplicationController
   before_action :authenticate_request!, only: [:index, :create, :destroy]
-  before_action :authority_check, :watch_drug_params, only: [:create]
+  before_action :authority_check, :watch_drug_params, :set_watch_drug, only: [:create]
 
   # GET /watch_drugs
   def index
@@ -19,13 +19,18 @@ class User::WatchDrugsController < ApplicationController
 
   # POST /watch_drugs
   def create
-    @watch_drug = WatchDrug.new(watch_drug_params)
+    if @watch_drug.empty?
 
-    if @watch_drug.save
-      render json: @watch_drug, status: :created, location: @watch_drug
+      @watch_drug = WatchDrug.new(watch_drug_params)
+
+      if @watch_drug.save
+        render json: @watch_drug, status: :created, location: user_watch_drugs_url(id: @watch_drug.id)
+      else
+        render json: @watch_drug.errors, status: :unprocessable_entity
+      end
+
     else
-      @watch_drug.destroy
-      render json: @watch_drug.errors, status: :unprocessable_entity
+      @watch_drug.first.destroy
     end
   end
 
@@ -45,9 +50,9 @@ class User::WatchDrugsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    # def set_watch_drug
-    #   @watch_drug = WatchDrug.find(params[:id])
-    # end
+    def set_watch_drug
+      @watch_drug = WatchDrug.where(user_id: watch_drug_params[:user_id], watch_drug_id: watch_drug_params[:watch_drug_id])
+    end
 
     # def authority_check
     #   if current_user.has_role? "admin"
