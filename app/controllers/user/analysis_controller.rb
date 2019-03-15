@@ -2,9 +2,34 @@ class User::AnalysisController < ApplicationController
   before_action :set_code, only: [:get]
 
   def get
+    require 'json'
     require 'http'
 
-    @result = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@codes}")
+    response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@codes}")
+    rest = JSON.parse(response)["data"]["rest"]
+    puts
+    @result = Hash.new
+    #병용금기
+    @result["interactions"] = rest["A"]
+    #연령금기
+    @result["age"] = rest["B"]
+    #임부금기
+    @result["pregnancy"] = rest["C"]
+    #사용(급여)중지
+    @result["stop_usage"] = rest["D"]
+    #동일성분중복
+    @result["same_ingr"] = rest["G"]
+    #효능군중복
+    @result["duplicate"] = rest["F"]
+    #용량주의
+    @result["dosage"] = rest["I"]
+    #투여기간주의
+    @result["period"] = rest["J"]
+    #노인주의
+    @resutl["elder"] = rest["L"]
+
+
+
     @result["Excluded"] = @excluded
     render json: @result
 
