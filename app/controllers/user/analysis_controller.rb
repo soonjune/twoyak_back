@@ -26,7 +26,7 @@ class User::AnalysisController < ApplicationController
     #투여기간주의
     @result["period"] = rest["J"]
     #노인주의
-    @resutl["elder"] = rest["L"]
+    @result["elder"] = rest["L"]
 
 
 
