@@ -1,5 +1,5 @@
 class User::WatchDrugsController < ApplicationController
-  before_action :authenticate_request!, only: [:index, :create, :destroy]
+  before_action :authenticate_request!, only: [:index, :create]
   before_action :authority_check, :watch_drug_params, :set_watch_drug, only: [:create]
 
   # GET /watch_drugs
@@ -13,9 +13,10 @@ class User::WatchDrugsController < ApplicationController
   end
 
   # GET /watch_drugs/1
-  # def show
-  #   render json: @watch_drug
-  # end
+  def show
+    @users_watching = Drug.find(params[:id]).watch_drugs.pluck(:user_id)
+    render json: @users_watching
+  end
 
   # POST /watch_drugs
   def create
