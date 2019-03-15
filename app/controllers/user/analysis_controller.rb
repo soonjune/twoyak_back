@@ -286,7 +286,7 @@ class User::AnalysisController < ApplicationController
     def set_code
       require 'json'
       @codes = ""
-      @excluded = ""
+      @excluded = []
       user_info_current_drugs = CurrentDrug.where(user_info_id: params[:user_info_id])
 
       user_info_current_drugs.each do |current_drug|
@@ -298,7 +298,7 @@ class User::AnalysisController < ApplicationController
           edi_code = select_code + "1"
           @codes << edi_code + ";"
         else
-          @excluded << select_drug.name + ";"
+          @excluded << select_drug.name
         end
       end
     end
