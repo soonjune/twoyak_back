@@ -6,9 +6,24 @@ class DrugReviewsController < ApplicationController
 
   # GET /:drug_id/drug_reviews
   def index
+    @result = []
     @drug_reviews = DrugReview.where(drug_id: params[:drug_id])
+    @drug_reviews.map { |review|
+      temp = Hash.new
+      temp["id"] = review.id
+      user = User.find(review.user_id)
+      user_info = user.user_infos.first
+      temp["user_email"] = user.email
+      temp["sex"] = user_info.sex
+      temp["birth_date"] = user_info.birth_date
+      temp["diseases"] = user_info.current_disease.pluck(:name)
+      temp["efficacy"] = review.efficacy
+      temp["side_effect"] = review.side_effect
+      temp["body"] =review.body
+      @result << temp
+    }
 
-    render json: @drug_reviews
+    render json: @result
   end
 
   # GET /drug_reviews/1
