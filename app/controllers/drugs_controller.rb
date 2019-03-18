@@ -99,7 +99,7 @@ class DrugsController < ApplicationController
       @data["product_name"] = []
       searched.each { |item|
         if item.class == Drug
-          @data["item_name"] << {id: item.id, name: item.name}
+          @data["item_name"] << {cuurent_drug_id: item.id, name: item.name}
         # 건강기능식품
         # elsif item.class == Supplement
         #   @data["product_name"] << {id: item.id, name: item.name}
