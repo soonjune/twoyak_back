@@ -12,7 +12,12 @@ class DrugsController < ApplicationController
 
   # GET /drugs/1
   def show
-    render json: @drug
+    @data = @drug.as_json
+    @data["reviews"] = @drug.reviews
+    @data["taking"] = @drug.currents.count
+    @data["watching"] = @drug.watch_drugs.pluck(:user_id)
+
+    render json: @data
   end
 
   # POST /drugs
