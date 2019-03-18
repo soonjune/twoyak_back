@@ -58,6 +58,9 @@ Rails.application.routes.draw do
 
   root :to => redirect("http://twoyak.com/")
 
+  #모바일 토큰 변환
+  post "change" => "change_token#change"
+
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end
