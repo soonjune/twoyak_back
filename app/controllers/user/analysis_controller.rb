@@ -9,24 +9,120 @@ class User::AnalysisController < ApplicationController
     rest = JSON.parse(response)["data"]["rest"]
     @result = Hash.new
     #병용금기
-    @result["interactions"] = rest["A"]
+    parent = rest["A"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = "#{yak["durNmA"]} + #{yak["durNmB"]}"
+        dur["description"] = yak["durSdEft"]
+        put << dur
+      }
+      @result["interactions"] = put
+    end
+    
     #연령금기
-    @result["age"] = rest["B"]
-    #임부금기
-    @result["pregnancy"] = rest["C"]
-    #사용(급여)중지
-    @result["stop_usage"] = rest["D"]
-    #동일성분중복
-    @result["same_ingr"] = rest["G"]
-    #효능군중복
-    @result["duplicate"] = rest["F"]
-    #용량주의
-    @result["dosage"] = rest["I"]
-    #투여기간주의
-    @result["period"] = rest["J"]
-    #노인주의
-    @result["elder"] = rest["L"]
+    parent = rest["B"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = yak["artcnm"]
+        dur["description"] = "#{yak["spcAge"]} #{yak["spcAgeUnit"]}"
+        put << dur
+      }
+      @result["age"] = put
+    end
 
+    #임부금기
+    parent = rest["C"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = yak["artcnm"]
+        dur["description"] = yak["imcompReason"]
+        put << dur
+      }
+      @result["pregnancy"] = put
+    end
+
+    #사용(급여)중지
+    parent = rest["D"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = yak["artcnm"]
+        dur["description"] = yak["suspDt"]
+        put << dur
+      }
+      @result["stop_usage"] = put
+    end
+
+    #동일성분중복
+    parent = rest["G"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = "#{yak["durNmA"]} 와(과) #{yak["durNmB"]}"
+        dur["description"] = "약의 효능효과·성분이 동일한 약물이 2가지 이상 있는 경우로 결과는 단순 참고용입니다"
+        put << dur
+      }
+      @result["same_ingr"] = put
+    end
+
+    #효능군중복
+    parent = rest["F"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = "#{yak["durNmA"]} 와(과) #{yak["durNmB"]}"
+        dur["description"] = "약의 성분은 다르나 효능이 동일한 약물이 2가지 이상 있는 경우"
+        put << dur
+      }
+      @result["duplicate"] = put
+    end
+    #용량주의
+    parent = rest["I"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = yak["artcnm"]
+        dur["description"] = "이 약은 1일 최대 #{yak["suspDt"]} 이내로 복용해야 하는 용량주의 의약품입니다."
+        put << dur
+      }
+      @result["dosage"] = put
+    end
+
+    #투여기간주의
+    parent = rest["J"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = yak["artcnm"]
+        dur["description"] = "#{yak["suspDt"]} 일을 초과하여 복용하면 부작용이 우려되는 투여기간주의 의약품입니다."
+        put << dur
+      }
+      @result["period"] = put
+    end
+
+    #노인주의
+    parent = rest["L"]
+    if !parent.nil?
+      put = []
+      parent.each { |yak|
+        dur = Hash.new
+        dur["name"] = yak["artcnm"]
+        dur["description"] = "이 약은 #{yak["suspDt"]} 세 이상 고령자가 복용 시 주의해야하는 노인주의 의약품입니다."
+        put << dur
+      }
+      @result["elder"] = put
+    end
 
 
     @result["Excluded"] = @excluded
