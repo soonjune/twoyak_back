@@ -7,7 +7,6 @@ class User::AnalysisController < ApplicationController
 
     response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@codes}")
     rest = JSON.parse(response)["data"]["rest"]
-
     @result = Hash.new
     #병용금기
     @result["interactions"] = rest["A"]
@@ -331,7 +330,10 @@ class User::AnalysisController < ApplicationController
         else
           select_code = select_drug.package_insert['DRB_ITEM']['EDI_CODE'] ? select_drug.package_insert['DRB_ITEM']['EDI_CODE'] : nil
           if select_code.nil?
-            select_code = select_drug.package_insert['DRB_ITEM']['BAR_CODE'][3..-2]
+            bar_code = select_drug.package_insert['DRB_ITEM']['BAR_CODE'] ?  select_drug.package_insert['DRB_ITEM']['BAR_CODE'][3..-2] : nil
+            if !bar_code.nil?
+              @codes << bar_code + ";"
+            end
           else
             edi_code = select_code + "0"
             @codes << edi_code + ";"
