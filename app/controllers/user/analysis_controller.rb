@@ -7,7 +7,7 @@ class User::AnalysisController < ApplicationController
 
     response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@codes}")
     rest = JSON.parse(response)["data"]["rest"]
-    puts
+
     @result = Hash.new
     #병용금기
     @result["interactions"] = rest["A"]
@@ -35,6 +35,41 @@ class User::AnalysisController < ApplicationController
 
   end
 
+  # def single_drug
+  #   require 'json'
+  #   require 'http'
+
+  #   select_drug =  Drug.find(:drug_id)
+  #   select_code = select_drug.package_insert['DRB_ITEM']['EDI_CODE'] ? select_drug.package_insert['DRB_ITEM']['EDI_CODE'] : nil
+
+  #   response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@codes}")
+  #   rest = JSON.parse(response)["data"]["rest"]
+
+  #   @result = Hash.new
+  #   #병용금기
+  #   @result["interactions"] = rest["A"]
+  #   #연령금기
+  #   @result["age"] = rest["B"]
+  #   #임부금기
+  #   @result["pregnancy"] = rest["C"]
+  #   #사용(급여)중지
+  #   @result["stop_usage"] = rest["D"]
+  #   #동일성분중복
+  #   @result["same_ingr"] = rest["G"]
+  #   #효능군중복
+  #   @result["duplicate"] = rest["F"]
+  #   #용량주의
+  #   @result["dosage"] = rest["I"]
+  #   #투여기간주의
+  #   @result["period"] = rest["J"]
+  #   #노인주의
+  #   @result["elder"] = rest["L"]
+
+
+
+  #   @result["Excluded"] = @excluded
+  #   render json: @result
+  # end
 
   def interaction
     require 'set'
@@ -291,7 +326,7 @@ class User::AnalysisController < ApplicationController
 
       user_info_current_drugs.each do |current_drug|
         select_drug =  Drug.find(current_drug.current_drug_id)
-        select_code = select_drug.package_insert['DRB_ITEM']['EDI_CODE'] ? select_drug.package_insert['DRB_ITEM']['EDI_CODE'] : nil
+        select_code = (select_drug.package_insert && select_drug.package_insert['DRB_ITEM']['EDI_CODE']) ? select_drug.package_insert['DRB_ITEM']['EDI_CODE'] : nil
         if !select_code.nil?
           edi_code = select_code + "0"
           @codes << edi_code + ";"

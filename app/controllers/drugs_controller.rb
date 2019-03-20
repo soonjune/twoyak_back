@@ -12,8 +12,11 @@ class DrugsController < ApplicationController
 
   # GET /drugs/1
   def show
-    request.headers.each { |key, value|  }
+    @data = Hash.new
     @data = @drug.as_json
+    # if !request.headers["Authorization"].nil?
+    #   @data["token"] = request.headers["Authorization"]
+    # end
     @data["taking"] = @drug.currents.count
     @data["watching"] = @drug.watch_drugs.pluck(:user_id)
 
