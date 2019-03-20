@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_12_115137) do
+ActiveRecord::Schema.define(version: 2019_03_20_053908) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -218,6 +218,16 @@ ActiveRecord::Schema.define(version: 2019_03_12_115137) do
     t.json "supplements"
   end
 
+  create_table "suggestions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "title"
+    t.text "body"
+    t.string "contact"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_suggestions_on_user_id"
+  end
+
   create_table "sup_review_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "sup_review_id"
@@ -350,6 +360,7 @@ ActiveRecord::Schema.define(version: 2019_03_12_115137) do
   add_foreign_key "drug_review_comments", "drug_reviews"
   add_foreign_key "drug_review_comments", "users"
   add_foreign_key "identities", "users"
+  add_foreign_key "suggestions", "users"
   add_foreign_key "sup_review_comments", "sup_reviews"
   add_foreign_key "sup_review_comments", "users"
 end
