@@ -9,8 +9,9 @@ class Users::SessionsController < Devise::SessionsController
             return
         elsif user.valid_password?(login_params[:password])
             if !user.confirmed?
-                User.send_confirmation_instructions({ email: user.email })
-                render json: { errors: "이메일 인증을 해주세요. 인증 메일을 보내드렸습니다." }, status: :unauthorized
+                user.skip_confirmation!
+                # User.send_confirmation_instructions({ email: user.email })
+                # render json: { errors: "이메일 인증을 해주세요. 인증 메일을 보내드렸습니다." }, status: :unauthorized
                 return
             end
             sign_in(user, store: false)
