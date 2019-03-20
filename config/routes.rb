@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     scope ':user_info_id' do
       #DUR 정보
       get 'analysis/get'
+      get "analysis/single/:drug_id" => "single_drug#cautions"
       #관심약물 추가
       resources :watch_drugs, :except => [:update, :destroy]
 
