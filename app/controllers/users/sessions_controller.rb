@@ -8,12 +8,12 @@ class Users::SessionsController < Devise::SessionsController
             render json: { errors: "이메일을 찾을 수 없습니다. 가입 후 이용해 주세요." }, status: :unauthorized
             return
         elsif user.valid_password?(login_params[:password])
-            if !user.confirmed?
-                user.skip_confirmation!
-                # User.send_confirmation_instructions({ email: user.email })
-                # render json: { errors: "이메일 인증을 해주세요. 인증 메일을 보내드렸습니다." }, status: :unauthorized
-                return
-            end
+            # if !user.confirmed?
+            #     # User.send_confirmation_instructions({ email: user.email })
+            #     # render json: { errors: "이메일 인증을 해주세요. 인증 메일을 보내드렸습니다." }, status: :unauthorized
+            #     return
+            # end
+            # user.skip_confirmation!
             sign_in(user, store: false)
             render json: { auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }
             return
