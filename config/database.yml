@@ -22,8 +22,8 @@ development:
   development:
   driver: mysql2
   username: root
-  password: MyNewPass
-  database: twoyak_db_development
+  password: <%= ENV['DB_PASSWORD'] %>
+  database: twoyak_test
   port: 3306
 
 # Warning: The database defined as "test" will be erased and
@@ -54,8 +54,8 @@ test:
 #
 production: &production
   <<: *default
-  host: twoyak-db.cpcaio0c9shs.ap-northeast-2.rds.amazonaws.com
-  username: TWOYAK
+  driver: mysql2
+  username: root
   password: <%= ENV['DB_PASSWORD'] %>
-  database: twoyak_db_development
+  database: twoyak_test
   port: 3306
