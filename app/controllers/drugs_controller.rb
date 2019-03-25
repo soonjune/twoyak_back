@@ -58,7 +58,7 @@ class DrugsController < ApplicationController
     searched = if search
       Searchkick.search(search, {
         index_name: [Drug, Supplement],
-        fields: [{item_name: :word_middle}],
+        fields: [{name: :word_middle}],
         limit: 50
         # misspellings: {below: 5}
       })
