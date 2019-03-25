@@ -31,13 +31,13 @@ class Drug < ApplicationRecord
 
 
 
-  searchkick language: "korean", word_middle: [:name, :ingr_kor_name, :ingr_eng_name]
+  searchkick language: "korean", word_start: [:name], word_middle: [:name, :ingr_kor_name, :ingr_eng_name]
 
 
   def search_data
       {
           name: name,
-          ingr_kor_name: kor_map(ingr_kor_name),
+          # ingr_kor_name: kor_map(ingr_kor_name),
           ingr_eng_name: eng_map(ingr_eng_name)
       }
   end
