@@ -58,12 +58,12 @@ class DrugsController < ApplicationController
     searched = if search
       Searchkick.search(search, {
         index_name: [Drug, Supplement],
-        fields: [{name: :word_middle}],
+        fields: [{item_name: :word_middle}],
         limit: 50
         # misspellings: {below: 5}
       })
     end
-    
+
     # 뭐 검색됐는지 확인용
     # searched.each { |item|
     #   if item.class == Drug
