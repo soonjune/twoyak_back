@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "admin" => "admin#index"
+  post "admin/insert" => "admin#insert"
+
   namespace :user do
     resources :mypage
     resources :user_infos, :except => [:index]
