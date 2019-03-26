@@ -3,8 +3,10 @@ class AdminController < ApplicationController
     before_action :is_admin?
   
     def index
-      @photos = PrescriptionPhoto.all.order("id DESC")
-      @current_drugs = CurrentDrug.all.order("created_at DESC").limit(100)
+      @result = Hash.new
+      @result["photos"] = PrescriptionPhoto.all.order("id DESC")
+      @result["current_drugs"] = CurrentDrug.all.order("created_at DESC").limit(100)
+      render json: @result
     end
   
     def insert
