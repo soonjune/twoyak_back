@@ -1,0 +1,2 @@
+class PrescriptionPhoto < ApplicationRecord
+end
