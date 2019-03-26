@@ -32,3 +32,4 @@
 
 #igonore db configuration
 /config/database.yml
+/config/database.yml
