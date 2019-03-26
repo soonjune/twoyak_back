@@ -29,7 +29,7 @@ class AdminController < ApplicationController
     private
   
     def insert_params
-      params.permit(:user_info_id, :drug_id)
+      params.permit(:user_info_id, :drug_id, :from, :to, :memo, :when, :how)
     end
   
     def is_admin?
