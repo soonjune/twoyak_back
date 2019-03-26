@@ -5,7 +5,12 @@ class AdminController < ApplicationController
     def index
       @result = Hash.new
       @result["photos"] = PrescriptionPhoto.all.order("id DESC")
-      @result["current_drugs"] = CurrentDrug.all.order("created_at DESC").limit(100)
+      @result["current_drugs"] = []
+      temp = CurrentDrug.all.order("created_at DESC").limit(100)
+      temp.as_json.map { |drug|
+        drug["name"] = Drug.find(drug["current_drug_id"]).name
+        @result["current_drugs"] << drug
+      }
       render json: @result
     end
   
