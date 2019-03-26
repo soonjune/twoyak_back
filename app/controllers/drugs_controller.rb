@@ -1,6 +1,7 @@
 class DrugsController < ApplicationController
   before_action :set_drug, only: [:show, :update, :destroy]
-  before_action :authenticate_request!, :check_authority, only: [:update, :destroy]
+  before_action :authenticate_request!,  only: [:create, :update, :destroy]
+  before_action :check_authority, only: [:create, :update, :destroy]
   # before_action :set_search, only: [:show]
 
   # GET /drugs
@@ -56,12 +57,7 @@ class DrugsController < ApplicationController
     # @rep = Drug.find_by_sql(query) //이전 searchkick 쓰고나서 다음과 같다.
     # Searchkick.search(search, where: {name: /.*#{search}.*/, ingredients: /.*#{search}.*/})
     searched = if search
-      Searchkick.search(search, {
-        index_name: [Drug, Supplement],
-        fields: [{name: :word_middle}],
-        limit: 50
-        # misspellings: {below: 5}
-      })
+      Searchkick.search(search, index_name: [Drug, Supplement])
     end
 
     # 뭐 검색됐는지 확인용
