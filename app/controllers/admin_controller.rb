@@ -26,6 +26,9 @@ class AdminController < ApplicationController
       end
     end
     
+    def check
+        PrescriptionPhoto.update(check_params)
+    end
 
     def destroy
         CurrentDrug.find(:current_drug_id).delete
@@ -35,6 +38,10 @@ class AdminController < ApplicationController
   
     def insert_params
       params.permit(:user_info_id, :drug_id, :from, :to, :memo, :when, :how)
+    end
+
+    def check_params
+      params.permit(:id, :check)
     end
   
     def is_admin?
