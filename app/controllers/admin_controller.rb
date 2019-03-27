@@ -15,7 +15,7 @@ class AdminController < ApplicationController
     end
   
     def insert
-      if @current_drug.include?(insert_params[:drug_id])
+      if @current_drug.include?(Drug.find(insert_params[:drug_id]))
         render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
       elsif @current_drug << Drug.find(insert_params[:drug_id])
         set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
