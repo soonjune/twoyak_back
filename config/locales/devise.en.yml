@@ -18,9 +18,9 @@ en:
       unconfirmed: "You have to confirm your email address before continuing."
     mailer:
       confirmation_instructions:
-        subject: "Confirmation instructions"
+        subject: "투약 이메일 인증"
       reset_password_instructions:
-        subject: "Reset password instructions"
+        subject: "투약 비밀번호 재설정"
       unlock_instructions:
         subject: "Unlock instructions"
       email_changed:
