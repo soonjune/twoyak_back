@@ -98,11 +98,15 @@ class DrugsController < ApplicationController
 
     
     if(!@rep.nil?)
-      @information = @rep['package_insert']['DRB_ITEM']
-      @ITEM_NAME = @rep.name
+      if !@rep['package_insert'].nil?
+        @information = @rep['package_insert']['DRB_ITEM']
+        @ITEM_NAME = @rep.name
 
-      @data["item_name"] = @ITEM_NAME
-      @data["information"] =  @information
+        @data["item_name"] = @ITEM_NAME
+        @data["information"] =  @information
+      else
+        @data["item_name"] = @rep.name
+      end
 
     elsif(!@sup.nil?)
       @data["sup"] = @sup
