@@ -31,7 +31,7 @@ class Drug < ApplicationRecord
 
 
 
-  searchkick language: "korean", word_start: [:name], word_middle: [:name, :ingr_kor_name, :ingr_eng_name]
+  searchkick language: "korean", word_start: [:name], word_middle: [:name, :ingr_kor_name, :ingr_eng_name], word: [:name]
 
 
   def search_data
