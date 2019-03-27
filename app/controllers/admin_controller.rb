@@ -28,7 +28,9 @@ class AdminController < ApplicationController
     end
     
     def check
-        PrescriptionPhoto.update(check_params)
+        pr_to_change = PrescriptionPhoto.find(check_params[:id])
+        pr_to_change.check = check_params[:check]
+        pr_to_change.save
     end
 
     def destroy
@@ -42,7 +44,7 @@ class AdminController < ApplicationController
     end
 
     def check_params
-      params.permit(:id, :check)
+      params.permit(:id, :check, :memo)
     end
   
     def is_admin?
