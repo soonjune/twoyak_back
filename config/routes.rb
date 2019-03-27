@@ -95,7 +95,8 @@ Rails.application.routes.draw do
   resources :diseases
   resources :classifications
   get 'search_terms' => 'search_terms#index'
-  get 'singleSearch/' => 'drugs#find_each_drug'
+  get 'singleSearch/' => 'drugs#find_drug_mobile'
+  get 'searchSingle/' => 'drugs#find_drug_web'
   get '/multiSearch' => "analysis#interaction"
   # #jwt authentication
   # post 'auth_user' => 'authentication#authenticate_user'
