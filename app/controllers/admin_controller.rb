@@ -12,6 +12,7 @@ class AdminController < ApplicationController
         photo["user_id"] = user_info_temp.user_id
         photo["user_info_id"] = user_info_id_temp
         photo["user_name"] = user_info_temp.user_name
+        @result["photos"] << photo
       }
       @result["current_drugs"] = []
       temp = CurrentDrug.all.order("created_at DESC").limit(100)
