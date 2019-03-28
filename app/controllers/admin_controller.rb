@@ -43,6 +43,40 @@ class AdminController < ApplicationController
         CurrentDrug.find(:current_drug_id).delete
     end
 
+    def push
+        require 'json'
+        require 'http'
+        uri = "http://54.180.189.64:8001/api/push/target"
+        target = []
+        user = User.find(push_params["user_id"])
+        user_token = user.push_token
+        target << user_token
+        data = {message: push_params["message"], target: target}
+
+        request = HTTP.post(uri, data.to_json, {"Content-Type" => "application/json", "Accept" => "application/json"})
+        
+        render json: user, status: 200
+    end
+
+    def push_all
+        require 'json'
+        require 'http'
+        uri = "http://54.180.189.64:8001/api/push/target"
+        target = []
+        users = User.all
+        users.each { |user|
+            if user.push_token
+                target << user.push_token
+            end
+        }
+        message = push_params["message"]
+        data = {message: message, target: target}
+
+        request = HTTP.post(uri, data.to_json, {"Content-Type" => "application/json", "Accept" => "application/json"})
+        
+        render json: "유저 전체에  #{message}  푸시 알람 전송 완료", status: 200
+    end
+    
     private
   
     def insert_params
@@ -51,6 +85,10 @@ class AdminController < ApplicationController
 
     def check_params
       params.permit(:id, :check, :memo)
+    end
+
+    def push_params
+      params.permit(:user_id, :message)
     end
   
     def is_admin?
