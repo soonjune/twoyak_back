@@ -1,7 +1,9 @@
 class AdminController < ApplicationController
     before_action :authenticate_request!
     before_action :is_admin?
-    before_action :set_current_drug, only: [:insert]
+
+    # current_drugs_controller로 이동
+    # before_action :set_current_drug, only: [:insert]
   
     def index
       @result = Hash.new
@@ -21,27 +23,24 @@ class AdminController < ApplicationController
       render json: @result
     end
   
-    def insert
-      if @current_drug.include?(Drug.find(insert_params[:drug_id]))
-        render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
-      elsif @current_drug << Drug.find(insert_params[:drug_id])
-        set_time_memo = CurrentDrug.where(user_info_id: insert_params[:user_info_id], current_drug_id: insert_params[:drug_id]).last
-        set_time_memo.update(from: insert_params[:from], to: insert_params[:to] ? insert_params[:to] : Time.zone.now, memo: insert_params[:memo], when: insert_params[:whern], how: insert_params[:how])
-        render json: @current_drug.pluck(:id, :name), status: :created
-      else
-        render json: @current_drug.errors, status: :unprocessable_entity
-      end
-    end
-    
+    # def insert
+    #   if @current_drug.include?(Drug.find(insert_params[:drug_id]))
+    #     render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
+    #   elsif @current_drug << Drug.find(insert_params[:drug_id])
+    #     set_time_memo = CurrentDrug.where(user_info_id: insert_params[:user_info_id], current_drug_id: insert_params[:drug_id]).last
+    #     set_time_memo.update(from: insert_params[:from], to: insert_params[:to] ? insert_params[:to] : Time.zone.now, memo: insert_params[:memo], when: insert_params[:whern], how: insert_params[:how])
+    #     render json: @current_drug.pluck(:id, :name), status: :created
+    #   else
+    #     render json: @current_drug.errors, status: :unprocessable_entity
+    #   end
+    # end
+
     def check
         pr_to_change = PrescriptionPhoto.find(check_params[:id])
         pr_to_change.check = check_params[:check]
         pr_to_change.save
     end
 
-    def destroy
-        CurrentDrug.find(:current_drug_id).delete
-    end
 
     def push
         require 'json'
@@ -76,12 +75,12 @@ class AdminController < ApplicationController
         
         render json: "유저 전체에  #{message}  푸시 알람 전송 완료", status: 200
     end
-    
+
     private
   
-    def insert_params
-      params.permit(:user_info_id, :drug_id, :from, :to, :memo, :when, :how)
-    end
+    # def insert_params
+    #   params.permit(:user_info_id, :drug_id, :from, :to, :memo, :when, :how)
+    # end
 
     def check_params
       params.permit(:id, :check, :memo)
