@@ -5,7 +5,14 @@ class AdminController < ApplicationController
   
     def index
       @result = Hash.new
-      @result["photos"] = PrescriptionPhoto.all.order("id DESC")
+      @result["photos"] = []
+      PrescriptionPhoto.all.order("id DESC").as_json.map { |photo|
+        user_info_id_temp = photo.user_info_id
+        user_info_temp = UserInfo.find(user_info_id_temp)
+        photo["user_id"] = user_info_temp.user_id
+        photo["user_info_id"] = user_info_id_temp
+        photo["user_name"] = user_info_temp.user_name
+      }
       @result["current_drugs"] = []
       temp = CurrentDrug.all.order("created_at DESC").limit(100)
       temp.as_json.map { |drug|
