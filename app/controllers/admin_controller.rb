@@ -44,26 +44,27 @@ class AdminController < ApplicationController
 
     def push
         require 'json'
-        require 'http'
-        uri = "http://54.180.189.64:8001/api/push/target"
+        require 'net/http'
+        uri = URI("http://54.180.189.64:8001/api/push/target")
         target = []
         user = User.find(push_params["user_id"])
         user_token = user.push_token
         target << user_token
         data = {message: push_params["message"], target: target}
 
-        request = Net::HTTP::Post.new(uri, {'Content-Type' => 'application/json'})
-        request.body = data.to_json
+        http = NET::HTTP.new(uri.host, uri.port)
+        req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
+        req.set_form_data(data.to_json)
 
-        response = http.request(request)
+        response = http.request(req)
 
         render json: user, status: 200
     end
 
     def push_all
         require 'json'
-        require 'http'
-        uri = "http://54.180.189.64:8001/api/push/target"
+        require 'net/http'
+        uri = URI("http://54.180.189.64:8001/api/push/target")
         target = []
         users = User.all
         users.each { |user|
@@ -74,10 +75,12 @@ class AdminController < ApplicationController
         message = push_params["message"]
         data = {message: message, target: target}
 
-        request = Net::HTTP::Post.new(uri, {'Content-Type' => 'application/json'})
-        request.body = data.to_json
+        http = NET::HTTP.new(uri.host, uri.port)
+        req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
+        req.set_form_data(data.to_json)
 
-        response = http.request(request)        
+        response = http.request(req)
+        
         render json: "유저 전체에  #{message}  푸시 알람 전송 완료", status: 200
     end
 
