@@ -52,7 +52,7 @@ class AdminController < ApplicationController
         target << user_token
         data = {message: push_params["message"], target: target}
 
-        http = NET::HTTP.new(uri.host, uri.port)
+        http = Net::HTTP.new(uri.host, uri.port)
         req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
         req.set_form_data(data.to_json)
 
@@ -75,7 +75,7 @@ class AdminController < ApplicationController
         message = push_params["message"]
         data = {message: message, target: target}
 
-        http = NET::HTTP.new(uri.host, uri.port)
+        http = Net::HTTP.new(uri.host, uri.port)
         req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
         req.set_form_data(data.to_json)
 
