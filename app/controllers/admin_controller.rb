@@ -46,6 +46,7 @@ class AdminController < ApplicationController
         require 'json'
         require 'uri'
         require 'net/http'
+        
         begin
             uri = URI("http://54.180.189.64:8001/api/push/target")
             target = []
@@ -54,16 +55,10 @@ class AdminController < ApplicationController
             target << user_token
             data = {message: push_params["message"], target: target}
 
-            req = Net::HTTP::Post.new(uri)
+            http = Net::HTTP.new(uri.host, uri.port)
+            req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type': 'application/x-www-form-urlencoded'})
             req.set_form_data(data)
             
-            Net::HTTP.start(uri.hostname, uri.port) do |http|
-                http.request(req)
-              end
-              
-              
-            res = Net::HTTP.post_form(uri, data)
-
             response = http.request(req)
 
             render json: user, status: 200
@@ -78,20 +73,14 @@ class AdminController < ApplicationController
         require 'net/http'
 
         begin
-            uri = URI("http://54.180.189.64:8001/api/push/target")
-            target = []
-            users = User.all
-            users.each { |user|
-                if user.push_token
-                    target << user.push_token
-                end
-            }
+            uri = URI("http://54.180.189.64:8001/api/push/all")
+ 
             message = push_params["message"]
-            data = {message: message, target: target}
+            data = {message: message}
 
             http = Net::HTTP.new(uri.host, uri.port)
-            req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' => 'application/json'})
-            req.set_form_data(data.to_json)
+            req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type': 'application/x-www-form-urlencoded'})
+            req.set_form_data(data)
 
             response = http.request(req)
             
