@@ -47,45 +47,58 @@ class AdminController < ApplicationController
         require 'uri'
         require 'net/http'
         begin
-            uri = URI.parse("http://54.180.189.64:8001/api/push/target")
+            uri = URI("http://54.180.189.64:8001/api/push/target")
             target = []
             user = User.find(push_params["user_id"])
             user_token = user.push_token
             target << user_token
             data = {message: push_params["message"], target: target}
 
-            http = Net::HTTP.new(uri.host, uri.port)
-            req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' => 'application/json'})
+            req = Net::HTTP::Post.new(uri)
             req.set_form_data(data)
+            
+            Net::HTTP.start(uri.hostname, uri.port) do |http|
+                http.request(req)
+              end
+              
+              
+            res = Net::HTTP.post_form(uri, data)
 
             response = http.request(req)
 
             render json: user, status: 200
-        rescue => e
-            render json: user, status: 500
+        rescue
+            render json: "푸시 알람 실패", status: 500
+        end
     end
 
     def push_all
         require 'json'
+        require 'uri'
         require 'net/http'
-        uri = URI.parse("http://54.180.189.64:8001/api/push/target")
-        target = []
-        users = User.all
-        users.each { |user|
-            if user.push_token
-                target << user.push_token
-            end
-        }
-        message = push_params["message"]
-        data = {message: message, target: target}
 
-        http = Net::HTTP.new(uri.host, uri.port)
-        req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' => 'application/json'})
-        req.set_form_data(data.to_json)
+        begin
+            uri = URI("http://54.180.189.64:8001/api/push/target")
+            target = []
+            users = User.all
+            users.each { |user|
+                if user.push_token
+                    target << user.push_token
+                end
+            }
+            message = push_params["message"]
+            data = {message: message, target: target}
 
-        response = http.request(req)
-        
-        render json: "유저 전체에  #{message}  푸시 알람 전송 완료", status: 200
+            http = Net::HTTP.new(uri.host, uri.port)
+            req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' => 'application/json'})
+            req.set_form_data(data.to_json)
+
+            response = http.request(req)
+            
+            render json: "유저 전체에  #{message}  푸시 알람 전송 완료", status: 200
+        rescue
+            render json: "푸시 알람 실패", status: 500
+        end
     end
 
     private
