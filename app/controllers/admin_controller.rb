@@ -52,8 +52,11 @@ class AdminController < ApplicationController
         target << user_token
         data = {message: push_params["message"], target: target}
 
-        request = HTTP.post(uri, data.to_json, {"Content-Type" => "application/json", "Accept" => "application/json"})
-        
+        request = Net::HTTP::Post.new(uri, {'Content-Type' => 'application/json'})
+        request.body = data.to_json
+
+        response = http.request(request)
+
         render json: user, status: 200
     end
 
@@ -71,8 +74,10 @@ class AdminController < ApplicationController
         message = push_params["message"]
         data = {message: message, target: target}
 
-        request = HTTP.post(uri, data.to_json, {"Content-Type" => "application/json", "Accept" => "application/json"})
-        
+        request = Net::HTTP::Post.new(uri, {'Content-Type' => 'application/json'})
+        request.body = data.to_json
+
+        response = http.request(request)        
         render json: "유저 전체에  #{message}  푸시 알람 전송 완료", status: 200
     end
 
