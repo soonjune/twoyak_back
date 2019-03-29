@@ -44,27 +44,31 @@ class AdminController < ApplicationController
 
     def push
         require 'json'
+        require 'uri'
         require 'net/http'
-        uri = URI("http://54.180.189.64:8001/api/push/target")
-        target = []
-        user = User.find(push_params["user_id"])
-        user_token = user.push_token
-        target << user_token
-        data = {message: push_params["message"], target: target}
+        begin
+            uri = URI.parse("http://54.180.189.64:8001/api/push/target")
+            target = []
+            user = User.find(push_params["user_id"])
+            user_token = user.push_token
+            target << user_token
+            data = {message: push_params["message"], target: target}
 
-        http = Net::HTTP.new(uri.host, uri.port)
-        req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
-        req.set_form_data(data.to_json)
+            http = Net::HTTP.new(uri.host, uri.port)
+            req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' => 'application/json'})
+            req.set_form_data(data)
 
-        response = http.request(req)
+            response = http.request(req)
 
-        render json: user, status: 200
+            render json: user, status: 200
+        rescue => e
+            render json: user, status: 500
     end
 
     def push_all
         require 'json'
         require 'net/http'
-        uri = URI("http://54.180.189.64:8001/api/push/target")
+        uri = URI.parse("http://54.180.189.64:8001/api/push/target")
         target = []
         users = User.all
         users.each { |user|
@@ -76,7 +80,7 @@ class AdminController < ApplicationController
         data = {message: message, target: target}
 
         http = Net::HTTP.new(uri.host, uri.port)
-        req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
+        req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' => 'application/json'})
         req.set_form_data(data.to_json)
 
         response = http.request(req)
