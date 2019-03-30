@@ -46,13 +46,14 @@ class AdminController < ApplicationController
         require 'json'
         require 'uri'
         require 'net/http'
-
+        
         begin
             uri = URI("http://54.180.189.64:8001/api/push/target")
-            target = ["2ee76634-1d9c-48f0-becc-3620f9f9abe3"]
-            # user = User.find(push_params["user_id"])
-            # user_token = user.push_token
-            # target << user_token
+            target = []
+            user = User.find(push_params["user_id"])
+            user_token = user.push_token
+            target << user_token
+            target.to_s
             data = {message: push_params["message"], target: target}
 
             http = Net::HTTP.new(uri.host, uri.port)
