@@ -167,7 +167,7 @@ class DrugsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def drug_params
-      params.require(:drug)
+      params.require(:drug).permit(:short_description, :short_notice)
     end
 
     def check_authority
