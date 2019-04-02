@@ -18,7 +18,7 @@ class DrugReviewsController < ApplicationController
         $1 + "*"*4
     }
       temp["sex"] = user_info.sex
-      temp["birth_date"] = user_info.birth_date
+      temp["birth_date"] = age(user_info.birth_date).floor(-1)
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
       temp["side_effect"] = review.side_effect
@@ -42,7 +42,7 @@ class DrugReviewsController < ApplicationController
         $1 + "*"*4
     }
       temp["sex"] = user_info.sex
-      temp["birth_date"] = user_info.birth_date
+      temp["birth_date"] = age(user_info.birth_date).floor(-1)
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
       temp["side_effect"] = review.side_effect
@@ -102,6 +102,11 @@ class DrugReviewsController < ApplicationController
         end
       end
     end
+
+    def age(dob)
+      now = Time.now.utc.to_date
+      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    end    
 
     # Only allow a trusted parameter "white list" through.
     def drug_review_params
