@@ -49,7 +49,7 @@ class DrugsController < ApplicationController
     @drug.destroy
   end
 
-  def find_each_drug
+  def find_drug_web
     require 'json'
 
     search = params[:search_term]
@@ -98,11 +98,15 @@ class DrugsController < ApplicationController
 
     
     if(!@rep.nil?)
-      @information = @rep['package_insert']['DRB_ITEM']
-      @ITEM_NAME = @rep.name
+      if !@rep['package_insert'].nil?
+        @information = @rep['package_insert']['DRB_ITEM']
+        @ITEM_NAME = @rep.name
 
-      @data["item_name"] = @ITEM_NAME
-      @data["information"] =  @information
+        @data["item_name"] = @ITEM_NAME
+        @data["information"] =  @information
+      else
+        @data["item_name"] = @rep.name
+      end
 
     elsif(!@sup.nil?)
       @data["sup"] = @sup
@@ -123,6 +127,38 @@ class DrugsController < ApplicationController
     render json: @data
   end
 
+  def find_drug_mobile
+    require 'json'
+
+    search = params[:search_term]
+    # query = "SELECT * FROM drugs WHERE item_name = " + "'" + search + "'"
+    # @rep = Drug.find_by_sql(query) //이전 searchkick 쓰고나서 다음과 같다.
+    # Searchkick.search(search, where: {name: /.*#{search}.*/, ingredients: /.*#{search}.*/})
+    searched = if search
+      Searchkick.search(search, {
+        index_name: [Drug, Supplement],
+        fields: [{name: :word_middle}],
+        limit: 50
+        # misspellings: {below: 5}
+      })
+    end
+
+    @data = Hash.new
+
+    @data["item_name"] = []
+    @data["product_name"] = []
+    searched.each { |item|
+      if item.class == Drug
+        @data["item_name"] << {current_drug_id: item.id, name: item.name}
+      # 건강기능식품
+      # elsif item.class == Supplement
+      #   @data["product_name"] << {id: item.id, name: item.name}
+      end
+    }
+
+    render json: @data
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_drug
@@ -131,7 +167,7 @@ class DrugsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def drug_params
-      JSON.parse(params.require(:drug))
+      params.require(:drug).permit(:short_description, :short_notice)
     end
 
     def check_authority
