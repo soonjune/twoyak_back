@@ -8,7 +8,7 @@ class DrugReviewsController < ApplicationController
   def recent
     @drug_reviews = DrugReview.order("id DESC").limit(20)
 
-    render json: @drug_review
+    render json: @drug_reviews
   end
 
   # GET /:drug_id/drug_reviews
