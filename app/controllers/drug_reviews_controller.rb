@@ -42,7 +42,7 @@ class DrugReviewsController < ApplicationController
         $1 + "*"*4
     }
       temp["sex"] = user_info.sex
-      temp["birth_date"] = age(user_info.birth_date).floor(-1)
+      temp["birth_date"] = user_info.birth_date
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
       temp["side_effect"] = review.side_effect
