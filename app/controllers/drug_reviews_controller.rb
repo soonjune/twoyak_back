@@ -4,6 +4,11 @@ class DrugReviewsController < ApplicationController
   before_action :authority_check, only: [:update, :destroy]
 
 
+  #최근 리뷰 보여주기
+  def recent
+    @drug_reviews = DrugReview.order("id DESC").limit(20)
+  end
+
   # GET /:drug_id/drug_reviews
   def index
     @result = []
