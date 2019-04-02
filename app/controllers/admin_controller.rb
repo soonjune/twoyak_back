@@ -1,30 +1,7 @@
 class AdminController < ApplicationController
     before_action :authenticate_request!
     before_action :is_admin?
-<<<<<<< HEAD
   
-    def index
-      @photos = PrescriptionPhoto.all.order("id DESC")
-      @current_drugs = CurrentDrug.all.order("created_at DESC").limit(100)
-    end
-  
-    def insert
-      if @current_drug.include?(insert_params[:drug_id])
-        render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
-      elsif @current_drug << Drug.find(insert_params[:drug_id])
-        set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
-        set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:whern], how: params[:how])
-        render json: @current_drug.pluck(:id, :name), status: :created
-      else
-        render json: @current_drug.errors, status: :unprocessable_entity
-      end
-    end
-    
-
-    def destroy
-        CurrentDrug.find(:id).delete
-=======
-
     # current_drugs_controller로 이동
     # before_action :set_current_drug, only: [:insert]
   
@@ -110,15 +87,10 @@ class AdminController < ApplicationController
         rescue
             render json: "푸시 알람 실패", status: 500
         end
->>>>>>> 799f0431e56b1fee50180e04c1045d31047ec8f2
     end
 
     private
   
-<<<<<<< HEAD
-    def insert_params
-      params.permit(:user_info_id, :drug_id)
-=======
     # def insert_params
     #   params.permit(:user_info_id, :drug_id, :from, :to, :memo, :when, :how)
     # end
@@ -129,7 +101,6 @@ class AdminController < ApplicationController
 
     def push_params
       params.permit(:user_id, :message)
->>>>>>> 799f0431e56b1fee50180e04c1045d31047ec8f2
     end
   
     def is_admin?
@@ -139,8 +110,6 @@ class AdminController < ApplicationController
         render json: { errors: ['접속 권한이 없습니다.'] }, status: :unauthorized
       end
     end
-<<<<<<< HEAD
-=======
 
     def set_current_drug
         if current_user.has_role? "admin"
@@ -155,5 +124,4 @@ class AdminController < ApplicationController
         end
       end
 
->>>>>>> 799f0431e56b1fee50180e04c1045d31047ec8f2
   end
