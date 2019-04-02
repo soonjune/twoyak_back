@@ -6,9 +6,25 @@ class DrugReviewsController < ApplicationController
 
   #최근 리뷰 보여주기
   def recent
+    @result = []
     @drug_reviews = DrugReview.order("id DESC").limit(20)
-
-    render json: @drug_reviews
+    @drug_reviews.map { |review|
+      temp = Hash.new
+      temp["id"] = review.id
+      temp["drug"] = Drug.find(review.drug_id).name
+      user = User.find(review.user_id)
+      user_info = user.user_infos.first
+      temp["user_email"] = user.email
+      temp["sex"] = user_info.sex
+      temp["birth_date"] = user_info.birth_date
+      temp["diseases"] = user_info.current_disease.pluck(:name)
+      temp["efficacy"] = review.efficacy
+      temp["side_effect"] = review.side_effect
+      temp["body"] =review.body
+      @result << temp
+    }
+    
+    render json: @result
   end
 
   # GET /:drug_id/drug_reviews
