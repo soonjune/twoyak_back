@@ -20,6 +20,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     #유저 필수 정보(닉네임) 입력 확인
     if UserInfo.new(info_params).user_name?
       user = User.new(user_params)
+      user.skip_confirmation!
+      user.skip_confirmation_notification!
       user.save
       info = UserInfo.new(info_params)
       info.user_id = user.id
