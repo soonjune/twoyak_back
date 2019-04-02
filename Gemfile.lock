@@ -1,5 +1,5 @@
 PATH
-  remote: ../searchkick_forked
+  remote: ../../searchkick_forked
   specs:
     searchkick (3.1.21)
       activemodel (>= 4.2)

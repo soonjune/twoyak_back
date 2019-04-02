@@ -1,14 +1,9 @@
 Rails.application.routes.draw do
   #관리자용
   get "admin" => "admin#index"
-<<<<<<< HEAD
-  post "admin/insert" => "admin#insert"
-  delete "admin/:current_drug_id" => "admin#destroy"
-=======
   post "admin/check" => "admin#check"
   post "admin/push" => "admin#push"
   post "admin/push_all" => "admin#push_all"
->>>>>>> 799f0431e56b1fee50180e04c1045d31047ec8f2
 
   namespace :user do
     resources :mypage
