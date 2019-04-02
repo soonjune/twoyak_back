@@ -73,7 +73,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     params.permit(:email, :password, :password_confirmation)
   end
   def info_params
-      params.permit(:user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine)
+      params.permit(:user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine, :sex)
   end
 
   def payload(user)
