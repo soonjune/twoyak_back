@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_20_081846) do
+ActiveRecord::Schema.define(version: 2019_03_20_163723) do
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -206,6 +206,7 @@ ActiveRecord::Schema.define(version: 2019_03_20_081846) do
   create_table "prescription_photos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_info_id"
     t.string "url"
+    t.string "check"
     t.index ["user_info_id"], name: "index_prescription_photos_on_user_info_id"
   end
 

@@ -1,3 +1,5 @@
+#어디서 왔는지 잘 모르겠으나 일단 남겨둠(20190402)
+
 class DrugReviewsControllerController < ApplicationController
     before_action :authenticate_request!
     before_action :set_drug, only: [:show, :update, :destroy]

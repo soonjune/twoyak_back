@@ -18,6 +18,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = yak["durSdEft"]
         put << dur
       }
+      put.uniq!
       @result["interactions"] = put
     end
     
@@ -31,6 +32,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = "#{yak["spcAge"]} #{yak["spcAgeUnit"]}"
         put << dur
       }
+      put.uniq!
       @result["age"] = put
     end
 
@@ -44,6 +46,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = yak["imcompReason"]
         put << dur
       }
+      put.uniq!
       @result["pregnancy"] = put
     end
 
@@ -57,6 +60,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = yak["suspDt"]
         put << dur
       }
+      put.uniq!
       @result["stop_usage"] = put
     end
 
@@ -70,6 +74,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = "약의 효능효과·성분이 동일한 약물이 2가지 이상 있는 경우로 결과는 단순 참고용입니다"
         put << dur
       }
+      put.uniq!
       @result["same_ingr"] = put
     end
 
@@ -83,6 +88,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = "약의 성분은 다르나 효능이 동일한 약물이 2가지 이상 있는 경우"
         put << dur
       }
+      put.uniq!
       @result["duplicate"] = put
     end
     #용량주의
@@ -95,6 +101,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = "이 약은 1일 최대 #{yak["suspDt"]} 이내로 복용해야 하는 용량주의 의약품입니다."
         put << dur
       }
+      put.uniq!
       @result["dosage"] = put
     end
 
@@ -108,6 +115,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = "#{yak["suspDt"]} 일을 초과하여 복용하면 부작용이 우려되는 투여기간주의 의약품입니다."
         put << dur
       }
+      put.uniq!
       @result["period"] = put
     end
 
@@ -121,6 +129,7 @@ class User::AnalysisController < ApplicationController
         dur["description"] = "이 약은 #{yak["suspDt"]} 세 이상 고령자가 복용 시 주의해야하는 노인주의 의약품입니다."
         put << dur
       }
+      put.uniq!
       @result["elder"] = put
     end
 

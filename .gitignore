@@ -31,4 +31,9 @@
 /config/application.yml
 
 #igonore db configuration
+<<<<<<< HEAD
 /config/database.yml
+=======
+/config/database.yml
+/config/database.yml
+>>>>>>> 799f0431e56b1fee50180e04c1045d31047ec8f2

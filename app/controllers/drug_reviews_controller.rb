@@ -4,6 +4,31 @@ class DrugReviewsController < ApplicationController
   before_action :authority_check, only: [:update, :destroy]
 
 
+  #최근 리뷰 보여주기
+  def recent
+    @result = []
+    @drug_reviews = DrugReview.order("id DESC").limit(20)
+    @drug_reviews.map { |review|
+      temp = Hash.new
+      temp["id"] = review.id
+      temp["drug"] = Drug.find(review.drug_id).name
+      user = User.find(review.user_id)
+      user_info = user.user_infos.first
+      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+        $1 + "*"*4
+    }
+      temp["sex"] = user_info.sex
+      temp["birth_date"] = age(user_info.birth_date).floor(-1)
+      temp["diseases"] = user_info.current_disease.pluck(:name)
+      temp["efficacy"] = review.efficacy
+      temp["side_effect"] = review.side_effect
+      temp["body"] =review.body
+      @result << temp
+    }
+
+    render json: @result
+  end
+
   # GET /:drug_id/drug_reviews
   def index
     @result = []
@@ -13,7 +38,9 @@ class DrugReviewsController < ApplicationController
       temp["id"] = review.id
       user = User.find(review.user_id)
       user_info = user.user_infos.first
-      temp["user_email"] = user.email
+      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+        $1 + "*"*4
+    }
       temp["sex"] = user_info.sex
       temp["birth_date"] = user_info.birth_date
       temp["diseases"] = user_info.current_disease.pluck(:name)
@@ -75,6 +102,11 @@ class DrugReviewsController < ApplicationController
         end
       end
     end
+
+    def age(dob)
+      now = Time.now.utc.to_date
+      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    end    
 
     # Only allow a trusted parameter "white list" through.
     def drug_review_params

@@ -1,8 +1,14 @@
 Rails.application.routes.draw do
   #관리자용
   get "admin" => "admin#index"
+<<<<<<< HEAD
   post "admin/insert" => "admin#insert"
   delete "admin/:current_drug_id" => "admin#destroy"
+=======
+  post "admin/check" => "admin#check"
+  post "admin/push" => "admin#push"
+  post "admin/push_all" => "admin#push_all"
+>>>>>>> 799f0431e56b1fee50180e04c1045d31047ec8f2
 
   namespace :user do
     resources :mypage
@@ -67,6 +73,8 @@ Rails.application.routes.draw do
   #모바일 토큰 변환
   post "change" => "change_token#change"
 
+  #최근 리뷰 받기
+  get "reviews/recent" => "drug_reviews#recent"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end
@@ -94,7 +102,8 @@ Rails.application.routes.draw do
   resources :diseases
   resources :classifications
   get 'search_terms' => 'search_terms#index'
-  get 'singleSearch/' => 'drugs#find_each_drug'
+  get 'singleSearch/' => 'drugs#find_drug_mobile'
+  get 'searchSingle/' => 'drugs#find_drug_web'
   get '/multiSearch' => "analysis#interaction"
   # #jwt authentication
   # post 'auth_user' => 'authentication#authenticate_user'
