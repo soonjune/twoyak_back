@@ -14,7 +14,9 @@ class DrugReviewsController < ApplicationController
       temp["drug"] = Drug.find(review.drug_id).name
       user = User.find(review.user_id)
       user_info = user.user_infos.first
-      temp["user_email"] = user.email
+      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+        $1 + "*"*$2.length
+    }
       temp["sex"] = user_info.sex
       temp["birth_date"] = user_info.birth_date
       temp["diseases"] = user_info.current_disease.pluck(:name)
@@ -23,7 +25,7 @@ class DrugReviewsController < ApplicationController
       temp["body"] =review.body
       @result << temp
     }
-    
+
     render json: @result
   end
 
@@ -36,7 +38,9 @@ class DrugReviewsController < ApplicationController
       temp["id"] = review.id
       user = User.find(review.user_id)
       user_info = user.user_infos.first
-      temp["user_email"] = user.email
+      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+        $1 + "*"*$2.length
+    }
       temp["sex"] = user_info.sex
       temp["birth_date"] = user_info.birth_date
       temp["diseases"] = user_info.current_disease.pluck(:name)
