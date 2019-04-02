@@ -110,11 +110,11 @@ class DrugReviewsController < ApplicationController
 
     def age_range(age)
       if (age % 10) <= 3
-        return age.floor(-1) + "대 초반"
+        return age.floor(-1).to_s + "대 초반"
       elsif (age % 10) <= 6
-        return age.floor(-1) + "대 중반"
+        return age.floor(-1).to_s + "대 중반"
       else
-        return age.floor(-1) + "대 후반"
+        return age.floor(-1).to_s + "대 후반"
       end
     end
 
