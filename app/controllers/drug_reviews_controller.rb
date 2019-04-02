@@ -14,7 +14,7 @@ class DrugReviewsController < ApplicationController
       temp["drug"] = Drug.find(review.drug_id).name
       user = User.find(review.user_id)
       user_info = user.user_infos.first
-      temp["user_email"] = user.email.sub(/\A(....)(.*)@\z/) { 
+      temp["user_email"] = user.email.sub(/\A(....)(.*)@(.*)\z/) { 
         $1 + "*"*$2.length
     }
       temp["sex"] = user_info.sex
@@ -38,7 +38,7 @@ class DrugReviewsController < ApplicationController
       temp["id"] = review.id
       user = User.find(review.user_id)
       user_info = user.user_infos.first
-      temp["user_email"] = user.email.sub(/\A(....)(.*)@\z/) { 
+      temp["user_email"] = user.email.sub(/\A(....)(.*)@(.*)\z/) { 
         $1 + "*"*$2.length
     }
       temp["sex"] = user_info.sex
