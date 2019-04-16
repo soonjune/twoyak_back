@@ -13,7 +13,6 @@ class DrugReviewsController < ApplicationController
       temp["id"] = review.id
       temp["drug"] = Drug.find(review.drug_id).name
       user = User.find(review.user_id)
-      temp["u_id"] = user.id
       user_info = user.user_infos.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
@@ -38,6 +37,7 @@ class DrugReviewsController < ApplicationController
       temp = Hash.new
       temp["id"] = review.id
       user = User.find(review.user_id)
+      temp["u_id"] = user.id
       user_info = user.user_infos.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
