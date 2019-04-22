@@ -1,8 +1,14 @@
 class DrugReviewsController < ApplicationController
   before_action :set_drug_review, only: [:show]
-  before_action :authenticate_request!, only: [:create, :update, :destroy]
-  before_action :authority_check, only: [:update, :destroy]
+  before_action :authenticate_request!, only: [:all, :create, :update, :destroy]
+  before_action :authority_check, only: [:all, :update, :destroy]
 
+
+  #전체 보여주기
+  def all
+    @result = DrugReview.all
+    render json: @result
+  end
 
   #최근 리뷰 보여주기
   def recent
@@ -18,7 +24,7 @@ class DrugReviewsController < ApplicationController
         $1 + "*"*4
     }
       temp["sex"] = user_info.sex
-      temp["birth_date"] = age(user_info.birth_date).floor(-1)
+      temp["age"] = age_range(age(user_info.birth_date))
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
       temp["side_effect"] = review.side_effect
@@ -37,12 +43,13 @@ class DrugReviewsController < ApplicationController
       temp = Hash.new
       temp["id"] = review.id
       user = User.find(review.user_id)
+      temp["u_id"] = user.id
       user_info = user.user_infos.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
     }
       temp["sex"] = user_info.sex
-      temp["birth_date"] = user_info.birth_date
+      temp["age"] = age_range(age(user_info.birth_date))
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
       temp["side_effect"] = review.side_effect
@@ -107,6 +114,16 @@ class DrugReviewsController < ApplicationController
       now = Time.now.utc.to_date
       now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
     end    
+
+    def age_range(age)
+      if (age % 10) <= 3
+        return age.floor(-1).to_s + "대 초반"
+      elsif (age % 10) <= 6
+        return age.floor(-1).to_s + "대 중반"
+      else
+        return age.floor(-1).to_s + "대 후반"
+      end
+    end
 
     # Only allow a trusted parameter "white list" through.
     def drug_review_params
