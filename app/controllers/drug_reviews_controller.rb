@@ -1,8 +1,18 @@
 class DrugReviewsController < ApplicationController
   before_action :set_drug_review, only: [:show]
-  before_action :authenticate_request!, only: [:create, :update, :destroy]
+  before_action :authenticate_request!, only: [:all, :create, :update, :destroy]
   before_action :authority_check, only: [:update, :destroy]
 
+
+  #전체 보여주기
+  def all
+    if current_user.has_role? "admin"
+      @result = DrugReview.all
+      render json: @result
+    else
+      render json: { errors: ['접속 권한이 없습니다.'] }, status: :unauthorized
+    end
+  end
 
   #최근 리뷰 보여주기
   def recent
