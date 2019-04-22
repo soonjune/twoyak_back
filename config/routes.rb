@@ -68,6 +68,8 @@ Rails.application.routes.draw do
   #모바일 토큰 변환
   post "change" => "change_token#change"
 
+  #전체 리뷰
+  get "reviews" => "drug_reviews#all"
   #최근 리뷰 받기
   get "reviews/recent" => "drug_reviews#recent"
   resources :drugs, :except => [:index] do
