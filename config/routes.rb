@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   #관리자용
   get "admin" => "admin#index"
+  get "admin/user_analysis" => "admin#user_analysis"
+
   post "admin/check" => "admin#check"
   post "admin/push" => "admin#push"
   post "admin/push_all" => "admin#push_all"
