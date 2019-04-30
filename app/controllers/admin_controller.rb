@@ -18,6 +18,28 @@ class AdminController < ApplicationController
         render json: @current_drug.errors, status: :unprocessable_entity
       end
     end
+
+    def drug_analysis
+      @result = Hash.new
+      @current_drugs = CurrentDrug.all
+      @current_drug.map { |drug|
+        temp = Hash.new
+        temp = drug
+        temp["drug_name"] = Drug.find(drug.current_drug_id).name
+        temp["user_info"] = UserInfo.find(drug.user_info_id)
+        result["current_drug"] << temp
+      }
+      @past_drugs = PastDrug.all
+      @past_drug.map { |drug|
+        temp = Hash.new
+        temp = drug
+        temp["drug_name"] = Drug.find(drug.current_drug_id).name
+        temp["user_info"] = UserInfo.find(drug.user_info_id)
+        result["past_drug"] << temp
+      }
+      render json: @result
+
+    end
     
 
     def destroy
