@@ -23,7 +23,7 @@ class AdminController < ApplicationController
       @data_sent = Hash.new
       user_infos = UserInfo.all
       infos = []
-      user_infos.each { |user_info|
+      user_infos.map { |user_info|
         @past_diseases = []
         user_info.past_diseases.each { |d|
           @past_diseases << { id: d.id, parent_id: d.past_disease.id, name: d.past_disease.name, from: d.from, to: d.to }
@@ -32,9 +32,11 @@ class AdminController < ApplicationController
         user_info.current_diseases.each { |d|
           @current_diseases << { id: d.id, parent_id: d.current_disease.id, name: d.current_disease.name, from: d.from, to: d.to }
         }
+        @past_drugs = []
         user_info.past_drugs.each { |d|
           @past_drugs << { id: d.id, parent_id: d.past_drug.id, name: d.past_drug.name, from: d.from, to: d.to, memo: d.memo }
         }
+        @current_drugs = []
         user_info.current_drugs.each { |d|
           @current_drugs << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, from: d.from, to: d.to, memo: d.memo  }
         }
