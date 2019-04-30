@@ -50,7 +50,7 @@ class AdminController < ApplicationController
         }
         @past_drugs = []
         user_info.past_drugs.each { |d|
-          @past_drugs << { id: d.id, parent_id: d.past_drug.id, name: d.past_drug.name, drug_class: if d.past_drug.package_insert["DRB_ITEM"]["CLASS_NO"] then d.past_drug.package_insert["DRB_ITEM"]["CLASS_NO"] else "분류 없음", from: d.from, to: d.to, memo: d.memo }
+          @past_drugs << { id: d.id, parent_id: d.past_drug.id, name: d.past_drug.name, drug_class: if d.past_drug.package_insert["DRB_ITEM"]["CLASS_NO"] then d.past_drug.package_insert["DRB_ITEM"]["CLASS_NO"] else "분류 없음" end, from: d.from, to: d.to, memo: d.memo }
         }
         @current_drugs = []
         user_info.current_drugs.each { |d|
