@@ -20,8 +20,9 @@ class AdminController < ApplicationController
     end
 
     def user_analysis
-      @data_sent = []
+      @data_sent = Hash.new
       user_infos = UserInfo.all
+      infos = []
       user_infos.map { |user_info|
         @past_diseases = []
         user_info.past_diseases.each { |d|
