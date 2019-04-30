@@ -23,14 +23,14 @@ class AdminController < ApplicationController
       @result = Hash.new
       @current_drugs = CurrentDrug.all
       @current_drugs.map { |drug|
-        temp = drug.to_hash
+        temp = drug.as_json
         temp["drug_name"] = Drug.find(drug.current_drug_id).name
         temp["user_info"] = UserInfo.find(drug.user_info_id)
         result["current_drug"] << temp
       }
       @past_drugs = PastDrug.all
       @past_drugs.map { |drug|
-        temp = drug.to_hash
+        temp = drug.as_json
         temp["drug_name"] = Drug.find(drug.current_drug_id).name
         temp["user_info"] = UserInfo.find(drug.user_info_id)
         result["past_drug"] << temp
