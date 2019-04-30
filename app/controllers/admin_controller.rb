@@ -54,7 +54,7 @@ class AdminController < ApplicationController
         }
         @current_drugs = []
         user_info.current_drugs.each { |d|
-          @current_drugs << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, drug_class: d.current_drug.package_insert["DRB_ITEM"]["CLASS_NO"] ? d.past_drug.package_insert["DRB_ITEM"]["CLASS_NO"] : "분류 없음", from: d.from, to: d.to, memo: d.memo  }
+          @current_drugs << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, drug_class: d.current_drug.package_insert["DRB_ITEM"]["CLASS_NO"] ? d.current_drug.package_insert["DRB_ITEM"]["CLASS_NO"] : "분류 없음", from: d.from, to: d.to, memo: d.memo  }
         }
         info_data = { user_info: { basic_info: user_info, family_med_his: user_info.med_his.select(:id, :name), past_diseases: @past_diseases, 
           current_diseases: @current_diseases, 
