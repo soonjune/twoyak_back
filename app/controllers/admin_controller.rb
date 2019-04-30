@@ -22,7 +22,7 @@ class AdminController < ApplicationController
     def drug_analysis
       @result = Hash.new
       @current_drugs = CurrentDrug.all
-      @current_drug.map { |drug|
+      @current_drugs.map { |drug|
         temp = Hash.new
         temp = drug
         temp["drug_name"] = Drug.find(drug.current_drug_id).name
@@ -30,7 +30,7 @@ class AdminController < ApplicationController
         result["current_drug"] << temp
       }
       @past_drugs = PastDrug.all
-      @past_drug.map { |drug|
+      @past_drugs.map { |drug|
         temp = Hash.new
         temp = drug
         temp["drug_name"] = Drug.find(drug.current_drug_id).name
