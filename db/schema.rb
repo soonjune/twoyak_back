@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_20_163723) do
+ActiveRecord::Schema.define(version: 2019_05_02_042216) do
+
+  create_table "adverse_effects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "symptom_code"
+    t.string "symptom_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "adverse_effects_drug_reviews", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "drug_review_id", null: false
+    t.bigint "adverse_effect_id", null: false
+    t.index ["drug_review_id", "adverse_effect_id"], name: "drug_reviews_and_adverse_effects"
+  end
 
   create_table "classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "code"
@@ -99,7 +112,6 @@ ActiveRecord::Schema.define(version: 2019_03_20_163723) do
     t.bigint "user_id"
     t.bigint "drug_id"
     t.integer "efficacy"
-    t.integer "side_effect"
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
