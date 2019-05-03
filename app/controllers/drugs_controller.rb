@@ -18,7 +18,7 @@ class DrugsController < ApplicationController
     # if !request.headers["Authorization"].nil?
     #   @data["token"] = request.headers["Authorization"]
     # end
-    @data["taking"] = @drug.currents.count
+    @data["taking"] = @drug.current_ids
     @data["watching"] = @drug.watch_drugs.pluck(:user_id)
 
     render json: @data
