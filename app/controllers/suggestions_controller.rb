@@ -46,6 +46,7 @@ class SuggestionsController < ApplicationController
       unless current_user.has_role? "admin"
         if current_user.suggestion_ids.include? params[:id]
           @suggestion = Suggestion.find(params[:id])
+        end
       else
         @suggestion = Suggestion.find(params[:id])
       end
