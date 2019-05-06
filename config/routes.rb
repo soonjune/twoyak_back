@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :adverse_effects
+  resources :suggestions
   #관리자용
   get "admin" => "admin#index"
   get "admin/user_analysis" => "admin#user_analysis"
