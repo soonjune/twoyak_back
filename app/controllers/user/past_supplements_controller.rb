@@ -58,7 +58,7 @@ class User::PastSupplementsController < ApplicationController
 
     def update_past_supplement
       @past_supplement_params = params.permit(:from, :to, :memo)
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
+      if (current_user.has_role? "admin") || (current_user.user_info_ids.include? params[:user_info_id].to_i)
         @past_supplement = UserInfo.find(params[:user_info_id]).past_supplements.find(params[:id])
       end
     end

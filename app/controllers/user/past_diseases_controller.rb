@@ -58,7 +58,7 @@ class User::PastDiseasesController < ApplicationController
 
     def update_past_disease
       @past_disease_params = params.permit(:from, :to)
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
+      if (current_user.has_role? "admin") || (current_user.user_info_ids.include? params[:user_info_id].to_i)
         @past_disease = UserInfo.find(params[:user_info_id]).past_diseases.find(params[:id])
       end
     end

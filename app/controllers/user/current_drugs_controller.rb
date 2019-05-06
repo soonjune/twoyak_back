@@ -75,7 +75,7 @@ class User::CurrentDrugsController < ApplicationController
 
     def update_current_drug
       @current_drug_params = params.permit(:from, :to, :memo, :when, :how)
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
+      if (current_user.has_role? "admin") || (current_user.user_info_ids.include? params[:user_info_id].to_i)
         @current_drug = UserInfo.find(params[:user_info_id]).current_drugs.find(params[:id])
       end
     end
