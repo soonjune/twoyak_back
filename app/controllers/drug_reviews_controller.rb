@@ -23,7 +23,7 @@ class DrugReviewsController < ApplicationController
       temp["id"] = review.id
       temp["drug"] = Drug.find(review.drug_id).name
       #탈퇴한 유저 처리
-      if User.find(review.user_id)
+      begin User.find(review.user_id)
         user = User.find(review.user_id)
         user_info = user.user_infos.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
@@ -32,7 +32,7 @@ class DrugReviewsController < ApplicationController
       temp["sex"] = user_info.sex
       temp["age"] = age_range(age(user_info.birth_date))
       temp["diseases"] = user_info.current_disease.pluck(:name)
-      else
+      rescue
         temp["sex"] = "탈퇴한 회원입니다"
         temp["age"] = "탈퇴한 회원입니다"
         temp["diseases"] = "탈퇴한 회원입니다."
