@@ -26,12 +26,12 @@ class DrugReviewsController < ApplicationController
       begin User.find(review.user_id)
         user = User.find(review.user_id)
         user_info = user.user_infos.first
-      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-        $1 + "*"*4
-    }
-      temp["sex"] = user_info.sex
-      temp["age"] = age_range(age(user_info.birth_date))
-      temp["diseases"] = user_info.current_disease.pluck(:name)
+        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+          $1 + "*"*4
+        }
+        temp["sex"] = user_info.sex
+        temp["age"] = age_range(age(user_info.birth_date))
+        temp["diseases"] = user_info.current_disease.pluck(:name)
       rescue
         temp["sex"] = "탈퇴한 회원입니다"
         temp["age"] = "탈퇴한 회원입니다"
@@ -53,18 +53,20 @@ class DrugReviewsController < ApplicationController
     @drug_reviews.map { |review|
       temp = Hash.new
       temp["id"] = review.id
-      user = User.find(review.user_id)
-      temp["u_id"] = user.id
-      user_info = user.user_infos.first
-      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-        $1 + "*"*4
-    }
-    if temp["user_email"].include? "탈퇴"
-      temp["user_email"] = "탈퇴한 회원입니다"
-    end
-      temp["sex"] = user_info.sex
-      temp["age"] = age_range(age(user_info.birth_date))
-      temp["diseases"] = user_info.current_disease.pluck(:name)
+      begin User.find(review.user_id)
+        user = User.find(review.user_id)
+        user_info = user.user_infos.first
+        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+          $1 + "*"*4
+        }
+        temp["sex"] = user_info.sex
+        temp["age"] = age_range(age(user_info.birth_date))
+        temp["diseases"] = user_info.current_disease.pluck(:name)
+      rescue
+        temp["sex"] = "탈퇴한 회원입니다"
+        temp["age"] = "탈퇴한 회원입니다"
+        temp["diseases"] = "탈퇴한 회원입니다."
+      end
       temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.pluck(:symptom_name)
       temp["body"] =review.body
