@@ -77,6 +77,7 @@ Rails.application.routes.draw do
   get "reviews" => "drug_reviews#all"
   #최근 리뷰 받기
   get "reviews/recent" => "drug_reviews#recent"
+  
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end
