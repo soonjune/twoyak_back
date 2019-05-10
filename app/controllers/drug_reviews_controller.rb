@@ -35,7 +35,7 @@ class DrugReviewsController < ApplicationController
       rescue
         temp["sex"] = "탈퇴한 회원입니다"
         temp["age"] = "탈퇴한 회원입니다"
-        temp["diseases"] = "탈퇴한 회원입니다."
+        temp["diseases"] = []
       end
       temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.pluck(:symptom_name)
@@ -65,7 +65,7 @@ class DrugReviewsController < ApplicationController
       rescue
         temp["sex"] = "탈퇴한 회원입니다"
         temp["age"] = "탈퇴한 회원입니다"
-        temp["diseases"] = "탈퇴한 회원입니다."
+        temp["diseases"] = []
       end
       temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.pluck(:symptom_name)
