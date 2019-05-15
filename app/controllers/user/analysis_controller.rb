@@ -277,7 +277,6 @@ class User::AnalysisController < ApplicationController
     render json: @result
 
   end
-  end
 
   # def single_drug
   #   require 'json'
