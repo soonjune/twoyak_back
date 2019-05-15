@@ -593,8 +593,8 @@ class User::AnalysisController < ApplicationController
       @codes = ""
       @excluded = []
 
-      drug_ids =  params.permit(:drug_ids)
-
+      params_extracted =  params.permit(:drug_ids)
+      drug_ids = JSON.parse(params_extracted[:drug_ids])
       drug_ids.each do |drug_id|
         select_drug =  Drug.find(drug_id)
         if select_drug.package_insert.nil?

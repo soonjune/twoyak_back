@@ -8,13 +8,16 @@ Rails.application.routes.draw do
   post "admin/push" => "admin#push"
   post "admin/push_all" => "admin#push_all"
 
+
   namespace :user do
     resources :mypage
     resources :user_infos, :except => [:index]
+    #의약품으로 직접 안전정보(DUR) 가져오기
+    get 'analysis/get_by_drug'
+
     scope ':user_info_id' do
       #DUR 정보
       get 'analysis/get'
-      get 'analysis/get_by_drug'
       get "analysis/single/:drug_id" => "single_drug#cautions"
       #관심약물 추가
       resources :watch_drugs, :except => [:update, :destroy]
