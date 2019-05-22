@@ -20,7 +20,7 @@ class Drug < ApplicationRecord
 
   resourcify
   
-  has_and_belongs_to_many :dur_ingrs
+  # has_and_belongs_to_many :dur_ingrs
   has_one :drug_imprint
   has_many :pasts, :class_name => "PastDrug", :foreign_key => "past_drug_id"
   has_many :currents, :class_name => "CurrentDrug", :foreign_key => "current_drug_id"
@@ -28,6 +28,9 @@ class Drug < ApplicationRecord
   has_many :watch_supplements, :class_name => "WatchSupplement", :foreign_key => "watch_supplement_id"
   #리뷰
   has_many :reviews, :class_name => "DrugReview"
+
+  has_and_belongs_to_many :drug_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "drug_ingr_id"
+  has_and_belongs_to_many :dur_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "dur_ingr_id"
 
 
 

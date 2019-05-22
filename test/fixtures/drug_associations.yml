@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  drug: one
+  drug_ingr: one
+  dur_ingr: one
+
+two:
+  drug: two
+  drug_ingr: two
+  dur_ingr: two

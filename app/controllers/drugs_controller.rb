@@ -13,12 +13,23 @@ class DrugsController < ApplicationController
 
   # GET /drugs/1
   def show
+    require 'nokogiri'
+    require 'open-uri'
+
+    doc = Nokogiri::HTML(open("https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetail?itemSeq=#{@drug.item_seq}"))
+    pics = doc.css('.pc-img img')
+    url = []
+    pics.each { |pic|
+      url << pic.attr('src')
+    }
+
     @data = Hash.new
     @data = @drug.as_json
+    @data["pics"] = url
     # if !request.headers["Authorization"].nil?
     #   @data["token"] = request.headers["Authorization"]
     # end
-    @data["taking"] = @drug.current_ids
+    @data["taking"] = @drug.currents.count
     @data["watching"] = @drug.watch_drugs.pluck(:user_id)
 
     render json: @data

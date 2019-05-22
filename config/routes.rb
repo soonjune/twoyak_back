@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   resources :adverse_effects
   resources :suggestions
+  resources :drug_ingrs
+
+  # 속하는 의약품 보여주기
+  get "related_drugs/:drug_ingr_id" => "drug_associations#show"
+
 
   #관리자용
   get "admin" => "admin#index"
@@ -77,7 +82,7 @@ Rails.application.routes.draw do
   get "reviews" => "drug_reviews#all"
   #최근 리뷰 받기
   get "reviews/recent" => "drug_reviews#recent"
-  
+
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end

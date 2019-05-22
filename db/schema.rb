@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_02_042216) do
+ActiveRecord::Schema.define(version: 2019_05_17_114419) do
 
   create_table "adverse_effects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "symptom_code"
@@ -70,6 +70,17 @@ ActiveRecord::Schema.define(version: 2019_05_02_042216) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "drug_associations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "drug_id"
+    t.bigint "drug_ingr_id"
+    t.bigint "dur_ingr_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["drug_id"], name: "index_drug_associations_on_drug_id"
+    t.index ["drug_ingr_id"], name: "index_drug_associations_on_drug_ingr_id"
+    t.index ["dur_ingr_id"], name: "index_drug_associations_on_dur_ingr_id"
+  end
+
   create_table "drug_imprints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "drug_id"
     t.string "item_name"
@@ -95,6 +106,13 @@ ActiveRecord::Schema.define(version: 2019_05_02_042216) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["drug_id"], name: "index_drug_imprints_on_drug_id"
+  end
+
+  create_table "drug_ingrs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.json "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "drug_review_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
