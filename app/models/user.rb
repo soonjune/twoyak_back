@@ -38,9 +38,17 @@ class User < ApplicationRecord
 
   #소셜 로그인시 두개로 로그인하지 않도록
   def self.find_for_oauth(auth, signed_in_resource = nil)
+    #이메일 설정하기
+    email = auth.info.email
 
     # Get the identity and user if they exist
     identity = Identity.find_for_oauth(auth)
+
+    #이메일 이미 존재하는 경우
+    if !identity.persisted? && !User.where(:email => email).empty?
+      user = "already exists"
+      return user
+    end
 
     # If a signed_in_resource is provided it always overrides the existing user
     # to prevent the identity being locked with accidentally created accounts.
@@ -54,23 +62,33 @@ class User < ApplicationRecord
       # Get the existing user by email if the provider gives us a verified email.
       # If no verified email was provided we assign a temporary email and ask the
       # user to verify it on the next step via UsersController.finish_signup
-      email = auth.info.email
-      user = User.where(:email => email).first
 
-      unless self.where(email: auth.info.email).exists?
+      unless self.where(email: email).exists?
         #이메일 없으면 새로운 데이터 생성
         if user.nil?
           
             # Create the user if it's a new registration
           user = User.new(
-            email: auth.info.email,
+            email: email,
             password: Devise.friendly_token[0,20]
           )
           user.skip_confirmation!
           user.save!
-          info = UserInfo.new(user_name: auth.info.first_name)
-          info.user_id = user.id
-          info.save!
+          if(auth.provider == "naver")
+            info = UserInfo.new(user_name: auth.info.nickname)
+            info.user_id = user.id
+            if (auth.extra.raw_info.response.gender == "M")
+              info.sex = 1
+            elsif (auth.extra.raw_info.response.gender == "F")
+              info.sex = 0
+            end
+            info.save!
+          else
+            info = UserInfo.new(user_name: auth.info.name)
+            info.user_id = user.id
+            info.save!
+          end
+
         end
       end
     end
