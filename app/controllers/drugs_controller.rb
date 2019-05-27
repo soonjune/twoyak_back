@@ -1,5 +1,5 @@
 class DrugsController < ApplicationController
-  before_action :set_drug, only: [:show, :update, :destroy]
+  before_action :set_drug, only: [:show, :show_pics, :update, :destroy]
   before_action :authenticate_request!,  only: [:create, :update, :destroy]
   before_action :check_authority, only: [:create, :update, :destroy]  
   # before_action :set_search, only: [:show]
@@ -11,8 +11,7 @@ class DrugsController < ApplicationController
     render json: @drugs
   end
 
-  # GET /drugs/1
-  def show
+  def show_pics
     require 'nokogiri'
     require 'open-uri'
 
@@ -24,8 +23,16 @@ class DrugsController < ApplicationController
     }
 
     @data = Hash.new
-    @data = @drug.as_json
     @data["pics"] = url
+
+    render json: @data
+  end
+
+  # GET /drugs/1
+  def show
+
+    @data = Hash.new
+    @data = @drug.as_json
     # if !request.headers["Authorization"].nil?
     #   @data["token"] = request.headers["Authorization"]
     # end
