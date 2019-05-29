@@ -9,8 +9,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           url =  "http://localhost:3000/login?token=" + @token
           redirect_to url
         elsif @user == "already exists"
-          # url =  "localhost:3000/login?error=user_already_exists"
-          render json: { errors: '이메일로 직접 가입하셨거나 다른 소셜 계정으로 가입한 이메일입니다.' }, status: :unauthorized
+          url =  "localhost:3000/login?error=user_already_exists"
+          redirect_to url
         else
           session["devise.#{provider}_data"] = request.env["omniauth.auth"]
           redirect_to new_user_registration_url
