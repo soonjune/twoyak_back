@@ -6,9 +6,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         if (@user.class == User && @user.persisted?)
           sign_in(@user, store: false)
           @token = JWT.encode(payload(@user), ENV['SECRET_KEY_BASE'], 'HS256')
-          redirect_to "/login?token=#{@token}"
+          url =  "http://localhost:3000/login?token=" + @token
+          redirect_to url
         elsif @user == "already exists"
-          redirect_to "/login?error=user_already_exists"
+          # url =  "localhost:3000/login?error=user_already_exists"
+          render json: { errors: '이메일로 직접 가입하셨거나 다른 소셜 계정으로 가입한 이메일입니다.' }, status: :unauthorized
         else
           session["devise.#{provider}_data"] = request.env["omniauth.auth"]
           redirect_to new_user_registration_url
@@ -31,6 +33,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
                 :iss => "twoyak.com",
                 :user => {id: user.id, email: user.email, user_name: user.user_infos.first.user_name, user_info_id: user.user_infos.first.id },
     }
-    end
+  end
+
+  def flash
+    super
+  end
   
 end
