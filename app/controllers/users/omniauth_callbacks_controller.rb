@@ -5,8 +5,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user = User.find_for_oauth(request.env["omniauth.auth"], current_user)
         if (@user.class == User && @user.persisted?)
           sign_in(@user, store: false)
-          render json: { auth_token: JWT.encode(payload(@user), ENV['SECRET_KEY_BASE'], 'HS256') }
-          return
+          token = JWT.encode(payload(@user), ENV['SECRET_KEY_BASE'], 'HS256') }
+          redirect_to "#{provider}?token=#{token}"
+        rescue StandardError => error
+          redirect_to "#{issuer}?error=#{error.message}"
         elsif @user == "already exists"
           render json: { errors: '이메일로 직접 가입하셨거나 다른 소셜 계정으로 가입한 이메일입니다.' }, status: :unauthorized
         else

@@ -435,7 +435,7 @@ class User::AnalysisController < ApplicationController
         else
           select_code = select_drug.package_insert['DRB_ITEM']['EDI_CODE'] ? select_drug.package_insert['DRB_ITEM']['EDI_CODE'] : nil
           if select_code.nil?
-            bar_code = select_drug.package_insert['DRB_ITEM']['BAR_CODE'] ?  select_drug.package_insert['DRB_ITEM']['BAR_CODE'][3..-2] : nil
+            bar_code = select_drug.package_insert['DRB_ITEM']['BAR_CODE'] ?  select_drug.package_insert['DRB_ITEM']['BAR_CODE'][3..11] : nil
             if !bar_code.nil?
               @codes << bar_code + ";"
             end
