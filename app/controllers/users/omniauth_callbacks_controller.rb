@@ -9,7 +9,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           url =  "http://localhost:3000/login?token=" + @token
           redirect_to url
         elsif @user == "already exists"
-          url =  "localhost:3000/login?error=user_already_exists"
+          url =  "localhost:3000/login-error"
           redirect_to url
         else
           session["devise.#{provider}_data"] = request.env["omniauth.auth"]
