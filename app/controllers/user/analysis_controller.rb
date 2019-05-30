@@ -572,9 +572,15 @@ class User::AnalysisController < ApplicationController
         if select_drug.package_insert.nil?
           @excluded << select_drug.name
         else
-          select_code = JSON.parse(select_drug.package_insert)['DRB_ITEM']['EDI_CODE'] ? JSON.parse(select_drug.package_insert)['DRB_ITEM']['EDI_CODE'] : nil
+          if select_drug.package_insert.class == Hash
+          #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
+            hashed_package = select_drug.package_insert
+          else
+            hashed_package = JSON.parse(select_drug.package_insert)
+          end
+          select_code = hashed_package['DRB_ITEM']['EDI_CODE'] ? hashed_package['DRB_ITEM']['EDI_CODE'] : nil
           if select_code.nil?
-            bar_code = JSON.parse(select_drug.package_insert)['DRB_ITEM']['BAR_CODE'] ? JSON.parse(select_drug.package_insert)['DRB_ITEM']['BAR_CODE'] : nil
+            bar_code = hashed_package['DRB_ITEM']['BAR_CODE'] ? hashed_package['DRB_ITEM']['BAR_CODE'] : nil
             if !bar_code.nil?
               bar_codes = bar_code.split(",").map(&:strip)
               bar_codes.each { |code| 
@@ -601,9 +607,15 @@ class User::AnalysisController < ApplicationController
         if select_drug.package_insert.nil?
           @excluded << select_drug.name
         else
-          select_code = JSON.parse(select_drug.package_insert)['DRB_ITEM']['EDI_CODE'] ? JSON.parse(select_drug.package_insert)['DRB_ITEM']['EDI_CODE'] : nil
-          if select_code.nil?
-            bar_code = JSON.parse(select_drug.package_insert)['DRB_ITEM']['BAR_CODE'] ? JSON.parse(select_drug.package_insert)['DRB_ITEM']['BAR_CODE'] : nil
+          if select_drug.package_insert.class == Hash
+            #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
+              hashed_package = select_drug.package_insert
+            else
+              hashed_package = JSON.parse(select_drug.package_insert)
+            end
+            select_code = hashed_package['DRB_ITEM']['EDI_CODE'] ? hashed_package['DRB_ITEM']['EDI_CODE'] : nil
+            if select_code.nil?
+              bar_code = hashed_package['DRB_ITEM']['BAR_CODE'] ? hashed_package['DRB_ITEM']['BAR_CODE'] : nil
             if !bar_code.nil?
               bar_codes = bar_code.split(",").map(&:strip)
               bar_codes.each { |code| 

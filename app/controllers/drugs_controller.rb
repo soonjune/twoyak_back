@@ -99,7 +99,11 @@ class DrugsController < ApplicationController
     
     if(!@rep.nil?)
       if !@rep['package_insert'].nil?
-        @information = JSON.parse(@rep["package_insert"])["DRB_ITEM"]
+        if @rep["package_insert"].class == Hash
+          @information = @rep["package_insert"]["DRB_ITEM"]
+        else
+          @information = JSON.parse(@rep["package_insert"])["DRB_ITEM"]
+        end
         @ITEM_NAME = @rep.name
 
         @data["item_name"] = @ITEM_NAME
