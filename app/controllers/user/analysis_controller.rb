@@ -422,32 +422,63 @@ class User::AnalysisController < ApplicationController
 
   private
 
-    def set_code
-      require 'json'
-      @codes = ""
-      @excluded = []
-      user_info_current_drugs = CurrentDrug.where(user_info_id: params[:user_info_id])
+  def set_code
+    require 'json'
+    @codes = ""
+    @excluded = []
+    user_info_current_drugs = CurrentDrug.where(user_info_id: params[:user_info_id])
 
-      user_info_current_drugs.each do |current_drug|
-        select_drug =  Drug.find(current_drug.current_drug_id)
-        if select_drug.package_insert.nil?
-          @excluded << select_drug.name
-        else
-          select_code = select_drug.package_insert['DRB_ITEM']['EDI_CODE'] ? select_drug.package_insert['DRB_ITEM']['EDI_CODE'] : nil
-          if select_code.nil?
-            bar_code = select_drug.package_insert['DRB_ITEM']['BAR_CODE'] ?  select_drug.package_insert['DRB_ITEM']['BAR_CODE'][3..11] : nil
-            if !bar_code.nil?
-              @codes << bar_code + ";"
-            end
-          else
-            edi_code = select_code + "0"
-            @codes << edi_code + ";"
-            edi_code = select_code + "1"
-            @codes << edi_code + ";"
+    user_info_current_drugs.each do |current_drug|
+      select_drug =  Drug.find(current_drug.current_drug_id)
+      if select_drug.package_insert.nil?
+        @excluded << select_drug.name
+      else
+        select_code = JSON.parse(select_drug.package_insert)['DRB_ITEM']['EDI_CODE'] ? JSON.parse(select_drug.package_insert)['DRB_ITEM']['EDI_CODE'] : nil
+        if select_code.nil?
+          bar_code = JSON.parse(select_drug.package_insert)['DRB_ITEM']['BAR_CODE'] ? JSON.parse(select_drug.package_insert)['DRB_ITEM']['BAR_CODE'] : nil
+          if !bar_code.nil?
+            bar_codes = bar_code.split(",").map(&:strip)
+            bar_codes.each { |code| 
+              @codes << code[3..11] + ";"
+            }
           end
+        else
+          edi_code = select_code
+          @codes << edi_code + ";"
         end
       end
     end
+  end
+
+  def drug_code
+    require 'json'
+    @codes = ""
+    @excluded = []
+
+    params_extracted =  params.permit(:drug_ids)
+    drug_ids = JSON.parse(params_extracted[:drug_ids])
+    drug_ids.each do |drug_id|
+      select_drug =  Drug.find(drug_id)
+      if select_drug.package_insert.nil?
+        @excluded << select_drug.name
+      else
+        select_code = JSON.parse(select_drug.package_insert)['DRB_ITEM']['EDI_CODE'] ? JSON.parse(select_drug.package_insert)['DRB_ITEM']['EDI_CODE'] : nil
+        if select_code.nil?
+          bar_code = JSON.parse(select_drug.package_insert)['DRB_ITEM']['BAR_CODE'] ? JSON.parse(select_drug.package_insert)['DRB_ITEM']['BAR_CODE'] : nil
+          if !bar_code.nil?
+            bar_codes = bar_code.split(",").map(&:strip)
+            bar_codes.each { |code| 
+              @codes << code[3..11] + ";"
+            }
+          end
+        else
+          edi_code = select_code
+          @codes << edi_code + ";"
+        end
+      end
+    end
+  end
 end
+
 
 
