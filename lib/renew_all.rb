@@ -4,7 +4,7 @@ require 'active_support/core_ext/hash'
 
 Searchkick.disable_callbacks
 
-for i in 501..502
+for i in 1..502
     puts "i = #{i}"
     response = Net::HTTP.get_response(URI.parse("http://apis.data.go.kr/1471057/MdcinPrductPrmisnInfoService/getMdcinPrductItem?serviceKey=#{ENV['PUBLIC_API_KEY']}&pageNo=#{i}&numOfRows=100")).body
     begin
