@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_17_114419) do
+ActiveRecord::Schema.define(version: 2019_06_24_114433) do
 
   create_table "adverse_effects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "symptom_code"
@@ -148,6 +148,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
     t.datetime "updated_at", null: false
     t.json "ingr_eng_name"
     t.string "atc_code"
+    t.index ["item_seq"], name: "drugs_item_seq_IDX"
     t.index ["name"], name: "index_drugs_on_name"
   end
 
@@ -173,6 +174,22 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   create_table "family_med_histories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_info_id"
     t.integer "med_his_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "health_news", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "url"
+    t.string "press"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "hospitals", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "province"
+    t.string "city"
+    t.json "more"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

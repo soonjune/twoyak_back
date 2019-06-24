@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :health_news
   resources :adverse_effects
   resources :suggestions
   resources :drug_ingrs
