@@ -92,7 +92,7 @@ class DrugsController < ApplicationController
         # if(!item.drug_imprint.nil?)
         #   @data["drug_imprint"] = item.drug_imprint
         # end
-        break
+        return
       elsif(item.class == Supplement && search == item.name)
         @sup = item
         break
