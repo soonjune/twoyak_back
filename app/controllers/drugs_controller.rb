@@ -78,16 +78,20 @@ class DrugsController < ApplicationController
   
     searched.each { |item|
       if(item.class == Drug && search == item.name)
-        @rep = item
-        @data["drug_id"] = @rep.id
-        @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
-        @data["ingr_eng_name"] = item.ingr_eng_name
-        @data["atc_code"] = item.atc_code
-        @data["taking"] = item.currents.count
-        @data["watching"] = item.watch_drugs.pluck(:user_id)
-        if(!item.drug_imprint.nil?)
-          @data["drug_imprint"] = item.drug_imprint
-        end
+        #drugs/:id로 직접 접근하는 것과 동일한 화면 표시를 위해 redirection
+        @id = item.id
+        redirect_to drug_path(@id)
+        #검색 이전 코드
+        # @rep = item
+        # @data["drug_id"] = @rep.id
+        # @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
+        # @data["ingr_eng_name"] = item.ingr_eng_name
+        # @data["atc_code"] = item.atc_code
+        # @data["taking"] = item.currents.count
+        # @data["watching"] = item.watch_drugs.pluck(:user_id)
+        # if(!item.drug_imprint.nil?)
+        #   @data["drug_imprint"] = item.drug_imprint
+        # end
         break
       elsif(item.class == Supplement && search == item.name)
         @sup = item
@@ -99,11 +103,7 @@ class DrugsController < ApplicationController
     
     if(!@rep.nil?)
       if !@rep['package_insert'].nil?
-        if @rep["package_insert"].class == Hash
-          @information = @rep["package_insert"]["DRB_ITEM"]
-        else
-          @information = JSON.parse(@rep["package_insert"])["DRB_ITEM"]
-        end
+        @information = @rep['package_insert']['DRB_ITEM']
         @ITEM_NAME = @rep.name
 
         @data["item_name"] = @ITEM_NAME
