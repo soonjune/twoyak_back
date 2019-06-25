@@ -118,6 +118,8 @@ Rails.application.routes.draw do
   get 'search_terms' => 'search_terms#index'
   get 'singleSearch/' => 'drugs#find_drug_mobile'
   get 'searchSingle/' => 'drugs#find_drug_web'
+  #user_id와 user_info_id 매치 시키기
+  get 'infos_for_mobile/:id' => 'users#infos_for_mobile'
   get '/multiSearch' => "analysis#interaction"
   # #jwt authentication
   # post 'auth_user' => 'authentication#authenticate_user'
