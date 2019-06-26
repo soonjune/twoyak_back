@@ -1,5 +1,5 @@
 class DrugsController < ApplicationController
-  before_action :set_drug, only: [:show, :update, :destroy]
+  before_action :set_drug, only: [:show, :update, :destroy, :show_pics]
   before_action :authenticate_request!,  only: [:create, :update, :destroy]
   before_action :check_authority, only: [:create, :update, :destroy]  
   # before_action :set_search, only: [:show]
