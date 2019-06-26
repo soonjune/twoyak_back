@@ -37,7 +37,7 @@ class DrugsController < ApplicationController
     end
     @url = []
     pics.each { |pic|
-      url << pic.attr('src')
+      @url << pic.attr('src')
     }
     render json: { pics: @url }
   end
