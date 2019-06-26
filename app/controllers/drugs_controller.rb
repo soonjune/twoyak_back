@@ -35,10 +35,11 @@ class DrugsController < ApplicationController
       doc = Nokogiri::HTML(open("https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetail?itemSeq=#{@drug.item_seq}"))
       pics = doc.css('.pc-img img')
     end
-    url = []
+    @url = []
     pics.each { |pic|
       url << pic.attr('src')
     }
+    render json: { pics: @url }
   end
 
   # POST /drugs
