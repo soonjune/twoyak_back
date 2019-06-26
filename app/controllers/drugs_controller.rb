@@ -18,6 +18,10 @@ class DrugsController < ApplicationController
 
     doc = Nokogiri::HTML(open("https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetail?itemSeq=#{@drug.item_seq}"))
     pics = doc.css('.pc-img img')
+    if pics.empty?
+      doc = Nokogiri::HTML(open("https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetail?itemSeq=#{@drug.item_seq}"))
+      pics = doc.css('.pc-img img')
+    end
     url = []
     pics.each { |pic|
       url << pic.attr('src')
@@ -89,17 +93,21 @@ class DrugsController < ApplicationController
   
     searched.each { |item|
       if(item.class == Drug && search == item.name)
-        @rep = item
-        @data["drug_id"] = @rep.id
-        @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
-        @data["ingr_eng_name"] = item.ingr_eng_name
-        @data["atc_code"] = item.atc_code
-        @data["taking"] = item.currents.count
-        @data["watching"] = item.watch_drugs.pluck(:user_id)
-        if(!item.drug_imprint.nil?)
-          @data["drug_imprint"] = item.drug_imprint
-        end
-        break
+        #drugs/:id로 직접 접근하는 것과 동일한 화면 표시를 위해 redirection
+        @id = item.id
+        redirect_to drug_path(@id)
+        #검색 이전 코드
+        # @rep = item
+        # @data["drug_id"] = @rep.id
+        # @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
+        # @data["ingr_eng_name"] = item.ingr_eng_name
+        # @data["atc_code"] = item.atc_code
+        # @data["taking"] = item.currents.count
+        # @data["watching"] = item.watch_drugs.pluck(:user_id)
+        # if(!item.drug_imprint.nil?)
+        #   @data["drug_imprint"] = item.drug_imprint
+        # end
+        return
       elsif(item.class == Supplement && search == item.name)
         @sup = item
         break
