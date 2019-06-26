@@ -13,6 +13,19 @@ class DrugsController < ApplicationController
 
   # GET /drugs/1
   def show
+    @data = Hash.new
+    @data = @drug.as_json
+    @data["pics"] = url
+    # if !request.headers["Authorization"].nil?
+    #   @data["token"] = request.headers["Authorization"]
+    # end
+    @data["taking"] = @drug.currents.count
+    @data["watching"] = @drug.watch_drugs.pluck(:user_id)
+
+    render json: @data
+  end
+
+  def show_pics
     require 'nokogiri'
     require 'open-uri'
 
@@ -26,17 +39,6 @@ class DrugsController < ApplicationController
     pics.each { |pic|
       url << pic.attr('src')
     }
-
-    @data = Hash.new
-    @data = @drug.as_json
-    @data["pics"] = url
-    # if !request.headers["Authorization"].nil?
-    #   @data["token"] = request.headers["Authorization"]
-    # end
-    @data["taking"] = @drug.currents.count
-    @data["watching"] = @drug.watch_drugs.pluck(:user_id)
-
-    render json: @data
   end
 
   # POST /drugs

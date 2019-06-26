@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :health_news
+  resources :hospitals
   resources :adverse_effects
   resources :suggestions
   resources :drug_ingrs
@@ -84,6 +86,9 @@ Rails.application.routes.draw do
   get "reviews" => "drug_reviews#all"
   #최근 리뷰 받기
   get "reviews/recent" => "drug_reviews#recent"
+
+  #drug 사진
+  get "drugs/:id/pics" => "drugs#show_pics"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end
