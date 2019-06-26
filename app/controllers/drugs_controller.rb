@@ -24,6 +24,23 @@ class DrugsController < ApplicationController
     render json: @data
   end
 
+  def show_pics
+    require 'nokogiri'
+    require 'open-uri'
+
+    doc = Nokogiri::HTML(open("https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetail?itemSeq=#{@drug.item_seq}"))
+    pics = doc.css('.pc-img img')
+    if pics.empty?
+      doc = Nokogiri::HTML(open("https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetail?itemSeq=#{@drug.item_seq}"))
+      pics = doc.css('.pc-img img')
+    end
+    @url = []
+    pics.each { |pic|
+      @url << pic.attr('src')
+    }
+    render json: { pics: @url }
+  end
+
   # POST /drugs
   def create
     @drug = Drug.new(drug_params)
