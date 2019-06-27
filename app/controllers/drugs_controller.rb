@@ -15,6 +15,7 @@ class DrugsController < ApplicationController
   def show
     @data = Hash.new
     @data = @drug.as_json
+    @data["package_insert"] = JSON.parse(@data["package_insert"])
     # if !request.headers["Authorization"].nil?
     #   @data["token"] = request.headers["Authorization"]
     # end
