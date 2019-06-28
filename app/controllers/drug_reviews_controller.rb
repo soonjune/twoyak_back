@@ -30,7 +30,7 @@ class DrugReviewsController < ApplicationController
       if temp["user_email"].include? "탈퇴"
         temp["user_email"] = "탈퇴한 회원입니다"
       end
-      temp["sex"] = user_info.sex
+      temp["sex"] = user_info.sex unless user_info.sex.nil?
       temp["age"] = age_range(age(user_info.birth_date))
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
