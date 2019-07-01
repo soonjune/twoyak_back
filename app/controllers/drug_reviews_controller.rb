@@ -29,7 +29,7 @@ class DrugReviewsController < ApplicationController
         temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
           $1 + "*"*4
         }
-        temp["sex"] = user_info.sex
+        temp["sex"] = user_info.sex unless user_info.sex.nil?
         temp["age"] = age_range(age(user_info.birth_date))
         temp["diseases"] = user_info.current_disease.pluck(:name)
       rescue
@@ -68,7 +68,7 @@ class DrugReviewsController < ApplicationController
         temp["diseases"] = []
       end
       temp["efficacy"] = review.efficacy
-      temp["adverse_effects"] = review.adverse_effects.pluck(:symptom_name)
+      temp["adverse_effects"] = review.adverse_effects.pluck(:id, :symptom_name)
       temp["body"] =review.body
       @result << temp
     }
