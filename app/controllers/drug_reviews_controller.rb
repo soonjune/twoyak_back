@@ -34,7 +34,7 @@ class DrugReviewsController < ApplicationController
       temp["age"] = age_range(age(user_info.birth_date))
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
-      temp["adverse_effects"] = review.adverse_effects.pluck(:symptom_name)
+      temp["adverse_effects"] = review.adverse_effects.pluck(:id, :symptom_name)
       temp["body"] =review.body
       @result << temp
     }
@@ -140,5 +140,5 @@ class DrugReviewsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def drug_review_params
       params.require(:drug_review).permit(:user_id, :drug_id, :body, :efficacy, :adverse_effect_ids => [])
-    end
+    end 
 end
