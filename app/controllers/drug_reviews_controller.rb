@@ -34,7 +34,7 @@ class DrugReviewsController < ApplicationController
       temp["age"] = age_range(age(user_info.birth_date))
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
-      temp["adverse_effects"] = review.adverse_effects.pluck(:id, :symptom_name)
+      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       temp["body"] =review.body
       @result << temp
     }
@@ -62,7 +62,7 @@ class DrugReviewsController < ApplicationController
       temp["age"] = age_range(age(user_info.birth_date))
       temp["diseases"] = user_info.current_disease.pluck(:name)
       temp["efficacy"] = review.efficacy
-      temp["adverse_effects"] = review.adverse_effects.pluck(:id, :symptom_name)
+      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       temp["body"] =review.body
       @result << temp
     }
