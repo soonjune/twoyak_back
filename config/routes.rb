@@ -91,6 +91,9 @@ Rails.application.routes.draw do
   get "drugs/:id/pics" => "drugs#show_pics"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
+    #좋아요 눌렀는지 확인
+    get '/"id/like' => 'drug_review_likes#show'
+    post '/:id/like' => 'drug_review_likes#create'
   end
   resources :supplements, :except => [:index] do
     resources :sup_reviews

@@ -27,6 +27,9 @@ class User < ApplicationRecord
 
   has_many :identities, dependent: :destroy
 
+  #리뷰 좋아요
+  has_many :drug_review_likes
+  has_many :l_drug_reviews, through: :drug_review_likes, source: :drug_review
 
   #이메일 형식
   # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i

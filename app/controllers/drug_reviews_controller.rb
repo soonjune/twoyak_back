@@ -36,6 +36,7 @@ class DrugReviewsController < ApplicationController
       temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       temp["body"] =review.body
+      temp["liked_users"] = review.l_users.count
       @result << temp
     }
 
@@ -64,6 +65,8 @@ class DrugReviewsController < ApplicationController
       temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       temp["body"] =review.body
+      temp["liked_users"] = review.l_users.count
+
       @result << temp
     }
 
