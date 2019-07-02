@@ -75,7 +75,10 @@ class DrugReviewsController < ApplicationController
 
   # GET /drug_reviews/1
   def show
-    render json: @drug_review
+    @result = Hash.new
+    @result["liked_users"] = @drug_review.count
+    render json: {@drug_review, @result}
+
   end
 
   # POST /drug_reviews
