@@ -76,8 +76,9 @@ class DrugReviewsController < ApplicationController
   # GET /drug_reviews/1
   def show
     @result = Hash.new
-    @result["liked_users"] = @drug_review.count
-    render json: @drug_review
+    @result = @drug_review.attributes
+    @result["liked_users"] = @drug_review.l_users.count
+    render json: @result
 
   end
 
