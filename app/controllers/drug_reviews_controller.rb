@@ -77,7 +77,7 @@ class DrugReviewsController < ApplicationController
   def show
     @result = Hash.new
     @result["liked_users"] = @drug_review.count
-    render json: {@drug_review, @result}
+    render json: @drug_review
 
   end
 
