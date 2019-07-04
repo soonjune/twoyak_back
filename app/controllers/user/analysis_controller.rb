@@ -589,6 +589,9 @@ class User::AnalysisController < ApplicationController
             end
           else
             edi_code = select_code
+            if edi_code.length != 9
+              edi_code + "0"
+            end
             @codes << edi_code + ";"
           end
         end
