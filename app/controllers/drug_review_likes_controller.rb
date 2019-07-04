@@ -20,3 +20,4 @@ class DrugReviewLikesController < ApplicationController
         end
         render json: {status: 'ok'}, status: :ok
     end
+end
