@@ -22,6 +22,7 @@ class DrugReviewsController < ApplicationController
       temp = Hash.new
       temp["id"] = review.id
       temp["drug"] = Drug.find(review.drug_id).name
+      temp["drug_id"] = review.drug_id
       #탈퇴한 유저 처리
       begin User.find(review.user_id)
         user = User.find(review.user_id)
@@ -40,6 +41,7 @@ class DrugReviewsController < ApplicationController
       temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.pluck(:symptom_name)
       temp["body"] =review.body
+      temp["liked_users"] = review.l_users.count
       @result << temp
     }
 
@@ -53,6 +55,7 @@ class DrugReviewsController < ApplicationController
     @drug_reviews.map { |review|
       temp = Hash.new
       temp["id"] = review.id
+      temp["drug_id"] = review.drug_id
       begin User.find(review.user_id)
         user = User.find(review.user_id)
         user_info = user.user_infos.first
@@ -70,6 +73,7 @@ class DrugReviewsController < ApplicationController
       temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.pluck(:id, :symptom_name)
       temp["body"] =review.body
+      temp["liked_users"] = review.l_users.count
       @result << temp
     }
 
