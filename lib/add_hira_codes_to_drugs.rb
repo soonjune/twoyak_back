@@ -18,6 +18,7 @@ Drug.find_each do |drug|
         res = Net::HTTP.post_form(uri, "txtArtcNm" => URI::encode(drug.name) )
         parsed = JSON.parse(res.body)
     end
+
     searched = parsed["data"]["rest"]["LIST"]
     if searched.nil?
         #검색 안되면 코드로 검색
