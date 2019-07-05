@@ -26,6 +26,7 @@ class DrugReviewsController < ApplicationController
       #탈퇴한 유저 처리
       begin User.find(review.user_id)
         user = User.find(review.user_id)
+        temp["u_id"] = user.id
         user_info = user.user_infos.first
         temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
           $1 + "*"*4
