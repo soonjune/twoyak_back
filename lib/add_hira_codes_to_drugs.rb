@@ -4,7 +4,7 @@ require 'net/http'
 
 Searchkick.disable_callbacks
 
-Drug.where("id > 2230").find_each do |drug|
+Drug.where("id > 2999").find_each do |drug|
     puts drug.name
     uri = URI("https://www.hira.or.kr/rg/dur/getDrugListJson.do")
     # http = Net::HTTP.new(uri.host, uri.port)
@@ -39,7 +39,12 @@ Drug.where("id > 2230").find_each do |drug|
                 }
                 @codes.each { |code|
                     res = Net::HTTP.post_form(uri, "txtArtcNm" => code )
-                    parsed = JSON.parse(res.body)
+                    begin
+                        parsed = JSON.parse(res.body)
+                    rescue
+                        res = Net::HTTP.post_form(uri, "txtArtcNm" => code )
+                        parsed = JSON.parse(res.body)
+                    end
                     searched = parsed["data"]["rest"]["LIST"]
                     if !searched.nil?
                         break
