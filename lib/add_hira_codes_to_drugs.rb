@@ -4,7 +4,7 @@ require 'net/http'
 
 Searchkick.disable_callbacks
 
-Drug.where("id > 10000").find_each do |drug|
+Drug.where("id > 11275").find_each do |drug|
     puts drug.name
     uri = URI("https://www.hira.or.kr/rg/dur/getDrugListJson.do")
     # http = Net::HTTP.new(uri.host, uri.port)
