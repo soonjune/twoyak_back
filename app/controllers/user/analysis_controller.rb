@@ -599,7 +599,8 @@ class User::AnalysisController < ApplicationController
         end
       #hira_med_code 있는 경우
       else
-        @code << select_code.to_s.concat(";")
+        puts select_code.to_s.concat(";")
+        @codes << select_code.to_s.concat(";")
       end
 
 
@@ -645,7 +646,7 @@ class User::AnalysisController < ApplicationController
           end
         #hira_med_code 있는 경우
         else
-          @code << select_code.to_s.concat(";")
+          @codes << select_code.to_s.concat(";")
         end
 
       end
