@@ -569,8 +569,11 @@ class User::AnalysisController < ApplicationController
 
       user_info_current_drugs.each do |current_drug|
         select_drug =  Drug.find(current_drug.current_drug_id)
-        if select_drug.package_insert.nil?
-          @excluded << select_drug.name
+        select_code = select_drug.hira_medicine_code
+        if select_code.nil?
+          if select_drug.package_insert.nil?
+            @excluded << select_drug.name
+          end
         else
           if select_drug.package_insert.class == Hash
           #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
@@ -592,9 +595,12 @@ class User::AnalysisController < ApplicationController
             if edi_code.length != 9
               edi_code.concat("0")
             end
-            @codes << edi_code + ";"
+            @codes << edi_code.concat(";")
           end
         end
+        #hira_med_code 있는 경우
+        @code << select_code.concat(";")
+
       end
     end
 
@@ -607,18 +613,21 @@ class User::AnalysisController < ApplicationController
       drug_ids = JSON.parse(params_extracted[:drug_ids])
       drug_ids.each do |drug_id|
         select_drug =  Drug.find(drug_id)
-        if select_drug.package_insert.nil?
-          @excluded << select_drug.name
+        select_code = select_drug.hira_medicine_code
+        if select_code.nil?
+          if select_drug.package_insert.nil?
+            @excluded << select_drug.name
+          end
         else
           if select_drug.package_insert.class == Hash
-            #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
-              hashed_package = select_drug.package_insert
-            else
-              hashed_package = JSON.parse(select_drug.package_insert)
-            end
-            select_code = hashed_package['DRB_ITEM']['EDI_CODE'] ? hashed_package['DRB_ITEM']['EDI_CODE'] : nil
-            if select_code.nil?
-              bar_code = hashed_package['DRB_ITEM']['BAR_CODE'] ? hashed_package['DRB_ITEM']['BAR_CODE'] : nil
+          #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
+            hashed_package = select_drug.package_insert
+          else
+            hashed_package = JSON.parse(select_drug.package_insert)
+          end
+          select_code = hashed_package['DRB_ITEM']['EDI_CODE'] ? hashed_package['DRB_ITEM']['EDI_CODE'] : nil
+          if select_code.nil?
+            bar_code = hashed_package['DRB_ITEM']['BAR_CODE'] ? hashed_package['DRB_ITEM']['BAR_CODE'] : nil
             if !bar_code.nil?
               bar_codes = bar_code.split(",").map(&:strip)
               bar_codes.each { |code| 
@@ -627,9 +636,15 @@ class User::AnalysisController < ApplicationController
             end
           else
             edi_code = select_code
-            @codes << edi_code + ";"
+            if edi_code.length != 9
+              edi_code.concat("0")
+            end
+            @codes << edi_code.concat(";")
           end
         end
+        #hira_med_code 있는 경우
+        @code << select_code.concat(";")
+
       end
     end
 end

@@ -184,7 +184,7 @@ class DrugsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_drug
-      @drug = Drug.find(params[:id])
+      @drug = Drug.select(Drug.column_names - ["hira_medicine_code","hira_main_ingr_code"]).find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
