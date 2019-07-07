@@ -22,7 +22,7 @@ class User::CurrentDrugsController < ApplicationController
       render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
     elsif @current_drug << Drug.find(@search_id)
       set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
-      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:when], how: params[:how])
+      set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
       render json: @current_drug.pluck(:id, :name), status: :created
     else
       render json: @current_drug.errors, status: :unprocessable_entity
