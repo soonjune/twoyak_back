@@ -44,4 +44,5 @@ class Drug < ApplicationRecord
           ingr_eng_name: eng_map(ingr_eng_name)
       }
   end
+
 end

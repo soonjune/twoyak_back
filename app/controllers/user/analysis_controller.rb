@@ -573,33 +573,35 @@ class User::AnalysisController < ApplicationController
         if select_code.nil?
           if select_drug.package_insert.nil?
             @excluded << select_drug.name
-          end
-        else
-          if select_drug.package_insert.class == Hash
-          #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
-            hashed_package = select_drug.package_insert
           else
-            hashed_package = JSON.parse(select_drug.package_insert)
-          end
-          select_code = hashed_package['DRB_ITEM']['EDI_CODE'] ? hashed_package['DRB_ITEM']['EDI_CODE'] : nil
-          if select_code.nil?
-            bar_code = hashed_package['DRB_ITEM']['BAR_CODE'] ? hashed_package['DRB_ITEM']['BAR_CODE'] : nil
-            if !bar_code.nil?
-              bar_codes = bar_code.split(",").map(&:strip)
-              bar_codes.each { |code| 
-                @codes << code[3..11] + ";"
-              }
+            if select_drug.package_insert.class == Hash
+            #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
+              hashed_package = select_drug.package_insert
+            else
+              hashed_package = JSON.parse(select_drug.package_insert)
             end
-          else
-            edi_code = select_code
-            if edi_code.length != 9
-              edi_code.concat("0")
-            end
-            @codes << edi_code.concat(";")
+            select_code = hashed_package['DRB_ITEM']['EDI_CODE'] ? hashed_package['DRB_ITEM']['EDI_CODE'] : nil
+            if select_code.nil?
+              bar_code = hashed_package['DRB_ITEM']['BAR_CODE'] ? hashed_package['DRB_ITEM']['BAR_CODE'] : nil
+              if !bar_code.nil?
+                bar_codes = bar_code.split(",").map(&:strip)
+                bar_codes.each { |code| 
+                  @codes << code[3..11] + ";"
+                }
+              end
+            else
+              edi_code = select_code
+              if edi_code.length != 9
+                edi_code.concat("0")
+              end
+          @codes << edi_code.concat(";")
           end
         end
-        #hira_med_code 있는 경우
+      #hira_med_code 있는 경우
+      else
         @code << select_code.concat(";")
+      end
+
 
       end
     end
@@ -617,33 +619,34 @@ class User::AnalysisController < ApplicationController
         if select_code.nil?
           if select_drug.package_insert.nil?
             @excluded << select_drug.name
-          end
-        else
-          if select_drug.package_insert.class == Hash
-          #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
-            hashed_package = select_drug.package_insert
           else
-            hashed_package = JSON.parse(select_drug.package_insert)
-          end
-          select_code = hashed_package['DRB_ITEM']['EDI_CODE'] ? hashed_package['DRB_ITEM']['EDI_CODE'] : nil
-          if select_code.nil?
-            bar_code = hashed_package['DRB_ITEM']['BAR_CODE'] ? hashed_package['DRB_ITEM']['BAR_CODE'] : nil
-            if !bar_code.nil?
-              bar_codes = bar_code.split(",").map(&:strip)
-              bar_codes.each { |code| 
-                @codes << code[3..11] + ";"
-              }
+            if select_drug.package_insert.class == Hash
+            #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
+              hashed_package = select_drug.package_insert
+            else
+              hashed_package = JSON.parse(select_drug.package_insert)
             end
-          else
-            edi_code = select_code
-            if edi_code.length != 9
-              edi_code.concat("0")
+            select_code = hashed_package['DRB_ITEM']['EDI_CODE'] ? hashed_package['DRB_ITEM']['EDI_CODE'] : nil
+            if select_code.nil?
+              bar_code = hashed_package['DRB_ITEM']['BAR_CODE'] ? hashed_package['DRB_ITEM']['BAR_CODE'] : nil
+              if !bar_code.nil?
+                bar_codes = bar_code.split(",").map(&:strip)
+                bar_codes.each { |code| 
+                  @codes << code[3..11] + ";"
+                }
+              end
+            else
+              edi_code = select_code
+              if edi_code.length != 9
+                edi_code.concat("0")
+              end
+              @codes << edi_code.concat(";")
             end
-            @codes << edi_code.concat(";")
           end
-        end
         #hira_med_code 있는 경우
-        @code << select_code.concat(";")
+        else
+          @code << select_code.concat(";")
+        end
 
       end
     end
