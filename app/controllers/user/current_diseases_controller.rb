@@ -22,7 +22,7 @@ class User::CurrentDiseasesController < ApplicationController
       render json: { errors: "이미 앓고 있는 질환입니다." }, status: :unprocessable_entity
     elsif @current_disease << Disease.find(@search_id)
       set_time_memo = CurrentDisease.where(user_info_id: params[:user_info_id], current_disease_id: @search_id).last
-      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now)
+      set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to])
       render json: @current_disease, status: :created
     else
       render json: @current_disease.errors, status: :unprocessable_entity
@@ -76,7 +76,7 @@ class User::CurrentDiseasesController < ApplicationController
 
     def update_current_disease
       @current_disease_params = params.permit(:from, :to)
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
+      if (current_user.has_role? "admin") || (current_user.user_info_ids.include? params[:user_info_id].to_i)
         @current_disease = UserInfo.find(params[:user_info_id]).current_diseases.find(params[:id])
       end
     end
