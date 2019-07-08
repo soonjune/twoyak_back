@@ -3,7 +3,9 @@ class User::CurrentDrugsController < ApplicationController
   before_action :set_current_drug, :search_id, only: [:create, :show, :update, :destroy, :destroy_to_past]
   before_action :update_current_drug, only: [:update]
   before_action :id_to_modify, only: [:update, :destroy, :destroy_to_past]
-  
+  require 'dur_analysis'
+
+
   # GET /current_drugs
   def index
     @current_drugs = CurrentDrug.all
@@ -18,9 +20,17 @@ class User::CurrentDrugsController < ApplicationController
 
   # POST /current_drugs
   def create
-    if @current_drug.include?(Drug.find(@search_id))
+
+    drug_found = Drug.find(@search_id)
+
+    if @current_drug.include?(drug_found)
       render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
-    elsif @current_drug << Drug.find(@search_id)
+    elsif @current_drug << drug_found
+      #dur 정보 추가
+      dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([drug_found.id]))
+      drug_found.dur_info = dur_info unless dur_info.nil?
+      drug_found.save
+      
       set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
       set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
       render json: @current_drug.pluck(:id, :name), status: :created
