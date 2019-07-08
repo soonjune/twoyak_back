@@ -106,6 +106,7 @@ Rails.application.routes.draw do
   get 'autocomplete/disease' => 'autocomplete#disease'
   get 'autocomplete/drug' => 'autocomplete#drug'
   get 'autocomplete/sup' => 'autocomplete#sup'
+  get 'autocomplete/adverse_effect' => 'adverse_effects#index'
 
   resources :supplements, :except => [:show, :index]
   get "supplements/:search_term" => "supplements#show"
