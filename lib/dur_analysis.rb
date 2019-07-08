@@ -1,19 +1,18 @@
 module DurAnalysis
     extend self
+    require 'json'
+    require 'http'
 
     def get_by_drug(codes)
-        require 'json'
-        require 'http'
-    
+
         response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
         begin
             rest = JSON.parse(response)["data"]["rest"]
         rescue
             response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
             rest = JSON.parse(response)["data"]["rest"]
-        else
-            return nil
         end
+
         @result = Hash.new
         #병용금기
         parent = rest["A"]
@@ -140,9 +139,7 @@ module DurAnalysis
           @result["elder"] = put
         end
     
-    
-        @result["Excluded"] = @excluded
-        render json: @result
+        return @result
     
       end
 

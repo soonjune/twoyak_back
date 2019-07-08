@@ -3,8 +3,6 @@ class User::CurrentDrugsController < ApplicationController
   before_action :set_current_drug, :search_id, only: [:create, :show, :update, :destroy, :destroy_to_past]
   before_action :update_current_drug, only: [:update]
   before_action :id_to_modify, only: [:update, :destroy, :destroy_to_past]
-  require 'dur_analysis'
-
 
   # GET /current_drugs
   def index
@@ -20,6 +18,7 @@ class User::CurrentDrugsController < ApplicationController
 
   # POST /current_drugs
   def create
+    require 'dur_analysis'
 
     drug_found = Drug.find(@search_id)
 
@@ -30,7 +29,7 @@ class User::CurrentDrugsController < ApplicationController
       dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([drug_found.id]))
       drug_found.dur_info = dur_info unless dur_info.nil?
       drug_found.save
-      
+
       set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
       set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
       render json: @current_drug.pluck(:id, :name), status: :created
