@@ -648,6 +648,9 @@ class User::AnalysisController < ApplicationController
           end
         #hira_med_code 있는 경우
         else
+          if select_code.to_s.length == 8
+            select_code = "0".concat(select_code.to_s)
+          end
           @codes << select_code.to_s.concat(";")
         end
 
