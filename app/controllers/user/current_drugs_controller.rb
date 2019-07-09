@@ -13,15 +13,18 @@ class User::CurrentDrugsController < ApplicationController
 
   # GET /current_drugs/1
   def show
+    require 'review_view'
+
     @result = @current_drug.as_json
+    my_reviews = current_user.drug_reviews
     @result.map { |drug|
       drug_found = Drug.find(drug["current_drug_id"])
-      reviews = drug_found.reviews
-      review_efficacies = reviews.pluck(:efficacy)
+      drug_reviews = drug_found.reviews
+      review_efficacies = drug_reviews.pluck(:efficacy)
       drug["drug_name"] = drug_found.name
       drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.count)
       drug["dur_info"] = drug_found.dur_info
-      drug["my_review"] = reviews.where(user_id: current_user.id)
+      drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
     }
     render json: @result
   end
