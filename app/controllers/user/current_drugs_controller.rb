@@ -64,10 +64,10 @@ class User::CurrentDrugsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_current_drug
       if current_user.has_role? "admin"
-        @current_drug = UserInfo.find(params[:user_info_id]).current_drug
+        @current_drug = UserInfo.find(params[:user_info_id]).current_drugs
       else
         if current_user.user_info_ids.include? params[:user_info_id].to_i
-          @current_drug = UserInfo.find(params[:user_info_id]).current_drug
+          @current_drug = UserInfo.find(params[:user_info_id]).current_drugs
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
