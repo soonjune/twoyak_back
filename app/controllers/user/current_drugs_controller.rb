@@ -26,7 +26,7 @@ class User::CurrentDrugsController < ApplicationController
       drug["dur_info"] = drug_found.dur_info
       drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
     }
-    render json: @result
+    render json: @result 
   end
 
   # POST /current_drugs
@@ -70,7 +70,10 @@ class User::CurrentDrugsController < ApplicationController
     CurrentDrug.find(@id_to_modify).delete
     @user_info =  UserInfo.find(params[:user_info_id])
     @user_info.past_drug << selected.current_drug
-    @user_info.past_drugs.order("created_at").last.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, when: selected.when, how: selected.how)
+    to = selected.to
+    #오늘 날짜 이전에 종료 예정이면 그 날짜, 아니면 복용종료한 날로 입력
+    to = Time.zone.now unless (to < Time.zone.now unless to.nil?)
+    @user_info.past_drugs.order("created_at").last.update(from: selected.from, to: to, when: selected.when, how: selected.how)
     render json: @user_info.past_drugs
   end
   private
