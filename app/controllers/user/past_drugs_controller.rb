@@ -13,6 +13,8 @@ class User::PastDrugsController < ApplicationController
 
   # GET /past_drugs/1
   def show
+    require 'review_view'
+
     @result = @past_drug.as_json
     my_reviews = current_user.drug_reviews
     @result.map { |drug|
