@@ -13,7 +13,17 @@ class User::CurrentDrugsController < ApplicationController
 
   # GET /current_drugs/1
   def show
-    render json: @current_drug
+    @result = @current_drug.as_json
+    @result.map { |drug|
+      drug_found = Drug.find(drug["current_drug_id"])
+      reviews = drug_found.reviews
+      review_efficacies = reviews.pluck(:efficacy)
+      drug["drug_name"] = drug_found.name
+      drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.count)
+      drug["dur_info"] = drug_found.dur_info
+      drug["my_review"] = reviews.where(user_id: current_user.id)
+    }
+    render json: @result
   end
 
   # POST /current_drugs
