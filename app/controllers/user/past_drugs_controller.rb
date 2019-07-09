@@ -22,7 +22,7 @@ class User::PastDrugsController < ApplicationController
       drug["drug_name"] = drug_found.name
       drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.count)
       drug["dur_info"] = drug_found.dur_info
-      drug["my_review"] = my_reviews.where(drug_id: drug["past_drug_id"])
+      drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
     }
     render json: @result
   end
