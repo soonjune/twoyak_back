@@ -30,7 +30,7 @@ class User::UserInfosController < ApplicationController
     require 'payload'
 
     if @user_info.update(user_info_params)
-      render json: Payload.payload(@user_info.user)
+      render json: Payload.jwt_encoded(@user_info.user)
     else
       render json: @user_info.errors, status: :unprocessable_entity
     end
