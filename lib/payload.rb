@@ -1,6 +1,10 @@
 module Payload
     extend self
 
+    def jwt_encoded(user)
+        { auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }
+    end
+
     def payload(user)
         return nil unless user and user.id
         {
@@ -9,5 +13,5 @@ module Payload
         }
     end
 
-    
+
 end
