@@ -27,8 +27,10 @@ class User::UserInfosController < ApplicationController
 
   # PATCH/PUT /user_infos/1
   def update
+    require 'payload'
+
     if @user_info.update(user_info_params)
-      render json: @user_info
+      render json: Payload.payload(@user_info)
     else
       render json: @user_info.errors, status: :unprocessable_entity
     end
