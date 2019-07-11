@@ -58,10 +58,10 @@ class User::PastDrugsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_past_drug
       if current_user.has_role? "admin"
-        @past_drug = SubUser.find(params[:sub_user_id]).past_drugs
+        @past_drug = SubUser.find(params[:sub_user_id]).past_drug
       else
         if current_user.sub_user_ids.include? params[:sub_user_id].to_i
-          @past_drug = SubUser.find(params[:sub_user_id]).past_drugs
+          @past_drug = SubUser.find(params[:sub_user_id]).past_drug
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
