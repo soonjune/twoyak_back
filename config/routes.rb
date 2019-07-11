@@ -8,13 +8,14 @@ Rails.application.routes.draw do
   # 속하는 의약품 보여주기
   get "related_drugs/:drug_ingr_id" => "drug_associations#show"
 
+
   #관리자용
   get "admin" => "admin#index"
   get "admin/user_analysis" => "admin#user_analysis"
+
   post "admin/check" => "admin#check"
   post "admin/push" => "admin#push"
   post "admin/push_all" => "admin#push_all"
-
 
   namespace :user do
     resources :mypage
@@ -86,14 +87,14 @@ Rails.application.routes.draw do
   get "reviews" => "drug_reviews#all"
   #최근 리뷰 받기
   get "reviews/recent" => "drug_reviews#recent"
-
+  
   #drug 사진
   get "drugs/:id/pics" => "drugs#show_pics"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
     #좋아요 눌렀는지 확인
     get '/"id/like' => 'drug_review_likes#show'
-    post '/:id/like' => 'drug_review_likes#create'
+    post '/:id/like' => 'drug_review_likes#like_toggle'
   end
   resources :supplements, :except => [:index] do
     resources :sup_reviews
@@ -122,6 +123,8 @@ Rails.application.routes.draw do
   get 'search_terms' => 'search_terms#index'
   get 'singleSearch/' => 'drugs#find_drug_mobile'
   get 'searchSingle/' => 'drugs#find_drug_web'
+  #user_id와 user_info_id 매치 시키기
+  get 'infos_for_mobile/:id' => 'users#infos_for_mobile'
   get '/multiSearch' => "analysis#interaction"
   # #jwt authentication
   # post 'auth_user' => 'authentication#authenticate_user'

@@ -3,7 +3,7 @@ class User::CurrentDrugsController < ApplicationController
   before_action :set_current_drug, :search_id, only: [:create, :show, :update, :destroy, :destroy_to_past]
   before_action :update_current_drug, only: [:update]
   before_action :id_to_modify, only: [:update, :destroy, :destroy_to_past]
-
+  
   # GET /current_drugs
   def index
     @current_drugs = CurrentDrug.all
@@ -59,7 +59,7 @@ class User::CurrentDrugsController < ApplicationController
       render json: @current_drug.errors, status: :unprocessable_entity
     end
   end
- 
+
   # DELETE /current_drugs/1
   def destroy
     CurrentDrug.find(@id_to_modify).delete
@@ -70,10 +70,12 @@ class User::CurrentDrugsController < ApplicationController
     CurrentDrug.find(@id_to_modify).delete
     @sub_user =  SubUser.find(params[:sub_user_id])
     @sub_user.past_drug << selected.current_drug
+    @sub_user.past_drugs.order("created_at").last.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, when: selected.when, how: selected.how)
     to = selected.to
     #오늘 날짜 이전에 종료 예정이면 그 날짜, 아니면 복용종료한 날로 입력
     to = Time.zone.now unless (to < Time.zone.now unless to.nil?)
     @sub_user.past_drugs.order("created_at").last.update(from: selected.from, to: to, when: selected.when, how: selected.how)
+
     render json: @sub_user.past_drugs
   end
   private
@@ -100,7 +102,7 @@ class User::CurrentDrugsController < ApplicationController
 
     def update_current_drug
       @current_drug_params = params.permit(:from, :to, :memo, :when, :how)
-      if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+      if (current_user.has_role? "admin") || (current_user.sub_user_ids.include? params[:sub_user_id].to_i)
         @current_drug = SubUser.find(params[:sub_user_id]).current_drugs.find(params[:id])
       end
     end
