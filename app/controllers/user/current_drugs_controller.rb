@@ -15,7 +15,7 @@ class User::CurrentDrugsController < ApplicationController
   def show
     require 'review_view'
 
-    @result = @current_drug.as_json
+    @result = @sub_user.current_drugs.as_json
     my_reviews = current_user.drug_reviews
     @result.map { |drug|
       drug_found = Drug.find(drug["current_drug_id"])
@@ -43,7 +43,7 @@ class User::CurrentDrugsController < ApplicationController
       drug_found.dur_info = dur_info unless dur_info.nil?
       drug_found.save
 
-      set_time_memo = CurrentDrug.where(sub_user_id: params[:sub_user_id], current_drug_id: @search_id).last
+      set_time_memo =  @sub_user.current_drugs.order("created_at").last
       set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
       render json: @current_drug.pluck(:id, :name), status: :created
     else
@@ -82,10 +82,12 @@ class User::CurrentDrugsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_current_drug
       if current_user.has_role? "admin"
-        @current_drug = SubUser.find(params[:sub_user_id]).current_drug
+        @sub_user = SubUser.find(params[:sub_user_id])
+        @current_drug = @sub_user.current_drug
       else
         if current_user.sub_user_ids.include? params[:sub_user_id].to_i
-          @current_drug = SubUser.find(params[:sub_user_id]).current_drug
+          @sub_user = SubUser.find(params[:sub_user_id])
+          @current_drug = @sub_user.current_drug
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
