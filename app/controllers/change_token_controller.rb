@@ -30,7 +30,7 @@ class ChangeTokenController < ApplicationController
         return nil unless user and user.id
         {
                     :iss => "twoyak.com",
-                    :user => {id: user.id, email: user.email, user_name: user.user_infos.first.user_name, user_info_ids: user.user_infos.pluck(:id) },
+                    :user => {id: user.id, email: user.email, user_name: user.sub_users.first.user_name, sub_user_id: user.sub_users.first.id },
         }
         end
 end

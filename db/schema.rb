@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_17_114419) do
+ActiveRecord::Schema.define(version: 2019_07_11_071258) do
 
   create_table "adverse_effects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "symptom_code"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   end
 
   create_table "current_diseases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_info_id"
+    t.integer "sub_user_id"
     t.integer "current_disease_id"
     t.date "to"
     t.date "from"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   end
 
   create_table "current_drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_info_id"
+    t.integer "sub_user_id"
     t.integer "current_drug_id"
     t.string "when"
     t.string "how"
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   end
 
   create_table "current_supplements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_info_id"
+    t.integer "sub_user_id"
     t.integer "current_supplement_id"
     t.date "to"
     t.date "from"
@@ -79,6 +79,14 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
     t.index ["drug_id"], name: "index_drug_associations_on_drug_id"
     t.index ["drug_ingr_id"], name: "index_drug_associations_on_drug_ingr_id"
     t.index ["dur_ingr_id"], name: "index_drug_associations_on_dur_ingr_id"
+  end
+
+  create_table "drug_disease_interactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "drug_id"
+    t.bigint "disease_id"
+    t.json "info"
+    t.index ["disease_id"], name: "index_drug_disease_interactions_on_disease_id"
+    t.index ["drug_id"], name: "index_drug_disease_interactions_on_drug_id"
   end
 
   create_table "drug_imprints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -126,6 +134,13 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
     t.index ["user_id"], name: "index_drug_review_comments_on_user_id"
   end
 
+  create_table "drug_review_likes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "drug_review_id"
+    t.index ["drug_review_id"], name: "index_drug_review_likes_on_drug_review_id"
+    t.index ["user_id"], name: "index_drug_review_likes_on_user_id"
+  end
+
   create_table "drug_reviews", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "drug_id"
@@ -137,6 +152,17 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
     t.index ["user_id"], name: "index_drug_reviews_on_user_id"
   end
 
+  create_table "drug_supplement_interactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "drug_ingr_id"
+    t.bigint "supplement_ingr_id"
+    t.boolean "positive"
+    t.json "info"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["drug_ingr_id"], name: "index_drug_supplement_interactions_on_drug_ingr_id"
+    t.index ["supplement_ingr_id"], name: "index_drug_supplement_interactions_on_supplement_ingr_id"
+  end
+
   create_table "drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "item_seq"
     t.string "name"
@@ -144,10 +170,14 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
     t.string "short_description"
     t.string "short_notice"
     t.json "package_insert"
+    t.json "dur_info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.json "ingr_eng_name"
     t.string "atc_code"
+    t.integer "hira_medicine_code"
+    t.string "hira_main_ingr_code"
+    t.index ["item_seq"], name: "drugs_item_seq_IDX"
     t.index ["name"], name: "index_drugs_on_name"
   end
 
@@ -171,8 +201,24 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   end
 
   create_table "family_med_histories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_info_id"
+    t.integer "sub_user_id"
     t.integer "med_his_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "health_news", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "url"
+    t.string "press"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "hospitals", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "province"
+    t.string "city"
+    t.json "more"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -203,7 +249,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   end
 
   create_table "past_diseases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_info_id"
+    t.integer "sub_user_id"
     t.integer "past_disease_id"
     t.date "to"
     t.date "from"
@@ -212,7 +258,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   end
 
   create_table "past_drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_info_id"
+    t.integer "sub_user_id"
     t.integer "past_drug_id"
     t.string "when"
     t.string "how"
@@ -224,7 +270,7 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   end
 
   create_table "past_supplements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_info_id"
+    t.integer "sub_user_id"
     t.integer "past_supplement_id"
     t.date "to"
     t.date "from"
@@ -234,10 +280,10 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
   end
 
   create_table "prescription_photos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_info_id"
+    t.bigint "user_id"
     t.string "url"
     t.string "check"
-    t.index ["user_info_id"], name: "index_prescription_photos_on_user_info_id"
+    t.index ["user_id"], name: "index_prescription_photos_on_user_id"
   end
 
   create_table "search_terms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -247,6 +293,20 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
     t.json "diseases"
     t.json "drugs"
     t.json "supplements"
+  end
+
+  create_table "sub_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "user_name", null: false
+    t.string "profile_image"
+    t.date "birth_date"
+    t.boolean "drink"
+    t.boolean "smoke"
+    t.boolean "caffeine"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "sex"
+    t.index ["user_id"], name: "index_sub_users_on_user_id"
   end
 
   create_table "suggestions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -320,20 +380,6 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
     t.index ["name"], name: "index_supplements_on_name"
   end
 
-  create_table "user_infos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id"
-    t.string "user_name", null: false
-    t.string "profile_image"
-    t.date "birth_date"
-    t.boolean "drink"
-    t.boolean "smoke"
-    t.boolean "caffeine"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "sex"
-    t.index ["user_id"], name: "index_user_infos_on_user_id"
-  end
-
   create_table "user_roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
@@ -389,8 +435,14 @@ ActiveRecord::Schema.define(version: 2019_05_17_114419) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "drug_disease_interactions", "diseases"
+  add_foreign_key "drug_disease_interactions", "drugs"
   add_foreign_key "drug_review_comments", "drug_reviews"
   add_foreign_key "drug_review_comments", "users"
+  add_foreign_key "drug_review_likes", "drug_reviews"
+  add_foreign_key "drug_review_likes", "users"
+  add_foreign_key "drug_supplement_interactions", "drug_ingrs"
+  add_foreign_key "drug_supplement_interactions", "supplement_ingrs"
   add_foreign_key "identities", "users"
   add_foreign_key "suggestions", "users"
   add_foreign_key "sup_review_comments", "sup_reviews"

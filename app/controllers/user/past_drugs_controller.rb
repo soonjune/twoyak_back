@@ -32,7 +32,7 @@ class User::PastDrugsController < ApplicationController
   # POST /past_drugs
   def create
     if @past_drug << Drug.find(@search_id) 
-      set_time_memo = PastDrug.order("created_at").where(user_info_id: params[:user_info_id], past_drug_id: @search_id).last
+      set_time_memo = PastDrug.order("created_at").where(sub_user_id: params[:sub_user_id], past_drug_id: @search_id).last
       set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:whern], how: params[:how])
       render json: @past_drug.pluck(:id, :name), status: :created
     else
@@ -58,10 +58,10 @@ class User::PastDrugsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_past_drug
       if current_user.has_role? "admin"
-        @past_drug = UserInfo.find(params[:user_info_id]).past_drugs
+        @past_drug = SubUser.find(params[:sub_user_id]).past_drugs
       else
-        if current_user.user_info_ids.include? params[:user_info_id].to_i
-          @past_drug = UserInfo.find(params[:user_info_id]).past_drugs
+        if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+          @past_drug = SubUser.find(params[:sub_user_id]).past_drugs
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
@@ -71,8 +71,8 @@ class User::PastDrugsController < ApplicationController
 
     def update_past_drug
       @past_drug_params = params.permit(:from, :to, :memo, :when, :how)
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
-        @past_drug = UserInfo.find(params[:user_info_id]).past_drugs.find(params[:id])
+      if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+        @past_drug = SubUser.find(params[:sub_user_id]).past_drugs.find(params[:id])
       end
     end
 

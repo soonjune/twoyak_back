@@ -1,4 +1,4 @@
-class UserInfo < ApplicationRecord
+class SubUser < ApplicationRecord
     #rolify 이용하기 위한 
     resourcify
 

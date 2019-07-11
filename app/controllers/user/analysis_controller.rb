@@ -565,9 +565,9 @@ class User::AnalysisController < ApplicationController
       require 'json'
       @codes = ""
       @excluded = []
-      user_info_current_drugs = CurrentDrug.where(user_info_id: params[:user_info_id])
+      sub_user_current_drugs = CurrentDrug.where(sub_user_id: params[:sub_user_id])
 
-      user_info_current_drugs.each do |current_drug|
+      sub_user_current_drugs.each do |current_drug|
         select_drug =  Drug.find(current_drug.current_drug_id)
         select_code = select_drug.hira_medicine_code
         if select_code.nil?

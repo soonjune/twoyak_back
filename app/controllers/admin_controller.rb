@@ -11,7 +11,7 @@ class AdminController < ApplicationController
       if @current_drug.include?(insert_params[:drug_id])
         render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
       elsif @current_drug << Drug.find(insert_params[:drug_id])
-        set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
+        set_time_memo = CurrentDrug.where(sub_user_id: params[:sub_user_id], current_drug_id: @search_id).last
         set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:whern], how: params[:how])
         render json: @current_drug.pluck(:id, :name), status: :created
       else
@@ -21,26 +21,26 @@ class AdminController < ApplicationController
 
     def user_analysis
       @data_sent = Hash.new
-      user_infos = UserInfo.all
+      sub_users = SubUser.all
       infos = []
-      user_infos.map { |user_info|
+      sub_users.map { |sub_user|
         @past_diseases = []
-        user_info.past_diseases.each { |d|
+        sub_user.past_diseases.each { |d|
           @past_diseases << { id: d.id, parent_id: d.past_disease.id, name: d.past_disease.name, from: d.from, to: d.to }
         }
         @current_diseases = []
-        user_info.current_diseases.each { |d|
+        sub_user.current_diseases.each { |d|
           @current_diseases << { id: d.id, parent_id: d.current_disease.id, name: d.current_disease.name, from: d.from, to: d.to }
         }
         @past_drugs = []
-        user_info.past_drugs.each { |d|
+        sub_user.past_drugs.each { |d|
           @past_drugs << { id: d.id, parent_id: d.past_drug.id, name: d.past_drug.name, drug_class: d.past_drug.package_insert["DRB_ITEM"]["CLASS_NO"], from: d.from, to: d.to, memo: d.memo }
         }
         @current_drugs = []
-        user_info.current_drugs.each { |d|
+        sub_user.current_drugs.each { |d|
           @current_drugs << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, drug_class: d.current_drug.package_insert["DRB_ITEM"]["CLASS_NO"], from: d.from, to: d.to, memo: d.memo  }
         }
-        info_data = { user_info: { basic_info: user_info, family_med_his: user_info.med_his.select(:id, :name), past_diseases: @past_diseases, 
+        info_data = { sub_user: { basic_info: sub_user, family_med_his: sub_user.med_his.select(:id, :name), past_diseases: @past_diseases, 
           current_diseases: @current_diseases, 
           past_drugs: @past_drugs, 
           current_drugs: @current_drugs}
@@ -66,7 +66,7 @@ class AdminController < ApplicationController
     private
   
     def insert_params
-      params.permit(:user_info_id, :drug_id)
+      params.permit(:sub_user_id, :drug_id)
     end
   
     def is_admin?

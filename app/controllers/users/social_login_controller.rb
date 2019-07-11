@@ -1,6 +1,7 @@
 class Users::SocialLoginController < ApplicationController
 
     def sign_in
+        require 'payload'
 
         # Get the identity and user if they exist
         identity = Identity.find_for_oauth(auth)
@@ -11,7 +12,9 @@ class Users::SocialLoginController < ApplicationController
         # can be cleaned up at a later date.
         user = current_user ? current_user : identity.user
         if !user.nil?
-            render json: { stauts: 'Logged in successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
+            result = Payload.jwt_encoded(user)
+            result[:status] = 'Logged in successfully'
+            render json: result, status: :created
             return
         end
 
@@ -25,7 +28,7 @@ class Users::SocialLoginController < ApplicationController
           )
           user.skip_confirmation!
           user.save!
-          info = UserInfo.new(info_params)
+          info = SubUser.new(info_params)
           info.user_id = user.id
           info.save!
 
@@ -34,7 +37,9 @@ class Users::SocialLoginController < ApplicationController
             identity.save!
           end
 
-          render json: { stauts: 'User created successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
+          result = Payload.jwt_encoded(user)
+          result[:status] = 'User created successfully'
+          render json: result, status: :created
 
         else
             render json: { errors: '이메일로 직접 가입하셨거나 다른 소셜 계정으로 가입한 이메일입니다.' }, status: :unauthorized
@@ -53,12 +58,5 @@ class Users::SocialLoginController < ApplicationController
         params.permit(:user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine)
     end
   
-    def payload(user)
-    return nil unless user and user.id
-    {
-                :iss => "twoyak.com",
-                :user => {id: user.id, email: user.email, user_name: user.user_infos.first.user_name, user_info_id: user.user_infos.first.id },
-    }
-    end
 
 end

@@ -4,6 +4,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   prepend_before_action :authenticate_request!, only: [:edit, :update, :destroy]
   skip_before_action :authenticate_scope!, :only => [:edit, :update, :destroy]
+  require 'payload'
 
   # GET /resource/sign_up
   # def new
@@ -18,12 +19,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
       return
     end
     #유저 필수 정보(닉네임) 입력 확인
-    if UserInfo.new(info_params).user_name?
+    if SubUser.new(info_params).user_name?
       user = User.new(user_params)
       user.skip_confirmation!
       user.skip_confirmation_notification!
       user.save
-      info = UserInfo.new(info_params)
+      info = SubUser.new(info_params)
       info.user_id = user.id
     else
       render json: { errors: "필수 정보를 모두 채워주세요" }, status: :bad_request
@@ -31,7 +32,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
     #생성 확인
     if info.save
-      render json: { stauts: 'User created successfully', auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }, status: :created
+      result = Payload.jwt_encoded(user)
+      result[:status] = 'User created successfully'
+      render json: result, status: :created
       return
     else
       render json: { errors1: user.errors.full_messages, errors2: info.errors.full_messages }, status: :bad_request
@@ -42,8 +45,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # GET /resource/edit
   def edit
     @user = current_user
-    @user_info = current_user.user_infos.first
-    render json: {user: @user, user_info: @user_info }
+    @sub_user = current_user.sub_users.first
+    render json: {user: @user, sub_user: @sub_user }
   end
 
   # PUT /resource
@@ -78,13 +81,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
       params.permit(:user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine, :sex)
   end
 
-  def payload(user)
-  return nil unless user and user.id
-  {
-              :iss => "twoyak.com",
-              :user => {id: user.id, email: user.email, user_name: user.user_infos.first.user_name, user_info_id: user.user_infos.first.id },
-  }
-  end
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_up_params

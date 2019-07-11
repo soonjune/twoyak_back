@@ -1,8 +1,7 @@
 class Users::SessionsController < Devise::SessionsController
-    
-    require 'jwt'
-    
+        
     def create
+        require 'payload'
         user = User.find_for_database_authentication(email: login_params[:email])
         if user.nil?
             render json: { errors: "이메일을 찾을 수 없습니다. 가입 후 이용해 주세요." }, status: :unauthorized
@@ -17,7 +16,7 @@ class Users::SessionsController < Devise::SessionsController
                 user.skip_confirmation!
             end
             sign_in(user, store: false)
-            render json: { auth_token: JWT.encode(payload(user), ENV['SECRET_KEY_BASE'], 'HS256') }
+            render json: Payload.jwt_encoded(user)
             return
 		else
 			render json: { errors: '유효하지 않은 비밀번호입니다.' }, status: :unauthorized
@@ -46,12 +45,6 @@ class Users::SessionsController < Devise::SessionsController
         params.permit(:email, :password, :session)
     end
 
-	def payload(user)
-    return nil unless user and user.id
-    {
-                :iss => "twoyak.com",
-                :user => {id: user.id, email: user.email, user_name: user.user_infos.first.user_name, user_info_id: user.user_infos.first.id },
-    }
-    end
+
 end
   

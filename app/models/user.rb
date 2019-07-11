@@ -8,7 +8,7 @@ class User < ApplicationRecord
          :confirmable, :trackable, :omniauthable,
          :omniauth_providers => [:facebook, :google_oauth2, :naver]
 
-  has_many :user_infos
+  has_many :sub_users
   #의약품/건강기능식품 리뷰
   has_many :drug_reviews
   has_many :sup_reviews
@@ -78,7 +78,7 @@ class User < ApplicationRecord
           user.skip_confirmation!
           user.save!
           if(auth.provider == "naver")
-            info = UserInfo.new(user_name: auth.info.nickname)
+            info = SubUser.new(user_name: auth.info.nickname)
             info.user_id = user.id
             if (auth.extra.raw_info.response.gender == "M")
               info.sex = 1
@@ -87,7 +87,7 @@ class User < ApplicationRecord
             end
             info.save!
           else
-            info = UserInfo.new(user_name: auth.info.name)
+            info = SubUser.new(user_name: auth.info.name)
             info.user_id = user.id
             info.save!
           end

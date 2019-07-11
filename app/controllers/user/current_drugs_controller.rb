@@ -43,7 +43,7 @@ class User::CurrentDrugsController < ApplicationController
       drug_found.dur_info = dur_info unless dur_info.nil?
       drug_found.save
 
-      set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
+      set_time_memo = CurrentDrug.where(sub_user_id: params[:sub_user_id], current_drug_id: @search_id).last
       set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
       render json: @current_drug.pluck(:id, :name), status: :created
     else
@@ -68,22 +68,22 @@ class User::CurrentDrugsController < ApplicationController
   def destroy_to_past
     selected = CurrentDrug.find(@id_to_modify)
     CurrentDrug.find(@id_to_modify).delete
-    @user_info =  UserInfo.find(params[:user_info_id])
-    @user_info.past_drug << selected.current_drug
+    @sub_user =  SubUser.find(params[:sub_user_id])
+    @sub_user.past_drug << selected.current_drug
     to = selected.to
     #오늘 날짜 이전에 종료 예정이면 그 날짜, 아니면 복용종료한 날로 입력
     to = Time.zone.now unless (to < Time.zone.now unless to.nil?)
-    @user_info.past_drugs.order("created_at").last.update(from: selected.from, to: to, when: selected.when, how: selected.how)
-    render json: @user_info.past_drugs
+    @sub_user.past_drugs.order("created_at").last.update(from: selected.from, to: to, when: selected.when, how: selected.how)
+    render json: @sub_user.past_drugs
   end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_current_drug
       if current_user.has_role? "admin"
-        @current_drug = UserInfo.find(params[:user_info_id]).current_drugs
+        @current_drug = SubUser.find(params[:sub_user_id]).current_drugs
       else
-        if current_user.user_info_ids.include? params[:user_info_id].to_i
-          @current_drug = UserInfo.find(params[:user_info_id]).current_drugs
+        if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+          @current_drug = SubUser.find(params[:sub_user_id]).current_drugs
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
@@ -93,15 +93,15 @@ class User::CurrentDrugsController < ApplicationController
 
     # def set_result
     #   @result = []
-    #   UserInfo.find(params[:user_info_id]).current_drugs.each { |d|
+    #   SubUser.find(params[:sub_user_id]).current_drugs.each { |d|
     #     @result << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, from: d.from, to: d.to }
     #   }
     # end
 
     def update_current_drug
       @current_drug_params = params.permit(:from, :to, :memo, :when, :how)
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
-        @current_drug = UserInfo.find(params[:user_info_id]).current_drugs.find(params[:id])
+      if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+        @current_drug = SubUser.find(params[:sub_user_id]).current_drugs.find(params[:id])
       end
     end
 

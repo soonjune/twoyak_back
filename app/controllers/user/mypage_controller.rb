@@ -1,49 +1,49 @@
 class User::MypageController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_user_info, only: [:create, :update, :destroy]
+  before_action :set_sub_user, only: [:create, :update, :destroy]
 
   def create
-    @user_info = current_user.user_infos.create(user_info_params)
+    @sub_user = current_user.sub_users.create(sub_user_params)
 
-    if @user_info.save
-      render json: @user_info, status: :created, location: @user_info
+    if @sub_user.save
+      render json: @sub_user, status: :created, location: @sub_user
     else
-      render json: @user_info.errors, status: :unprocessable_entity
+      render json: @sub_user.errors, status: :unprocessable_entity
     end 
   end
 
   def index
-    user_infos = current_user.user_infos
+    sub_users = current_user.sub_users
     @data_sent = Hash.new
     infos = []
-    user_infos.each { |user_info|
+    sub_users.each { |sub_user|
       #각각의 이력 정렬
       @past_diseases = []
-      user_info.past_diseases.each { |d|
+      sub_user.past_diseases.each { |d|
         @past_diseases << { id: d.id, parent_id: d.past_disease.id, name: d.past_disease.name, from: d.from, to: d.to }
       }
       @current_diseases = []
-      user_info.current_diseases.each { |d|
+      sub_user.current_diseases.each { |d|
         @current_diseases << { id: d.id, parent_id: d.current_disease.id, name: d.current_disease.name, from: d.from, to: d.to }
       }
       @past_drugs = []
-      user_info.past_drugs.each { |d|
+      sub_user.past_drugs.each { |d|
         @past_drugs << { id: d.id, parent_id: d.past_drug.id, name: d.past_drug.name, from: d.from, to: d.to, memo: d.memo }
       }
       @current_drugs = []
-      user_info.current_drugs.each { |d|
+      sub_user.current_drugs.each { |d|
         @current_drugs << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, from: d.from, to: d.to, memo: d.memo  }
       }
       @past_supplements = []
-      user_info.past_supplements.each { |d|
+      sub_user.past_supplements.each { |d|
         @past_supplements << { id: d.id, parent_id: d.past_supplement.id, name: d.past_supplement.name, from: d.from, to: d.to, memo: d.memo  }
       }
       @current_supplements = []
-      user_info.current_supplements.each { |d|
+      sub_user.current_supplements.each { |d|
         @current_supplements << { id: d.id, parent_id: d.current_supplement.id, name: d.current_supplement.name, from: d.from, to: d.to, memo: d.memo  }
       }
 
-      info_data = { user_info: { basic_info: user_info, family_med_his: user_info.med_his.select(:id, :name), past_diseases: @past_diseases, 
+      info_data = { sub_user: { basic_info: sub_user, family_med_his: sub_user.med_his.select(:id, :name), past_diseases: @past_diseases, 
       current_diseases: @current_diseases, 
       past_drugs: @past_drugs, 
       current_drugs: @current_drugs,
@@ -67,25 +67,25 @@ class User::MypageController < ApplicationController
   end
 
   def update
-    if @user_info.update(user_info_params)
+    if @sub_user.update(sub_user_params)
   end
 
   def destroy
-    @user_info.destroy
+    @sub_user.destroy
   end
 
   private
 
-  def set_user_info
-    @user_info = UserInfo.find(params[:id])
+  def set_sub_user
+    @sub_user = SubUser.find(params[:id])
   end
 
-  def user_info_params
-    params.require([:user_info]).permit(:id, :user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine)
+  def sub_user_params
+    params.require([:sub_user]).permit(:id, :user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine)
   end
 
   # def update_params
-  #   params.require([:user_info, :family_med_his, :past_disease, :current_disease, :past_drug, :current_drug, :past_supplement]).permit(:id, :profile_image, :birth_date, :drink, :smoke, :caffeine, :disease_name, :past_disease, :current_diseases, :past_supplement,:current_supplement)
+  #   params.require([:sub_user, :family_med_his, :past_disease, :current_disease, :past_drug, :current_drug, :past_supplement]).permit(:id, :profile_image, :birth_date, :drink, :smoke, :caffeine, :disease_name, :past_disease, :current_diseases, :past_supplement,:current_supplement)
   end
 
 end

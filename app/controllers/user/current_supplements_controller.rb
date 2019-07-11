@@ -21,7 +21,7 @@ class User::CurrentSupplementsController < ApplicationController
     if @current_supplement.include?(Supplement.find(@search_id))
       render json: { errors: "이미 복용 중인 건강식품입니다." }, status: :unprocessable_entity
     elsif @current_supplement << Supplement.find(@search_id)
-      set_time_memo = CurrentSupplement.where(user_info_id: params[:user_info_id], current_supplement_id: @search_id).last
+      set_time_memo = CurrentSupplement.where(sub_user_id: params[:sub_user_id], current_supplement_id: @search_id).last
       set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo])
       render json: @current_supplement.pluck(:id, :name), status: :created
     else
@@ -46,22 +46,22 @@ class User::CurrentSupplementsController < ApplicationController
   def destroy_to_past
     selected = CurrentSupplement.find(@id_to_modify)
     CurrentSupplement.find(@id_to_modify).delete
-    @past_supplements =  UserInfo.find(params[:user_info_id]).past_sup
-    @user_info =  UserInfo.find(params[:user_info_id])
-    @user_info.past_sup << selected.current_supplement
+    @past_supplements =  SubUser.find(params[:sub_user_id]).past_sup
+    @sub_user =  SubUser.find(params[:sub_user_id])
+    @sub_user.past_sup << selected.current_supplement
     set_time_memo = PastSupplement.order("created_at").last
     set_time_memo.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, memo: selected.memo, when: selecte.when, how: selected.how)
-    render json: @user_info.past_supplements
+    render json: @sub_user.past_supplements
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_current_supplement
       if current_user.has_role? "admin"
-        @current_supplement = UserInfo.find(params[:user_info_id]).current_sup
+        @current_supplement = SubUser.find(params[:sub_user_id]).current_sup
       else
-        if current_user.user_info_ids.include? params[:user_info_id].to_i
-          @current_supplement = UserInfo.find(params[:user_info_id]).current_sup
+        if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+          @current_supplement = SubUser.find(params[:sub_user_id]).current_sup
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
@@ -71,8 +71,8 @@ class User::CurrentSupplementsController < ApplicationController
 
     def update_current_supplement
       @current_supplement_params = params.permit(:from, :to, :memo)
-      if current_user.user_info_ids.include? params[:user_info_id].to_i
-        @current_supplement = UserInfo.find(params[:user_info_id]).current_supplements.find(params[:id])
+      if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+        @current_supplement = SubUser.find(params[:sub_user_id]).current_supplements.find(params[:id])
       end
     end
 
