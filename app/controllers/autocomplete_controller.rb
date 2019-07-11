@@ -60,7 +60,24 @@ class AutocompleteController < ApplicationController
   end
 
   def drug
-    render json: SearchTerm.pluck(:drugs)[1]
+    if request.headers['Authorization'].present?
+      authenticate_request!
+      if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+        drugs_taking_ids = SubUser.find(params[:sub_user_id]).current_drug_ids
+        terms = JSON.parse(SearchTerm.pluck(:drugs)[1])
+        terms.map { |drug|
+          if drugs_taking_ids.include?(drug["id"])
+            drug[:current_drug?] = true
+          end
+        }
+      else
+        terms = JSON.parse(SearchTerm.pluck(:drugs)[1])
+      end
+    else
+      terms = JSON.parse(SearchTerm.pluck(:drugs)[1])
+    end
+
+    render json: terms
   end
 
   def sup
