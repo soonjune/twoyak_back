@@ -30,7 +30,7 @@ class User::SubUsersController < ApplicationController
     require 'payload'
 
     if @sub_user.update(sub_user_params)
-      render json: { Payload.jwt_encoded(@sub_user.user) }
+      render json: Payload.jwt_encoded(@sub_user.user)
     else
       render json: @sub_user.errors, status: :unprocessable_entity
     end
