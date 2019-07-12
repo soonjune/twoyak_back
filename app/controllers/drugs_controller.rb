@@ -16,11 +16,11 @@ class DrugsController < ApplicationController
     #안전정보 우선 확인
     if @drug.dur_info.nil?
       require 'dur_analysis'
-      dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([drug_found.id]))
-      drug_found.dur_info = dur_info unless dur_info.nil?
-      drug_found.save    
+      dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code(@drug.id)
+      @drug.dur_info = dur_info unless dur_info.nil?
+      @drug.save    
     end
-    
+
     @data = Hash.new
     @data = @drug.as_json
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
