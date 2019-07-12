@@ -23,7 +23,7 @@ class User::AnalysisController < ApplicationController
       #유사도 판정
       jarow = FuzzyStringMatch::JaroWinkler.create( :pure )
       put.combination(2).any? { |pair|
-        if jarow.getDistance( pair.first, pair.second) > 0.9
+        if jarow.getDistance( pair.first.to_s, pair.second.to_s) > 0.9
           put = put - [pair.second]
         end
       }
@@ -85,7 +85,7 @@ class User::AnalysisController < ApplicationController
       #유사도 판정
       jarow = FuzzyStringMatch::JaroWinkler.create( :pure )
       put.combination(2).any? { |pair|
-        if jarow.getDistance( pair.first, pair.second) > 0.9
+        if jarow.getDistance( pair.first.to_s, pair.second.to_s) > 0.9
           put = put - [pair.second]
         end
       }
@@ -105,7 +105,7 @@ class User::AnalysisController < ApplicationController
       #유사도 판정
       jarow = FuzzyStringMatch::JaroWinkler.create( :pure )
       put.combination(2).any? { |pair|
-        if jarow.getDistance( pair.first, pair.second) > 0.9
+        if jarow.getDistance( pair.first.to_s, pair.second.to_s) > 0.9
           put = put - [pair.second]
         end
       }
@@ -180,7 +180,7 @@ class User::AnalysisController < ApplicationController
       #유사도 판정
       jarow = FuzzyStringMatch::JaroWinkler.create( :pure )
       put.combination(2).any? { |pair|
-        if jarow.getDistance( pair.first, pair.second) > 0.9
+        if jarow.getDistance( pair.first.to_s, pair.second.to_s) > 0.9
           put = put - [pair.second]
         end
       }
@@ -242,7 +242,7 @@ class User::AnalysisController < ApplicationController
       #유사도 판정
       jarow = FuzzyStringMatch::JaroWinkler.create( :pure )
       put.combination(2).any? { |pair|
-        if jarow.getDistance( pair.first, pair.second) > 0.9
+        if jarow.getDistance( pair.first.to_s, pair.second.to_s) > 0.9
           put = put - [pair.second]
         end
       }
@@ -262,7 +262,7 @@ class User::AnalysisController < ApplicationController
       #유사도 판정
       jarow = FuzzyStringMatch::JaroWinkler.create( :pure )
       put.combination(2).any? { |pair|
-        if jarow.getDistance( pair.first, pair.second) > 0.9
+        if jarow.getDistance( pair.first.to_s, pair.second.to_s) > 0.9
           put = put - [pair.second]
         end
       }
