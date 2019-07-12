@@ -5,6 +5,7 @@ class User::AnalysisController < ApplicationController
   def get
     require 'json'
     require 'http'
+    require 'fuzzystringmatch'
 
     response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@codes}")
     rest = JSON.parse(response)["data"]["rest"]
@@ -161,6 +162,7 @@ class User::AnalysisController < ApplicationController
   def get_by_drug
     require 'json'
     require 'http'
+    require 'fuzzystringmatch'
 
     response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{@codes}")
     rest = JSON.parse(response)["data"]["rest"]

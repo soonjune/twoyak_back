@@ -4,6 +4,7 @@ module DurAnalysis
     require 'http'
 
     def get_by_drug(codes)
+      require 'fuzzystringmatch'
 
         response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
         begin
