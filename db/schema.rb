@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_11_071258) do
+ActiveRecord::Schema.define(version: 2019_07_12_064320) do
 
   create_table "adverse_effects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "symptom_code"
@@ -152,17 +152,6 @@ ActiveRecord::Schema.define(version: 2019_07_11_071258) do
     t.index ["user_id"], name: "index_drug_reviews_on_user_id"
   end
 
-  create_table "drug_supplement_interactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "drug_ingr_id"
-    t.bigint "supplement_ingr_id"
-    t.boolean "positive"
-    t.json "info"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["drug_ingr_id"], name: "index_drug_supplement_interactions_on_drug_ingr_id"
-    t.index ["supplement_ingr_id"], name: "index_drug_supplement_interactions_on_supplement_ingr_id"
-  end
-
   create_table "drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "item_seq"
     t.string "name"
@@ -230,17 +219,6 @@ ActiveRecord::Schema.define(version: 2019_07_11_071258) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_identities_on_user_id"
-  end
-
-  create_table "interactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "interaction_type"
-    t.json "first_ingr"
-    t.json "second_ingr"
-    t.string "review"
-    t.string "note"
-    t.text "more_info"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "notices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -441,8 +419,6 @@ ActiveRecord::Schema.define(version: 2019_07_11_071258) do
   add_foreign_key "drug_review_comments", "users"
   add_foreign_key "drug_review_likes", "drug_reviews"
   add_foreign_key "drug_review_likes", "users"
-  add_foreign_key "drug_supplement_interactions", "drug_ingrs"
-  add_foreign_key "drug_supplement_interactions", "supplement_ingrs"
   add_foreign_key "identities", "users"
   add_foreign_key "suggestions", "users"
   add_foreign_key "sup_review_comments", "sup_reviews"
