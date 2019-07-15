@@ -14,7 +14,7 @@ class DrugsController < ApplicationController
   # GET /drugs/1
   def show
     # for development only
-    # Searchkick.disable_callbacks
+    Searchkick.disable_callbacks
 
     #안전정보 우선 확인
     if @drug.dur_info.nil?
@@ -37,8 +37,7 @@ class DrugsController < ApplicationController
     #평점 추가
     drug_reviews = @drug.reviews
     review_efficacies = drug_reviews.pluck(:efficacy)
-    @data["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.count)
-
+    @data["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
     @data["taking"] = @drug.currents.count
     @data["watching"] = @drug.watch_drugs.pluck(:user_id)
 
