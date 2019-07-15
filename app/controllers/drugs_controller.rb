@@ -15,7 +15,7 @@ class DrugsController < ApplicationController
   def show
     # for development only
     # Searchkick.disable_callbacks
-    
+
     #안전정보 우선 확인
     if @drug.dur_info.nil?
       require 'dur_analysis'
@@ -30,6 +30,8 @@ class DrugsController < ApplicationController
     if params[:sub_user_id].present?
       if SubUser.find(params[:sub_user_id]).current_drug_ids.include?(@drug.id)
         @data["currently_taking?"] = true
+      else
+        @data["currently_taking?"] = false
       end
     end
     @data["taking"] = @drug.currents.count
