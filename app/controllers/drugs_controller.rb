@@ -34,6 +34,11 @@ class DrugsController < ApplicationController
         @data["currently_taking?"] = false
       end
     end
+    #평점 추가
+    drug_reviews = @drug.reviews
+    review_efficacies = drug_reviews.pluck(:efficacy)
+    @data["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.count)
+
     @data["taking"] = @drug.currents.count
     @data["watching"] = @drug.watch_drugs.pluck(:user_id)
 
