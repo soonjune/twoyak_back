@@ -13,6 +13,7 @@ class DrugsController < ApplicationController
 
   # GET /drugs/1
   def show
+    Searchkick.disable_callbacks
     #안전정보 우선 확인
     if @drug.dur_info.nil?
       require 'dur_analysis'
@@ -20,15 +21,15 @@ class DrugsController < ApplicationController
       @drug.dur_info = dur_info unless dur_info.nil?
       @drug.save    
     end
-
+    
     @data = Hash.new
     @data = @drug.as_json
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
-    # if !request.headers["Authorization"].nil?
-    #   @data["token"] = request.headers["Authorization"]
-    # end
-
-
+    if params[:sub_user_id].present?
+      if SubUser.find(params[:sub_user_id]).current_drug_ids.include?(@drug.id)
+        @data["currently_taking?"] = true
+      end
+    end
     @data["taking"] = @drug.currents.count
     @data["watching"] = @drug.watch_drugs.pluck(:user_id)
 
