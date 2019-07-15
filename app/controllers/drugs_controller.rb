@@ -29,16 +29,16 @@ class DrugsController < ApplicationController
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
     if params[:sub_user_id].present?
       if SubUser.find(params[:sub_user_id]).current_drug_ids.include?(@drug.id)
-        @data["currently_taking?"] = true
+        @data["currently_taking"] = true
       else
-        @data["currently_taking?"] = false
+        @data["currently_taking"] = false
       end
     end
     #평점 추가
     drug_reviews = @drug.reviews
     review_efficacies = drug_reviews.pluck(:efficacy)
     @data["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
-    @data["taking"] = @drug.currents.count
+    @data["sub_users_taking"] = @drug.currents.count
     @data["watching"] = @drug.watch_drugs.pluck(:user_id)
 
     render json: @data
