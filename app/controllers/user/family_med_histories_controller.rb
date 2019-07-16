@@ -36,7 +36,9 @@ class User::FamilyMedHistoriesController < ApplicationController
 
   # DELETE /family_med_histories/1
   def destroy
-    @family_med_history.delete(Disease.find(@search_id))
+    if @family_med_history.delete(Disease.find(@search_id))
+      render json: @family_med_history, status: 200
+    end
   end
 
   private
