@@ -22,13 +22,13 @@ Rails.application.routes.draw do
     resources :sub_users, :except => [:index]
     #의약품으로 직접 안전정보(DUR) 가져오기
     get 'analysis/get_by_drug'
-
+    #관심약물 추가
+    resources :watch_drugs, :except => [:update, :destroy]
     scope ':sub_user_id' do
       #DUR 정보
       get 'analysis/get'
       get "analysis/single/:drug_id" => "single_drug#cautions"
-      #관심약물 추가
-      resources :watch_drugs, :except => [:update, :destroy]
+
 
       #가족력
       get "family_med_histories" => "family_med_histories#show"
