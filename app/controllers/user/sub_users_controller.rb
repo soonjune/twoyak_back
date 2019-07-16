@@ -16,10 +16,12 @@ class User::SubUsersController < ApplicationController
 
   # POST /sub_users
   def create
+    require 'payload'
+
     @sub_user= SubUser.new(sub_user_params)
     @sub_user.user = current_user
     if @sub_user.save
-      render json: @sub_user, status: :created
+      render json: Payload.jwt_encoded(current_user), status: :created
     else
       render json: @sub_user.errors, status: :unprocessable_entity
     end
