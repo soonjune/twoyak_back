@@ -17,8 +17,8 @@ class User::SubUsersController < ApplicationController
   # POST /sub_users
   def create
     @sub_user= SubUser.new(sub_user_params)
-
     if @sub_user.save
+      current_user.sub_users << @sub_user
       render json: @sub_user, status: :created, location: @sub_user
     else
       render json: @sub_user.errors, status: :unprocessable_entity
