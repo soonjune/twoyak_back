@@ -19,8 +19,7 @@ class DrugReviewsController < ApplicationController
     @result = []
     @drug_reviews = DrugReview.order("id DESC").limit(20)
     @drug_reviews.map { |review|
-      temp = Hash.new
-      temp["id"] = review.id
+      temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
       user = User.find(review.user_id)
       sub_user = user.sub_users.first
@@ -33,9 +32,7 @@ class DrugReviewsController < ApplicationController
       temp["sex"] = sub_user.sex unless sub_user.sex.nil?
       temp["age"] = age_range(age(sub_user.birth_date))
       temp["diseases"] = sub_user.current_disease.pluck(:name)
-      temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      temp["body"] =review.body
       temp["liked_users"] = review.l_users.count
       @result << temp
     }
@@ -48,8 +45,7 @@ class DrugReviewsController < ApplicationController
     @result = []
     @drug_reviews = DrugReview.where(drug_id: params[:drug_id])
     @drug_reviews.map { |review|
-      temp = Hash.new
-      temp["id"] = review.id
+      temp = review.as_json
       user = User.find(review.user_id)
       temp["u_id"] = user.id
       sub_user = user.sub_users.first
@@ -62,9 +58,7 @@ class DrugReviewsController < ApplicationController
       temp["sex"] = sub_user.sex
       temp["age"] = age_range(age(sub_user.birth_date))
       temp["diseases"] = sub_user.current_disease.pluck(:name)
-      temp["efficacy"] = review.efficacy
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      temp["body"] =review.body
       temp["liked_users"] = review.l_users.count
 
       @result << temp
