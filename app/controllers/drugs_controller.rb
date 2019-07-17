@@ -29,8 +29,9 @@ class DrugsController < ApplicationController
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
     if params[:sub_user_id].present?
       #먹고 있는지 확인
-      if SubUser.find(params[:sub_user_id]).current_drug_ids.include?(@drug.id)
-        @data["currently_taking"] = true
+      sub_user = SubUser.find(params[:sub_user_id])
+      if sub_user.current_drug_ids.include?(@drug.id)
+        @data["currently_taking"]["current_drug_id"] = sub_user.current_drug_ids[current_drug_ids.index(@drug.id)]
       else
         @data["currently_taking"] = false
       end
