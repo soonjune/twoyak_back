@@ -18,6 +18,7 @@ class User::CurrentDrugsController < ApplicationController
     @result = @sub_user.current_drugs.as_json
     my_reviews = current_user.drug_reviews
     @result.map { |drug|
+      #여기서 drug는 current_drug object를 as_json을 통해 Hash로 변환한 상태이다.
       drug_found = Drug.find(drug["current_drug_id"])
       drug_reviews = drug_found.reviews
       review_efficacies = drug_reviews.pluck(:efficacy)
@@ -25,6 +26,7 @@ class User::CurrentDrugsController < ApplicationController
       drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
       drug["dur_info"] = drug_found.dur_info
       drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
+      drug["diseases"] = CurrentDrug(drug["id"]).diseases
     }
     render json: @result 
   end
@@ -43,8 +45,11 @@ class User::CurrentDrugsController < ApplicationController
       drug_found.dur_info = dur_info unless dur_info.nil?
       drug_found.save
 
-      set_time_memo =  @sub_user.current_drugs.order("created_at").last
-      set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
+      selected =  @sub_user.current_drugs.order("created_at").last
+      selected.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
+      #먹는 이유 추가하기(질환추가)
+      selected.disease_ids = params[:disease_ids]
+
       render json: @current_drug.pluck(:id, :name), status: :created
     else
       render json: @current_drug.errors, status: :unprocessable_entity
@@ -62,19 +67,23 @@ class User::CurrentDrugsController < ApplicationController
 
   # DELETE /current_drugs/1
   def destroy
-    CurrentDrug.find(@id_to_modify).delete
+    CurrentDrug.find(@id_to_modify).destroy
   end
 
   def destroy_to_past
     selected = CurrentDrug.find(@id_to_modify)
-    CurrentDrug.find(@id_to_modify).delete
+    taking_reasons = selected.disease_ids
+    CurrentDrug.find(@id_to_modify).destroy
     @sub_user =  SubUser.find(params[:sub_user_id])
     @sub_user.past_drug << selected.current_drug
     @sub_user.past_drugs.order("created_at").last.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now, when: selected.when, how: selected.how)
     to = selected.to
     #오늘 날짜 이전에 종료 예정이면 그 날짜, 아니면 복용종료한 날로 입력
     to = Time.zone.now unless (to < Time.zone.now unless to.nil?)
-    @sub_user.past_drugs.order("created_at").last.update(from: selected.from, to: to, when: selected.when, how: selected.how)
+    past_selected = @sub_user.past_drugs.order("created_at").last
+    past_selected.update(from: selected.from, to: to, when: selected.when, how: selected.how)
+    #지우고 과거 복용에 먹는이유(질환)도 함께 옮김
+    past_selected.disease_ids = taking_reasons
 
     render json: @sub_user.past_drugs
   end

@@ -25,6 +25,7 @@ class User::PastDrugsController < ApplicationController
       drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.count)
       drug["dur_info"] = drug_found.dur_info
       drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
+      drug["diseases"] = CurrentDrug(drug["id"]).diseases
     }
     render json: @result
   end
@@ -32,8 +33,10 @@ class User::PastDrugsController < ApplicationController
   # POST /past_drugs
   def create
     if @past_drug << Drug.find(@search_id) 
-      set_time_memo = @sub_user.past_drugs.order("created_at").last
-      set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:whern], how: params[:how])
+      selected = @sub_user.past_drugs.order("created_at").last
+      selected.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:whern], how: params[:how])
+      #먹는 이유 추가하기(질환추가)
+      selected.disease_ids = params[:disease_ids]
       render json: @past_drug.pluck(:id, :name), status: :created
     else
       render json: @past_drug.errors, status: :unprocessable_entity
@@ -51,7 +54,7 @@ class User::PastDrugsController < ApplicationController
 
   # DELETE /past_drugs/1
   def destroy
-    PastDrug.find(@id_to_modify).delete
+    PastDrug.find(@id_to_modify).destroy
   end
 
   private
