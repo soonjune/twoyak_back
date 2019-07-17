@@ -54,7 +54,9 @@ class User::PastDrugsController < ApplicationController
 
   # DELETE /past_drugs/1
   def destroy
-    PastDrug.find(@id_to_modify).destroy
+    if PastDrug.find(@id_to_modify).destroy
+      render json: @past_drug, status: 200
+    end
   end
 
   private

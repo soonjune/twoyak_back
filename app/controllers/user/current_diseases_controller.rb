@@ -40,7 +40,9 @@ class User::CurrentDiseasesController < ApplicationController
 
   # DELETE /current_diseases/1
   def destroy
-    CurrentDisease.find(@id_to_modify).delete
+    if CurrentDisease.find(@id_to_modify).delete
+      render json: @current_disease, status: 200
+    end
   end
 
   def destroy_to_past
@@ -49,7 +51,7 @@ class User::CurrentDiseasesController < ApplicationController
     @sub_user =  SubUser.find(params[:sub_user_id])
     @sub_user.past_disease << selected.current_disease
     @sub_user.past_diseases.order("created_at").last.update(from: selected.from, to: params[:to] ? params[:to] : Time.zone.now)
-    render json: @sub_user.past_diseases
+    render json: @current_disease, status: 200
   end
 
   private

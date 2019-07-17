@@ -67,7 +67,9 @@ class User::CurrentDrugsController < ApplicationController
 
   # DELETE /current_drugs/1
   def destroy
-    CurrentDrug.find(@id_to_modify).destroy
+    if CurrentDrug.find(@id_to_modify).destroy
+      render json: @current_drug, status: 200
+    end
   end
 
   def destroy_to_past
@@ -85,7 +87,7 @@ class User::CurrentDrugsController < ApplicationController
     #지우고 과거 복용에 먹는이유(질환)도 함께 옮김
     past_selected.disease_ids = taking_reasons
 
-    render json: @sub_user.past_drugs
+    render json: @current_drug, status: 200
   end
   private
     # Use callbacks to share common setup or constraints between actions.
