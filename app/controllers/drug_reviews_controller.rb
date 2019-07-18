@@ -28,7 +28,7 @@ class DrugReviewsController < ApplicationController
         }
         if (sub_user = user.sub_users.first)
           temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-          temp["age"] = age_range(age(sub_user.birth_date))
+          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
           temp["diseases"] = sub_user.current_disease.pluck(:name)
         end
       else
@@ -56,7 +56,7 @@ class DrugReviewsController < ApplicationController
         }
         if (sub_user = user.sub_users.first)
           temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-          temp["age"] = age_range(age(sub_user.birth_date))
+          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
           temp["diseases"] = sub_user.current_disease.pluck(:name)
         end
       else
@@ -85,7 +85,7 @@ class DrugReviewsController < ApplicationController
         }
         if (sub_user = user.sub_users.first)
           temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-          temp["age"] = age_range(age(sub_user.birth_date))
+          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
           temp["diseases"] = sub_user.current_disease.pluck(:name)
         end
       else
