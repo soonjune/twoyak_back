@@ -18,6 +18,8 @@ class User::MypageController < ApplicationController
     sub_users = current_user.sub_users
     @data_sent = Hash.new
     infos = []
+    #나의 리뷰 목록
+    my_reviews = current_user.drug_reviews
     sub_users.each { |sub_user|
       #각각의 이력 정렬
       @past_diseases = []
@@ -28,7 +30,6 @@ class User::MypageController < ApplicationController
       sub_user.current_diseases.each { |d|
         @current_diseases << { id: d.id, parent_id: d.current_disease.id, name: d.current_disease.name, from: d.from, to: d.to }
       }
-      my_reviews = current_user.drug_reviews
 
       @past_drugs = []
       sub_user.past_drugs.each { |drug|
@@ -66,7 +67,6 @@ class User::MypageController < ApplicationController
       sub_user.current_supplements.each { |d|
         @current_supplements << { id: d.id, parent_id: d.current_supplement.id, name: d.current_supplement.name, from: d.from, to: d.to, memo: d.memo  }
       }
-
       info_data = { sub_user: { basic_info: sub_user, family_med_his: sub_user.med_his.select(:id, :name), past_diseases: @past_diseases, 
       current_diseases: @current_diseases, 
       past_drugs: @past_drugs, 
