@@ -45,7 +45,7 @@ class DrugReviewsController < ApplicationController
 
   def popular
     @result = []
-    @drug_reviews = DrugReview.order(:drug_review_likes).limit(100)
+    @drug_reviews = DrugReview.order(:drug_review_likes_count).limit(100)
     @drug_reviews.map { |review|
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
