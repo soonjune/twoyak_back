@@ -32,7 +32,7 @@ class DrugsController < ApplicationController
       sub_user = SubUser.find(params[:sub_user_id])
       sub_user_current_drug_ids = sub_user.current_drug_ids
       if sub_user_current_drug_ids.include?(@drug.id)
-        @data["currently_taking"]["current_drug_id"] = sub_user_current_drug_ids[sub_user_current_drug_ids.index(@drug.id)]
+        @data["currently_taking"]["current_drug_id"] = sub_user_current_drug_ids[sub_user_current_drug_ids.index(@drug.id)] unless sub_user_current_drug_ids.nil?
       else
         @data["currently_taking"] = false
       end
