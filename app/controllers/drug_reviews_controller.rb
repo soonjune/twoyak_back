@@ -22,7 +22,7 @@ class DrugReviewsController < ApplicationController
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
       user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
-      if user.exists?
+      if !user.nil?
         sub_user = user.sub_users.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
@@ -48,7 +48,7 @@ class DrugReviewsController < ApplicationController
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
       user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
-      if user.exists?
+      if !user.nil?
         sub_user = user.sub_users.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
@@ -74,7 +74,7 @@ class DrugReviewsController < ApplicationController
     @drug_reviews.map { |review|
       temp = review.as_json
       user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
-      if user.exists?
+      if !user.nil?
         temp["user_id"] = user.id
         sub_user = user.sub_users.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
