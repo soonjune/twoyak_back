@@ -26,13 +26,14 @@ class DrugReviewsController < ApplicationController
         sub_user = user.sub_users.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
+      temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+      temp["age"] = age_range(age(sub_user.birth_date))
+      temp["diseases"] = sub_user.current_disease.pluck(:name)
     }
       else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
-      temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-      temp["age"] = age_range(age(sub_user.birth_date))
-      temp["diseases"] = sub_user.current_disease.pluck(:name)
+
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       temp["liked_users"] = review.l_users.count
       @result << temp
@@ -53,12 +54,13 @@ class DrugReviewsController < ApplicationController
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
     }
-      else
-        temp["user_email"] = "탈퇴한 회원입니다"
-      end
       temp["sex"] = sub_user.sex unless sub_user.sex.nil?
       temp["age"] = age_range(age(sub_user.birth_date))
       temp["diseases"] = sub_user.current_disease.pluck(:name)
+      else
+        temp["user_email"] = "탈퇴한 회원입니다"
+      end
+
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       temp["liked_users"] = review.l_users.count
       @result << temp
@@ -80,12 +82,13 @@ class DrugReviewsController < ApplicationController
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
     }
+      temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+      temp["age"] = age_range(age(sub_user.birth_date))
+      temp["diseases"] = sub_user.current_disease.pluck(:name)
       else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
-      temp["sex"] = sub_user.sex
-      temp["age"] = age_range(age(sub_user.birth_date))
-      temp["diseases"] = sub_user.current_disease.pluck(:name)
+
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       temp["liked_users"] = review.l_users.count
 
