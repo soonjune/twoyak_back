@@ -13,6 +13,8 @@ class User::MypageController < ApplicationController
   end
 
   def index
+    require 'review_view'
+
     sub_users = current_user.sub_users
     @data_sent = Hash.new
     infos = []
@@ -26,13 +28,37 @@ class User::MypageController < ApplicationController
       sub_user.current_diseases.each { |d|
         @current_diseases << { id: d.id, parent_id: d.current_disease.id, name: d.current_disease.name, from: d.from, to: d.to }
       }
+      my_reviews = current_user.drug_reviews
+
       @past_drugs = []
-      sub_user.past_drugs.each { |d|
-        @past_drugs << { id: d.id, parent_id: d.past_drug.id, name: d.past_drug.name, from: d.from, to: d.to, memo: d.memo }
+      sub_user.past_drugs.each { |drug|
+        drug = drug.as_json
+        #여기서 drug는 current_drug object를 as_json을 통해 Hash로 변환한 상태이다.
+        drug_found = Drug.find(drug["past_drug_id"])
+        drug_reviews = drug_found.reviews
+        review_efficacies = drug_reviews.pluck(:efficacy)
+        drug["drug_name"] = drug_found.name
+        drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
+        drug["dur_info"] = drug_found.dur_info
+        my_reviews = current_user.reviews
+        drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
+        drug["diseases"] = PastDrug.find(drug["id"]).diseases
+        @past_drugs << drug
       }
       @current_drugs = []
-      sub_user.current_drugs.each { |d|
-        @current_drugs << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, from: d.from, to: d.to, memo: d.memo  }
+      sub_user.current_drugs.each { |drug|
+        drug = drug.as_json
+       #여기서 drug는 current_drug object를 as_json을 통해 Hash로 변환한 상태이다.
+        drug_found = Drug.find(drug["current_drug_id"])
+        drug_reviews = drug_found.reviews
+        review_efficacies = drug_reviews.pluck(:efficacy)
+        drug["drug_name"] = drug_found.name
+        drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
+        drug["dur_info"] = drug_found.dur_info
+        my_reviews = current_user.reviews
+        drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
+        drug["diseases"] = CurrentDrug.find(drug["id"]).diseases
+        @current_drugs << drug
       }
       @past_supplements = []
       sub_user.past_supplements.each { |d|
@@ -56,8 +82,10 @@ class User::MypageController < ApplicationController
     @data_sent[:infos] = infos
     @data_sent[:watch_drugs] = current_user.watch_drug
     @data_sent[:watch_supplements] = current_user.watch_supplement
-    reviews = current_user.drug_reviews
-    @data_sent[:drug_reviews] = reviews.as_json
+    @data_sent[:drug_reviews] = { my_reviews.map { |review|
+      ReviewView.view(review)
+    }
+  }
     reviews.each_with_index { |review, index|
       @data_sent[:drug_reviews][index][:adverse_effects] = review.adverse_effects.select(:id, :symptom_code, :symptom_name)
     }
