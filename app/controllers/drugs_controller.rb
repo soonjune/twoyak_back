@@ -30,8 +30,9 @@ class DrugsController < ApplicationController
     if params[:sub_user_id].present?
       #먹고 있는지 확인
       sub_user = SubUser.find(params[:sub_user_id])
-      if sub_user.current_drug_ids.include?(@drug.id)
-        @data["currently_taking"]["current_drug_id"] = sub_user.current_drug_ids[current_drug_ids.index(@drug.id)]
+      sub_user_current_drug_ids = sub_user.current_drug_ids
+      if sub_user_current_drug_ids.include?(@drug.id)
+        @data["currently_taking"]["current_drug_id"] = sub_user_current_drug_ids[sub_user_current_drug_ids.index(@drug.id)]
       else
         @data["currently_taking"] = false
       end
