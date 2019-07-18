@@ -23,13 +23,14 @@ class DrugReviewsController < ApplicationController
       temp["drug"] = Drug.find(review.drug_id).name
       user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
       if !user.nil?
-        sub_user = user.sub_users.first
-      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-        $1 + "*"*4
-      }
-      temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-      temp["age"] = age_range(age(sub_user.birth_date))
-      temp["diseases"] = sub_user.current_disease.pluck(:name)
+        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+          $1 + "*"*4
+        }
+        if (sub_user = user.sub_users.first)
+          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+          temp["age"] = age_range(age(sub_user.birth_date))
+          temp["diseases"] = sub_user.current_disease.pluck(:name)
+        end
       else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
@@ -50,13 +51,14 @@ class DrugReviewsController < ApplicationController
       temp["drug"] = Drug.find(review.drug_id).name
       user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
       if !user.nil?
-        sub_user = user.sub_users.first
-      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-        $1 + "*"*4
-    }
-      temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-      temp["age"] = age_range(age(sub_user.birth_date))
-      temp["diseases"] = sub_user.current_disease.pluck(:name)
+        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+          $1 + "*"*4
+        }
+        if (sub_user = user.sub_users.first)
+          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+          temp["age"] = age_range(age(sub_user.birth_date))
+          temp["diseases"] = sub_user.current_disease.pluck(:name)
+        end
       else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
@@ -78,13 +80,14 @@ class DrugReviewsController < ApplicationController
       user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
       if !user.nil?
         temp["user_id"] = user.id
-        sub_user = user.sub_users.first
-      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-        $1 + "*"*4
-    }
-      temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-      temp["age"] = age_range(age(sub_user.birth_date))
-      temp["diseases"] = sub_user.current_disease.pluck(:name)
+        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+          $1 + "*"*4
+        }
+        if (sub_user = user.sub_users.first)
+          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+          temp["age"] = age_range(age(sub_user.birth_date))
+          temp["diseases"] = sub_user.current_disease.pluck(:name)
+        end
       else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
