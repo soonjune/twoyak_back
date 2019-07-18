@@ -21,12 +21,13 @@ class DrugReviewsController < ApplicationController
     @drug_reviews.map { |review|
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
-      user = User.find(review.user_id)
-      sub_user = user.sub_users.first
+      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
+      if user.exists?
+        sub_user = user.sub_users.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
     }
-      if temp["user_email"].include? "탈퇴"
+      else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
       temp["sex"] = sub_user.sex unless sub_user.sex.nil?
@@ -46,12 +47,13 @@ class DrugReviewsController < ApplicationController
     @drug_reviews.map { |review|
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
-      user = User.find(review.user_id)
-      sub_user = user.sub_users.first
+      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
+      if user.exists?
+        sub_user = user.sub_users.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
     }
-      if temp["user_email"].include? "탈퇴"
+      else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
       temp["sex"] = sub_user.sex unless sub_user.sex.nil?
@@ -71,15 +73,16 @@ class DrugReviewsController < ApplicationController
     @drug_reviews = DrugReview.where(drug_id: params[:drug_id])
     @drug_reviews.map { |review|
       temp = review.as_json
-      user = User.find(review.user_id)
-      temp["u_id"] = user.id
-      sub_user = user.sub_users.first
+      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
+      if user.exists?
+        temp["user_id"] = user.id
+        sub_user = user.sub_users.first
       temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
         $1 + "*"*4
     }
-    if temp["user_email"].include? "탈퇴"
-      temp["user_email"] = "탈퇴한 회원입니다"
-    end
+      else
+        temp["user_email"] = "탈퇴한 회원입니다"
+      end
       temp["sex"] = sub_user.sex
       temp["age"] = age_range(age(sub_user.birth_date))
       temp["diseases"] = sub_user.current_disease.pluck(:name)
