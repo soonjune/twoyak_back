@@ -17,7 +17,32 @@ class DrugReviewsController < ApplicationController
   #최근 리뷰 보여주기
   def recent
     @result = []
-    @drug_reviews = DrugReview.order("id DESC").limit(20)
+    @drug_reviews = DrugReview.order("id DESC").limit(100)
+    @drug_reviews.map { |review|
+      temp = review.as_json
+      temp["drug"] = Drug.find(review.drug_id).name
+      user = User.find(review.user_id)
+      sub_user = user.sub_users.first
+      temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+        $1 + "*"*4
+    }
+      if temp["user_email"].include? "탈퇴"
+        temp["user_email"] = "탈퇴한 회원입니다"
+      end
+      temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+      temp["age"] = age_range(age(sub_user.birth_date))
+      temp["diseases"] = sub_user.current_disease.pluck(:name)
+      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
+      temp["liked_users"] = review.l_users.count
+      @result << temp
+    }
+
+    render json: @result
+  end
+
+  def popular
+    @result = []
+    @drug_reviews = DrugReview.order(:drug_review_likes).limit(100)
     @drug_reviews.map { |review|
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
