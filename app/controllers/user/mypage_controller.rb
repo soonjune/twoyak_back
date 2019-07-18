@@ -83,7 +83,7 @@ class User::MypageController < ApplicationController
     @data_sent[:drug_reviews] = my_reviews.map { |review|
       ReviewView.view(review)
     }
-    reviews.each_with_index { |review, index|
+    my_reviews.each_with_index { |review, index|
       @data_sent[:drug_reviews][index][:adverse_effects] = review.adverse_effects.select(:id, :symptom_code, :symptom_name)
     }
     @data_sent[:sup_reviews] = current_user.sup_reviews
