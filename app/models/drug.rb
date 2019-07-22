@@ -28,8 +28,10 @@ class Drug < ApplicationRecord
   has_many :watch_supplements, :class_name => "WatchSupplement", :foreign_key => "watch_supplement_id"
   #리뷰
   has_many :reviews, :class_name => "DrugReview"
-
-  has_and_belongs_to_many :drug_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "drug_ingr_id"
+  
+  #약 성분 연결(join table 통해서)
+  has_many :drug_associations
+  has_many :drug_ingrs, through: :drug_associations
   has_and_belongs_to_many :dur_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "dur_ingr_id"
 
 
