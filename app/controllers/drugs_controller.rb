@@ -48,7 +48,15 @@ class DrugsController < ApplicationController
     review_efficacies = drug_reviews.pluck(:efficacy)
     @data["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
     @data["sub_users_taking"] = @drug.currents.count
-
+    #상호작용 추가
+    inputs = []
+    @drug.interactions.each { |interaction|
+      temp = Hash.new
+      temp[:more_info]= interaction.interactable
+      temp.merge!(interaction.as_json)
+      inputs << temp
+    }
+    @data["interactions"] = inputs
     render json: @data
   end
 

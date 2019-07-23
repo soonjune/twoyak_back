@@ -11,4 +11,6 @@ class SupplementIngr < ApplicationRecord
             ingr_name: ingr_name
         }
     end
+
+    has_many :interactions, as: :interactable
 end

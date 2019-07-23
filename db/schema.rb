@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_12_064320) do
+ActiveRecord::Schema.define(version: 2019_07_23_050903) do
 
   create_table "adverse_effects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "symptom_code"
@@ -118,7 +118,9 @@ ActiveRecord::Schema.define(version: 2019_07_12_064320) do
 
   create_table "drug_ingrs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
+    t.string "name_eng"
     t.json "description"
+    t.json "atc_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -148,8 +150,17 @@ ActiveRecord::Schema.define(version: 2019_07_12_064320) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "drug_review_likes_count", default: 0
     t.index ["drug_id"], name: "index_drug_reviews_on_drug_id"
     t.index ["user_id"], name: "index_drug_reviews_on_user_id"
+  end
+
+  create_table "drug_taking_reasons", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "disease_id"
+    t.string "reasonable_type"
+    t.bigint "reasonable_id"
+    t.index ["disease_id"], name: "index_drug_taking_reasons_on_disease_id"
+    t.index ["reasonable_type", "reasonable_id"], name: "index_drug_taking_reasons_on_reasonable_type_and_reasonable_id"
   end
 
   create_table "drugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -219,6 +230,16 @@ ActiveRecord::Schema.define(version: 2019_07_12_064320) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_identities_on_user_id"
+  end
+
+  create_table "interactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.boolean "is_recommendation"
+    t.string "interactable_type"
+    t.bigint "interactable_id"
+    t.string "title"
+    t.json "info"
+    t.json "references"
+    t.index ["interactable_type", "interactable_id"], name: "index_interactions_on_interactable_type_and_interactable_id"
   end
 
   create_table "notices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -329,6 +350,7 @@ ActiveRecord::Schema.define(version: 2019_07_12_064320) do
     t.string "daily_intake"
     t.string "daily_intake_max"
     t.string "daily_intake_min"
+    t.json "rich_foods"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "active_ingr"
@@ -419,6 +441,7 @@ ActiveRecord::Schema.define(version: 2019_07_12_064320) do
   add_foreign_key "drug_review_comments", "users"
   add_foreign_key "drug_review_likes", "drug_reviews"
   add_foreign_key "drug_review_likes", "users"
+  add_foreign_key "drug_taking_reasons", "diseases"
   add_foreign_key "identities", "users"
   add_foreign_key "suggestions", "users"
   add_foreign_key "sup_review_comments", "sup_reviews"

@@ -32,6 +32,7 @@ class Drug < ApplicationRecord
   #약 성분 연결(join table 통해서)
   has_many :drug_associations
   has_many :drug_ingrs, through: :drug_associations
+  has_many :interactions, through: :drug_ingrs
   has_and_belongs_to_many :dur_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "dur_ingr_id"
 
 

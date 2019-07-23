@@ -117,7 +117,7 @@ Rails.application.routes.draw do
   resources :supplement_ingrs, :except => [:show, :index]
   get "supplement_ingrs/:search_term" => "supplement_ingrs#show"
   resources :interactions
-  resources :dur_ingrs, :except => [:show, :index]
+  resources :dur_ingrs, :except => [:show]
   get "dur_ingrs/:search_term" => "dur_ingrs#show"
   # resources :drugs_dur_ingrs
   resources :diseases
