@@ -4,7 +4,6 @@ module DurAnalysis
     require 'http'
 
     def get_by_drug(codes)
-
         response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
         begin
             rest = JSON.parse(response)["data"]["rest"]
@@ -151,7 +150,13 @@ module DurAnalysis
         drug_ids_array.each { |drug_id|
             select_drug =  Drug.find(drug_id)
             select_code = select_drug.hira_medicine_code
-            if select_code.nil?
+            #hira_med_code 있는 경우 
+            if !select_code.nil?
+              if select_code.to_s.length == 8
+                select_code = "0".concat(select_code.to_s)
+              end
+              @codes << select_code.to_s.concat(";")
+            else
                 if select_drug.package_insert.nil?
                     @excluded << select_drug.name
                 else
@@ -178,12 +183,6 @@ module DurAnalysis
                     @codes << edi_code.concat(";")
                     end
                 end
-            #hira_med_code 있는 경우
-            else
-                if select_code.to_s.length == 8
-                    select_code = "0".concat(select_code.to_s)
-                end
-                @codes << select_code.to_s.concat(";")
             end
         }
         return @codes.empty? ? @exclued : @codes
