@@ -26,7 +26,6 @@ class DrugsController < ApplicationController
     
     @data = Hash.new
     @data = @drug.as_json
-    @data["package_insert"] = CGI.unescapeHTML(@data["package_insert"]) unless @data["package_insert"].nil?
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
     if params[:sub_user_id].present?
       #먹고 있는지 확인
