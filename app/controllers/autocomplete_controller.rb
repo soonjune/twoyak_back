@@ -1,5 +1,9 @@
 class AutocompleteController < ApplicationController
+  before_action :authenticate_request!, only: [:disease]
+  before_action :set_sub_user, only: [:disease]
+
   require 'json'
+
 
   def search
     name = Drug.select(:name).map(&:name)
@@ -56,7 +60,12 @@ class AutocompleteController < ApplicationController
   # end
 
   def disease
-    render json: SearchTerm.pluck(:diseases)[1]
+    @disease_terms = Hash.new
+    @disease_terms["standard_diseases"] = SearchTerm.pluck(:diseases)[1]
+    compiled = (@sub_user.current_disease) + (@sub_user.past_disease) unless @sub_user.blank?
+    @disease_terms["my_diseases"] = compiled.uniq! unless compiled.blank?
+    
+    render json: @disease_terms
   end
 
   def drug
@@ -65,6 +74,14 @@ class AutocompleteController < ApplicationController
 
   def sup
     render json: SearchTerm.pluck(:supplements)[1]
+  end
+
+  private
+
+  def set_sub_user
+    if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+      @sub_user = SubUser.find(params[:sub_user_id])
+    end
   end
 
 end
