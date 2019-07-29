@@ -83,12 +83,17 @@ Rails.application.routes.draw do
   #모바일 토큰 변환
   post "change" => "change_token#change"
 
-  #전체 리뷰
+  #전체 리뷰(관리자용)
   get "reviews" => "drug_reviews#all"
   #최근 리뷰 받기
   get "reviews/recent" => "drug_reviews#recent"
   #좋아요 순으로 받기
   get "reviews/popular" => "drug_reviews#popular"
+  #평점 높은 리뷰 순으로 보기
+  get "reviews/high_rating" => "drug_reviews#high_rating"
+  #나의 리뷰 모아보기(내가 남긴 리뷰) // 토큰 필요
+  get "reviews/my_reviews" => "drug_reviews#my_reviews"
+
 
   #drug 사진
   get "drugs/:id/pics" => "drugs#show_pics"
