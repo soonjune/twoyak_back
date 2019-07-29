@@ -170,6 +170,13 @@ class DrugReviewsController < ApplicationController
   def create
     if drug_review_params[:user_id] == current_user.id
       @drug_review = DrugReview.new(drug_review_params)
+      #평점 저장하기
+      drug_found = Drug.find(drug_review_params[:drug_id])
+      review_efficacies = drug_found.reviews.pluck(:efficacy)
+      count = review_efficacies.count
+      rating = (review_efficacies.sum.to_f / (count + 1)).round(2)
+      Drug.find(drug_review_params[:drug_id]).update(drug_rating: rating)
+
       @drug_review.adverse_effect_ids = drug_review_params[:adverse_effect_ids]
     else
       render json: { errors: ['리뷰 작성 권한이 없습니다.'] }, status: :unauthorized
