@@ -11,7 +11,9 @@ class User::SubUsersController < ApplicationController
 
   # GET /sub_users/1
   def show
-    render json: @sub_user
+    @result = @sub_user.as_json
+    @result["family_med_his"] = @sub_user.med_his
+    render json: @result
   end
 
   # POST /sub_users
