@@ -61,7 +61,7 @@ class AutocompleteController < ApplicationController
 
   def disease
     @disease_terms = Hash.new
-    @disease_terms["standard_diseases"] = SearchTerm.pluck(:diseases)[1]
+    @disease_terms["standard_diseases"] = JSON.parse(SearchTerm.pluck(:diseases)[1])
     compiled = (@sub_user.current_disease) + (@sub_user.past_disease) unless @sub_user.blank?
     @disease_terms["my_diseases"] = compiled.uniq! unless compiled.blank?
     
