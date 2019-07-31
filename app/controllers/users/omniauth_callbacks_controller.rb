@@ -18,7 +18,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             return
           end
         else
+
           uri = URI("http://localhost:3000/login-error")
+          if @user.class != User
+            #에러 url에 포함해서 리턴
+            uri.query = URI.encode_www_form(@user)
+          end
           redirect_to uri.to_s
           return
         end

@@ -49,8 +49,12 @@ class User < ApplicationRecord
 
     #이메일 이미 존재하는 경우
     if !identity.persisted? && !User.where(:email => email).empty?
-      user = "already exists"
-      return user
+      user = User.where(:email => email).first
+      if !user.blank?
+        return {error: "#{user.email}(으)로 이미 가입하셨습니다."}
+      else
+        return {error: "회원가입 도중 오류가 발생했습니다. 관리자에게 문의해주세요."}
+      end
     end
 
     # If a signed_in_resource is provided it always overrides the existing user
@@ -78,7 +82,7 @@ class User < ApplicationRecord
           user.skip_confirmation!
           user.save!
           if(auth.provider == "naver")
-            info = SubUser.new(user_name: auth.info.nickname)
+            info = UserInfo.new(user_name: auth.info.nickname)
             info.user_id = user.id
             if (auth.extra.raw_info.response.gender == "M")
               info.sex = 1
@@ -87,7 +91,7 @@ class User < ApplicationRecord
             end
             info.save!
           else
-            info = SubUser.new(user_name: auth.info.name)
+            info = UserInfo.new(user_name: auth.info.name)
             info.user_id = user.id
             info.save!
           end
