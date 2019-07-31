@@ -8,16 +8,19 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           @token = JWT.encode(payload(@user), ENV['SECRET_KEY_BASE'], 'HS256')
           if @user.sign_in_count == 1
             uri = URI("http://localhost:3000/add-info")
-            url.query = URI.encode_www_form(:token => @token)
+            uri.query = URI.encode_www_form(:token => @token)
             redirect_to uri.to_s
+            return
           else
             uri = URI("http://localhost:3000/login")
-            url.query = URI.encode_www_form(:token => @token)
+            uri.query = URI.encode_www_form(:token => @token)
             redirect_to uri.to_s
+            return
           end
         else
           uri = URI("http://localhost:3000/login-error")
           redirect_to uri.to_s
+          return
         end
       end
     }
