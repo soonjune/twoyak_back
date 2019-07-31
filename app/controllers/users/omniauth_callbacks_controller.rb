@@ -1,17 +1,19 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def self.provides_callback_for(provider)
-    require 'payload'
     class_eval %Q{
       def #{provider}
         @user = User.find_for_oauth(request.env["omniauth.auth"], current_user)
         if (@user.class == User && @user.persisted?)
           sign_in(@user, store: false)
+          @token = JWT.encode(payload(@user), ENV['SECRET_KEY_BASE'], 'HS256')
           if @user.sign_in_count == 1
             uri = URI("http://localhost:3000/add-info")
-            redirect_to uri.to_s, Payload.jwt_encoded(@user)
+            url.query = URI.encode_www_form(:token => @token)
+            redirect_to uri.to_s
           else
             uri = URI("http://localhost:3000/login")
-            redirect_to uri.to_s, Payload.jwt_encoded(@user)
+            url.query = URI.encode_www_form(:token => @token)
+            redirect_to uri.to_s
           end
         else
           uri = URI("http://localhost:3000/login-error")
