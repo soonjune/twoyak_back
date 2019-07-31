@@ -6,8 +6,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user = User.find_for_oauth(request.env["omniauth.auth"], current_user)
         if (@user.class == User && @user.persisted?)
           sign_in(@user, store: false)
-          uri = URI("http://localhost:3000/login")
-          redirect_to uri.to_s, Payload.jwt_encoded(@user)
+          if @user.sign_in_count == 1
+            uri = URI("http://localhost:3000/add-info")
+            redirect_to uri.to_s, Payload.jwt_encoded(@user)
+          else
+            uri = URI("http://localhost:3000/login")
+            redirect_to uri.to_s, Payload.jwt_encoded(@user)
+          end
         else
           uri = URI("http://localhost:3000/login-error")
           redirect_to uri.to_s
