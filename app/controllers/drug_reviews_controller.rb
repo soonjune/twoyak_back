@@ -191,8 +191,8 @@ class DrugReviewsController < ApplicationController
       temp["liked"] = true
     else
       temp["liked"] = false
-      end    render json: @result
-
+    end    
+    render json: @result
   end
 
   # POST /drug_reviews
