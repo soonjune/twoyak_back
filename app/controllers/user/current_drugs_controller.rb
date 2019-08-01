@@ -26,7 +26,7 @@ class User::CurrentDrugsController < ApplicationController
       drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
       drug["dur_info"] = drug_found.dur_info
       drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
-      drug["diseases"] = CurrentDrug.find(drug["id"]).diseases
+      drug["disease"] = CurrentDrug.find(drug["id"]).diseases.first unless CurrentDrug.find(drug["id"]).diseases.present?
     }
     render json: @result 
   end
