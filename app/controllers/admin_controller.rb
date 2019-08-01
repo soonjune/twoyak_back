@@ -7,18 +7,6 @@ class AdminController < ApplicationController
       @current_drugs = CurrentDrug.all.order("created_at DESC").limit(100)
     end
   
-<<<<<<< HEAD
-    def insert
-      if @current_drug.include?(insert_params[:drug_id])
-        render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
-      elsif @current_drug << Drug.find(insert_params[:drug_id])
-        set_time_memo = CurrentDrug.where(sub_user_id: params[:sub_user_id], current_drug_id: @search_id).last
-        set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:whern], how: params[:how])
-        render json: @current_drug.pluck(:id, :name), status: :created
-      else
-        render json: @current_drug.errors, status: :unprocessable_entity
-      end
-=======
     # def insert
     #   if @current_drug.include?(Drug.find(insert_params[:drug_id]))
     #     render json: { errors: "이미 투약 중인 의약품입니다." }, status: :unprocessable_entity
@@ -74,7 +62,6 @@ class AdminController < ApplicationController
         pr_to_change = PrescriptionPhoto.find(check_params[:id])
         pr_to_change.check = check_params[:check]
         pr_to_change.save
->>>>>>> master
     end
 
     def user_analysis
