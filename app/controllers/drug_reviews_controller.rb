@@ -2,6 +2,7 @@ class DrugReviewsController < ApplicationController
   before_action :set_drug_review, only: [:show]
   before_action :authenticate_request!, only: [:all, :create, :update, :destroy, :my_reviews]
   before_action :authority_check, only: [:update, :destroy]
+  before_action :liked_drug_reviews, only: [:recent, :high_rating, :popular, :my_reviews]
 
 
   #전체 보여주기
@@ -18,6 +19,8 @@ class DrugReviewsController < ApplicationController
   def recent
     @result = []
     @drug_reviews = DrugReview.order("id DESC").limit(100)
+    begin
+      authenticate_request!
     @drug_reviews.map { |review|
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
@@ -36,7 +39,12 @@ class DrugReviewsController < ApplicationController
       end
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      temp["liked_users"] = review.l_users.count
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
       @result << temp
     }
 
@@ -64,7 +72,12 @@ class DrugReviewsController < ApplicationController
       end
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      temp["liked_users"] = review.l_users.count
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
       @result << temp
     }
 
@@ -92,7 +105,12 @@ class DrugReviewsController < ApplicationController
       end
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      temp["liked_users"] = review.l_users.count
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
       @result << temp
     }
 
@@ -120,7 +138,12 @@ class DrugReviewsController < ApplicationController
       end
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      temp["liked_users"] = review.l_users.count
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
       @result << temp
     }
 
@@ -149,8 +172,12 @@ class DrugReviewsController < ApplicationController
       end
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      temp["liked_users"] = review.l_users.count
-
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
       @result << temp
     }
 
@@ -161,8 +188,12 @@ class DrugReviewsController < ApplicationController
   def show
     @result = Hash.new
     @result = @drug_review.attributes
-    @result["liked_users"] = @drug_review.l_users.count
-    render json: @result
+    #내가 좋아요 했는지
+    if liked_drug_reviews.include?(review.id)
+      temp["liked"] = true
+    else
+      temp["liked"] = false
+      end    render json: @result
 
   end
 
@@ -239,4 +270,12 @@ class DrugReviewsController < ApplicationController
     def drug_review_params
       params.require(:drug_review).permit(:user_id, :drug_id, :body, :efficacy, :adverse_effect_ids => [])
     end 
+
+    def liked_drug_reviews
+      begin
+        authenticate_request!
+        return current_user.l_drug_reviews
+      rescue
+        return []
+    end
 end
