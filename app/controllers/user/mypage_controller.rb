@@ -80,10 +80,16 @@ class User::MypageController < ApplicationController
     @data_sent[:infos] = infos
     @data_sent[:watch_drugs] = current_user.watch_drug
     @data_sent[:watch_supplements] = current_user.watch_supplement
+<<<<<<< HEAD
     @data_sent[:drug_reviews] = my_reviews.map { |review|
       ReviewView.view(review)
     }
     my_reviews.each_with_index { |review, index|
+=======
+    reviews = current_user.drug_reviews
+    @data_sent[:drug_reviews] = reviews.as_json
+    reviews.each_with_index { |review, index|
+>>>>>>> master
       @data_sent[:drug_reviews][index][:adverse_effects] = review.adverse_effects.select(:id, :symptom_code, :symptom_name)
     }
     @data_sent[:sup_reviews] = current_user.sup_reviews
