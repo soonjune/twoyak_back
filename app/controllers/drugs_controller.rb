@@ -26,6 +26,15 @@ class DrugsController < ApplicationController
     
     @data = Hash.new
     @data = @drug.as_json
+    #package_insert 형태 동일하게 가도록
+    if !@drug.package_insert.nil?
+      if @drug.package_insert.class == Hash
+          #Hash인 경우와 String인 경우 구분 => Hash로 모두 변환
+          @data["package_insert"] = @drug.package_insert
+      else
+          @data["package_insert"]= JSON.parse(@drug.package_insert)
+      end
+    end
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
     if params[:sub_user_id].present?
       #먹고 있는지 확인
