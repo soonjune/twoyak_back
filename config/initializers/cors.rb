@@ -17,7 +17,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 
 allow do
   origins 'twoyak.com'
-  resource '*', headers: :any, methods: :get
+  resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
 
   # Only allow a request for a specific host
   resource '*',
