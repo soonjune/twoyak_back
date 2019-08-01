@@ -14,7 +14,6 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
-end
 
 allow do
   origins '*'
@@ -25,7 +24,9 @@ allow do
       headers: :any,
       methods: :get,
       if: proc { |env| env['HTTP_HOST'] == 'api.twoyak.com' }
+  end
 end
+
 # Rails.application.config.middleware.insert_before 0, Rack::Cors do
 #   allow do
 #     origins 'http://api.twoyak.com'
