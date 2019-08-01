@@ -79,8 +79,10 @@ class AutocompleteController < ApplicationController
   private
 
   def set_sub_user
-    if current_user.sub_user_ids.include? params[:sub_user_id].to_i
-      @sub_user = SubUser.find(params[:sub_user_id])
+    unless current_user.blank?
+      if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+        @sub_user = SubUser.find(params[:sub_user_id])
+      end
     end
   end
 
