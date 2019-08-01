@@ -15,18 +15,30 @@ class User::CurrentDrugsController < ApplicationController
   def show
     require 'review_view'
 
+<<<<<<< HEAD
     @result = @sub_user.current_drugs.as_json
     my_reviews = current_user.drug_reviews
     @result.map { |drug|
       #여기서 drug는 current_drug object를 as_json을 통해 Hash로 변환한 상태이다.
+=======
+    @result = @current_drug.as_json
+    my_reviews = current_user.drug_reviews
+    @result.map { |drug|
+>>>>>>> master
       drug_found = Drug.find(drug["current_drug_id"])
       drug_reviews = drug_found.reviews
       review_efficacies = drug_reviews.pluck(:efficacy)
       drug["drug_name"] = drug_found.name
+<<<<<<< HEAD
       drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
       drug["dur_info"] = drug_found.dur_info
       drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
       drug["disease"] = CurrentDrug.find(drug["id"]).diseases.first unless CurrentDrug.find(drug["id"]).diseases.blank?
+=======
+      drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.count)
+      drug["dur_info"] = drug_found.dur_info
+      drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
+>>>>>>> master
     }
     render json: @result 
   end
@@ -45,11 +57,16 @@ class User::CurrentDrugsController < ApplicationController
       drug_found.dur_info = dur_info unless dur_info.nil?
       drug_found.save
 
+<<<<<<< HEAD
       selected =  @sub_user.current_drugs.order("created_at").last
       selected.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
       #먹는 이유 추가하기(질환추가)
       selected.disease_ids = JSON.parse(params[:disease_ids])
 
+=======
+      set_time_memo = CurrentDrug.where(user_info_id: params[:user_info_id], current_drug_id: @search_id).last
+      set_time_memo.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
+>>>>>>> master
       render json: @current_drug.pluck(:id, :name), status: :created
     else
       render json: @current_drug.errors, status: :unprocessable_entity
@@ -115,8 +132,13 @@ class User::CurrentDrugsController < ApplicationController
 
     def update_current_drug
       @current_drug_params = params.permit(:from, :to, :memo, :when, :how)
+<<<<<<< HEAD
       if (current_user.has_role? "admin") || (current_user.sub_user_ids.include? params[:sub_user_id].to_i)
         @current_drug = SubUser.find(params[:sub_user_id]).current_drugs.find(params[:id])
+=======
+      if (current_user.has_role? "admin") || (current_user.user_info_ids.include? params[:user_info_id].to_i)
+        @current_drug = UserInfo.find(params[:user_info_id]).current_drugs.find(params[:id])
+>>>>>>> master
       end
     end
 

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_user!, except: [:infos_for_mobile]
 
     def finish_signup
         if request.patch? && params[:user] #&& params[:user][:email]
@@ -11,6 +11,13 @@ class UsersController < ApplicationController
             @show_errors = true
             end
         end
+    end
+
+    def infos_for_mobile
+        user_id = params[:id]
+        infos = User.find(user_id).user_info_ids.first
+
+        render json: { user_info_id: infos }
     end
 
     def create

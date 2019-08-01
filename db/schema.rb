@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2019_07_23_050903) do
+=======
+ActiveRecord::Schema.define(version: 2019_06_24_114433) do
+>>>>>>> master
 
   create_table "adverse_effects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "symptom_code"
@@ -81,6 +85,7 @@ ActiveRecord::Schema.define(version: 2019_07_23_050903) do
     t.index ["dur_ingr_id"], name: "index_drug_associations_on_dur_ingr_id"
   end
 
+<<<<<<< HEAD
   create_table "drug_disease_interactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "drug_id"
     t.bigint "disease_id"
@@ -89,6 +94,8 @@ ActiveRecord::Schema.define(version: 2019_07_23_050903) do
     t.index ["drug_id"], name: "index_drug_disease_interactions_on_drug_id"
   end
 
+=======
+>>>>>>> master
   create_table "drug_imprints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "drug_id"
     t.string "item_name"
@@ -118,9 +125,13 @@ ActiveRecord::Schema.define(version: 2019_07_23_050903) do
 
   create_table "drug_ingrs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
+<<<<<<< HEAD
     t.string "name_eng"
     t.json "description"
     t.json "atc_code"
+=======
+    t.json "description"
+>>>>>>> master
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -175,8 +186,11 @@ ActiveRecord::Schema.define(version: 2019_07_23_050903) do
     t.datetime "updated_at", null: false
     t.json "ingr_eng_name"
     t.string "atc_code"
+<<<<<<< HEAD
     t.integer "hira_medicine_code"
     t.string "hira_main_ingr_code"
+=======
+>>>>>>> master
     t.index ["item_seq"], name: "drugs_item_seq_IDX"
     t.index ["name"], name: "index_drugs_on_name"
   end

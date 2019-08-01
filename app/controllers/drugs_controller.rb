@@ -26,6 +26,7 @@ class DrugsController < ApplicationController
     
     @data = Hash.new
     @data = @drug.as_json
+<<<<<<< HEAD
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
     if params[:sub_user_id].present?
       #먹고 있는지 확인
@@ -54,6 +55,19 @@ class DrugsController < ApplicationController
       inputs << temp
     }
     @data["interactions"] = inputs
+=======
+    begin
+      @data["package_insert"] = JSON.parse(@data["package_insert"]) unless @data["package_insert"].nil?
+    rescue
+      @data["package_insert"] = @data["package_insert"]
+    end
+    # if !request.headers["Authorization"].nil?
+    #   @data["token"] = request.headers["Authorization"]
+    # end
+    @data["taking"] = @drug.currents.count
+    @data["watching"] = @drug.watch_drugs.pluck(:user_id)
+
+>>>>>>> master
     render json: @data
   end
 
@@ -153,7 +167,11 @@ class DrugsController < ApplicationController
     
     if(!@rep.nil?)
       if !@rep['package_insert'].nil?
-        @information = @rep['package_insert']['DRB_ITEM']
+        if @rep["package_insert"].class == Hash
+          @information = @rep["package_insert"]["DRB_ITEM"]
+        else
+          @information = JSON.parse(@rep["package_insert"])["DRB_ITEM"]
+        end
         @ITEM_NAME = @rep.name
 
         @data["item_name"] = @ITEM_NAME
@@ -216,7 +234,7 @@ class DrugsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_drug
-      @drug = Drug.find(params[:id])
+      @drug = Drug.select(Drug.column_names - ["hira_medicine_code","hira_main_ingr_code"]).find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
