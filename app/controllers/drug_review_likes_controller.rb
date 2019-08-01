@@ -12,9 +12,9 @@ class DrugReviewLikesController < ApplicationController
     end
 
     def like_toggle
-        like = DrugReviewLike.find_by(user: current_user, drug_review_comment_id: params[:review_id])
+        like = DrugReviewLike.find_by(user: current_user, drug_review_id: params[:review_id])
         if like.nil?
-            DrugReviewLike.create(user: current_user, drug_review_comment_id: params[:review_id])
+            DrugReviewLike.create(user: current_user, drug_review_id: params[:review_id])
         else
             like.destroy
         end
