@@ -1,5 +1,5 @@
 class AutocompleteController < ApplicationController
-  before_action :authenticate_request!, only: [:disease]
+  before_action :check_token!, only: [:disease]
   before_action :set_sub_user, only: [:disease]
 
   require 'json'
