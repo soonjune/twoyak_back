@@ -49,17 +49,12 @@ class User < ApplicationRecord
 
     #이메일 이미 존재하는 경우
     if !identity.persisted? && !User.where(:email => email).empty?
-<<<<<<< HEAD
       user = User.where(:email => email).first
       if !user.blank?
         return {error: "#{user.email}(으)로 이미 가입하셨습니다."}
       else
         return {error: "회원가입 도중 오류가 발생했습니다. 관리자에게 문의해주세요."}
       end
-=======
-      user = "already exists"
-      return user
->>>>>>> master
     end
 
     # If a signed_in_resource is provided it always overrides the existing user
