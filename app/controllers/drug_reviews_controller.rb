@@ -19,8 +19,6 @@ class DrugReviewsController < ApplicationController
   def recent
     @result = []
     @drug_reviews = DrugReview.order("id DESC").limit(100)
-    begin
-      authenticate_request!
     @drug_reviews.map { |review|
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
