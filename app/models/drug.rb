@@ -35,11 +35,6 @@ class Drug < ApplicationRecord
   has_many :interactions, through: :drug_ingrs
   has_and_belongs_to_many :dur_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "dur_ingr_id"
 
-  has_and_belongs_to_many :drug_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "drug_ingr_id"
-  has_and_belongs_to_many :dur_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "dur_ingr_id"
-
-
-
   searchkick language: "korean", word_start: [:name], word_middle: [:name, :ingr_kor_name, :ingr_eng_name], word: [:name]
 
   def search_data
