@@ -27,11 +27,6 @@ class DrugsController < ApplicationController
     @data = Hash.new
     @data = @drug.as_json
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
-    #사용설명서 html 문자 &nbsp 제거
-    package_insert = @drug.package_insert.class == Hash ? @drug.package_insert.to_json : @drug.package_insert
-    package_insert.gsub!(/&nbsp;|&amp;|&lt;|&gt;|u0026nbsp;|'\"'/i,"") unless package_insert.nil?
-    @data["package_insert"] = JSON.parse(package_insert)
-
     if params[:sub_user_id].present?
       #먹고 있는지 확인
       sub_user = SubUser.find(params[:sub_user_id])
