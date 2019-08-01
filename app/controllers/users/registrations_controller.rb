@@ -4,10 +4,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   prepend_before_action :authenticate_request!, only: [:edit, :update, :destroy]
   skip_before_action :authenticate_scope!, :only => [:edit, :update, :destroy]
-<<<<<<< HEAD
   require 'payload'
-=======
->>>>>>> master
 
   # GET /resource/sign_up
   # def new
@@ -65,11 +62,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def destroy
     current_user.destroy
   end
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> master
   # GET /resource/cancel
   # Forces the session data which is usually expired after sign
   # in to be expired now. This is useful if the user wants to

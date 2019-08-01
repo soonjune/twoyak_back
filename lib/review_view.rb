@@ -13,11 +13,4 @@ module ReviewView
         return temp
     end
 
-<<<<<<< HEAD
-    def get_rate(drug)
-
-    end
-
-=======
->>>>>>> master
 end

@@ -60,13 +60,8 @@ class User::PastDiseasesController < ApplicationController
 
     def update_past_disease
       @past_disease_params = params.permit(:from, :to)
-<<<<<<< HEAD
       if current_user.sub_user_ids.include? params[:sub_user_id].to_i
         @past_disease = SubUser.find(params[:sub_user_id]).past_diseases.find(params[:id])
-=======
-      if (current_user.has_role? "admin") || (current_user.user_info_ids.include? params[:user_info_id].to_i)
-        @past_disease = UserInfo.find(params[:user_info_id]).past_diseases.find(params[:id])
->>>>>>> master
       end
     end
 
