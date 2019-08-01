@@ -14,7 +14,6 @@ class DrugReviewLikesController < ApplicationController
     def like_toggle
         like = DrugReviewLike.find_by(user: current_user, drug_review_id: params[:drug_review_id])
         if like.nil?
-            byebug
             DrugReviewLike.create(user: current_user, drug_review_id: params[:drug_review_id])
             render json: {status: 'ok'}, status: :created
         else
