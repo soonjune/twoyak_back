@@ -775,13 +775,9 @@ class User::AnalysisController < ApplicationController
         end
       #hira_med_code 있는 경우
       else
-<<<<<<< HEAD
-        puts select_code.to_s.concat(";")
-=======
         if select_code.to_s.length == 8
           select_code = "0".concat(select_code.to_s)
         end
->>>>>>> master
         @codes << select_code.to_s.concat(";")
       end
 
@@ -828,12 +824,9 @@ class User::AnalysisController < ApplicationController
           end
         #hira_med_code 있는 경우
         else
-<<<<<<< HEAD
-=======
           if select_code.to_s.length == 8
             select_code = "0".concat(select_code.to_s)
           end
->>>>>>> master
           @codes << select_code.to_s.concat(";")
         end
 

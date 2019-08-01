@@ -26,7 +26,6 @@ class DrugsController < ApplicationController
     
     @data = Hash.new
     @data = @drug.as_json
-<<<<<<< HEAD
     @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
     if params[:sub_user_id].present?
       #먹고 있는지 확인
@@ -55,19 +54,6 @@ class DrugsController < ApplicationController
       inputs << temp
     }
     @data["interactions"] = inputs
-=======
-    begin
-      @data["package_insert"] = JSON.parse(@data["package_insert"]) unless @data["package_insert"].nil?
-    rescue
-      @data["package_insert"] = @data["package_insert"]
-    end
-    # if !request.headers["Authorization"].nil?
-    #   @data["token"] = request.headers["Authorization"]
-    # end
-    @data["taking"] = @drug.currents.count
-    @data["watching"] = @drug.watch_drugs.pluck(:user_id)
-
->>>>>>> master
     render json: @data
   end
 
