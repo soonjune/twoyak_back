@@ -7,7 +7,8 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins '*'
+    origins 'localhost:3000', '127.0.0.1:3000',
+            /\Ahttp:\/\/163\.152\.83\.\168(:\d+)?\z/
 
     resource '*',
       headers: :any,
@@ -15,6 +16,16 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   end
 end
 
+allow do
+  origins '*'
+  resource '*', headers: :any, methods: :get
+
+  # Only allow a request for a specific host
+  resource '*',
+      headers: :any,
+      methods: :get,
+      if: proc { |env| env['HTTP_HOST'] == 'api.twoyak.com' }
+end
 # Rails.application.config.middleware.insert_before 0, Rack::Cors do
 #   allow do
 #     origins 'http://api.twoyak.com'
