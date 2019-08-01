@@ -15,10 +15,11 @@ class DrugReviewLikesController < ApplicationController
         like = DrugReviewLike.find_by(user: current_user, drug_review_id: params[:review_id])
         if like.nil?
             DrugReviewLike.create(user: current_user, drug_review_id: params[:review_id])
+            render json: {status: 'ok'}, status: :created
         else
             like.destroy
+            render json: {status: 'ok'}, status: :ok
         end
-        render json: {status: 'ok'}, status: :ok
     end
 
 end
