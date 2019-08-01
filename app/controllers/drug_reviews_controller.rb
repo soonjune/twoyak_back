@@ -277,5 +277,6 @@ class DrugReviewsController < ApplicationController
         return current_user.l_drug_reviews
       rescue
         return []
+      end
     end
 end
