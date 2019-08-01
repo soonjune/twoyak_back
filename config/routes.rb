@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   resources :health_news
+<<<<<<< HEAD
+  resources :hospitals
+  resources :adverse_effects, :except => [:index]
+=======
   resources :adverse_effects
+>>>>>>> master
   resources :suggestions
   resources :drug_ingrs
 
@@ -18,16 +23,24 @@ Rails.application.routes.draw do
 
   namespace :user do
     resources :mypage
+<<<<<<< HEAD
+    resources :sub_users, :except => [:index]
+    #의약품으로 직접 안전정보(DUR) 가져오기
+    get 'analysis/get_by_drug'
+    #관심약물 추가
+    resources :watch_drugs, :except => [:update, :destroy]
+    scope ':sub_user_id' do
+=======
     resources :user_infos, :except => [:index]
     #의약품으로 직접 안전정보(DUR) 가져오기
     get 'analysis/get_by_drug'
 
     scope ':user_info_id' do
+>>>>>>> master
       #DUR 정보
       get 'analysis/get'
       get "analysis/single/:drug_id" => "single_drug#cautions"
-      #관심약물 추가
-      resources :watch_drugs, :except => [:update, :destroy]
+
 
       #가족력
       get "family_med_histories" => "family_med_histories#show"
@@ -92,7 +105,16 @@ Rails.application.routes.draw do
   get "reviews/high_rating" => "drug_reviews#high_rating"
   #나의 리뷰 모아보기(내가 남긴 리뷰) // 토큰 필요
   get "reviews/my_reviews" => "drug_reviews#my_reviews"
+<<<<<<< HEAD
+  resources :drug_reviews, :except =>[:index, :show, :create, :update, :destroy] do
+    #좋아요 눌렀는지 확인
+    get '/like' => 'drug_review_likes#show'
+    post '/like' => 'drug_review_likes#like_toggle'
+  end
+
+=======
   
+>>>>>>> master
   #drug 사진
   get "drugs/:id/pics" => "drugs#show_pics"
   resources :drugs, :except => [:index] do
@@ -120,7 +142,7 @@ Rails.application.routes.draw do
   resources :supplement_ingrs, :except => [:show, :index]
   get "supplement_ingrs/:search_term" => "supplement_ingrs#show"
   resources :interactions
-  resources :dur_ingrs, :except => [:show, :index]
+  resources :dur_ingrs, :except => [:show]
   get "dur_ingrs/:search_term" => "dur_ingrs#show"
   # resources :drugs_dur_ingrs
   resources :diseases

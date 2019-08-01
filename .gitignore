@@ -32,4 +32,6 @@
 
 #igonore db configuration
 /config/database.yml
-/config/database.yml
+
+#ignore test file with sensitive token
+/lib/current_drug_analysis.rb

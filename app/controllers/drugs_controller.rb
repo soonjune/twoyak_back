@@ -13,8 +13,49 @@ class DrugsController < ApplicationController
 
   # GET /drugs/1
   def show
+    # for development only
+    Searchkick.disable_callbacks
+
+    #안전정보 우선 확인
+    if @drug.dur_info.blank?
+      require 'dur_analysis'
+      dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([@drug.id]))
+      @drug.dur_info = dur_info unless dur_info.blank?
+      @drug.save    
+    end
+    
     @data = Hash.new
     @data = @drug.as_json
+<<<<<<< HEAD
+    @data["ingr_kor_name"] = JSON.parse(@drug["ingr_kor_name"]) unless (@drug["ingr_kor_name"].nil? || @drug["ingr_kor_name"].kind_of?(Array))
+    if params[:sub_user_id].present?
+      #먹고 있는지 확인
+      sub_user = SubUser.find(params[:sub_user_id])
+      sub_user_current_drug_ids = sub_user.current_drug_ids
+      if sub_user_current_drug_ids.include?(@drug.id)
+        @data.merge!(:currently_taking => {:current_drug_id => sub_user.current_drugs.ids[sub_user_current_drug_ids.index(@drug.id)] })
+      else
+        @data["currently_taking"] = false
+      end
+      #관심 등록했는지 확인
+      if @drug.watch_drugs.pluck(:user_id).include?(SubUser.find(params[:sub_user_id]).user_id)
+        @data["watching"] = true
+      else
+        @data["watching"] = false
+      end
+    end
+    #현재 복용중인 인원
+    @data["sub_users_taking"] = @drug.currents.count
+    #상호작용 추가
+    inputs = []
+    @drug.interactions.each { |interaction|
+      temp = Hash.new
+      temp[:more_info]= interaction.interactable
+      temp.merge!(interaction.as_json)
+      inputs << temp
+    }
+    @data["interactions"] = inputs
+=======
     begin
       @data["package_insert"] = JSON.parse(@data["package_insert"]) unless @data["package_insert"].nil?
     rescue
@@ -26,6 +67,7 @@ class DrugsController < ApplicationController
     @data["taking"] = @drug.currents.count
     @data["watching"] = @drug.watch_drugs.pluck(:user_id)
 
+>>>>>>> master
     render json: @data
   end
 
@@ -100,17 +142,21 @@ class DrugsController < ApplicationController
   
     searched.each { |item|
       if(item.class == Drug && search == item.name)
-        @rep = item
-        @data["drug_id"] = @rep.id
-        @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
-        @data["ingr_eng_name"] = item.ingr_eng_name
-        @data["atc_code"] = item.atc_code
-        @data["taking"] = item.currents.count
-        @data["watching"] = item.watch_drugs.pluck(:user_id)
-        if(!item.drug_imprint.nil?)
-          @data["drug_imprint"] = item.drug_imprint
-        end
-        break
+        #drugs/:id로 직접 접근하는 것과 동일한 화면 표시를 위해 redirection
+        @id = item.id
+        redirect_to drug_path(@id)
+        #검색 이전 코드
+        # @rep = item
+        # @data["drug_id"] = @rep.id
+        # @data["ingr_kor_name"] = JSON.parse(item.ingr_kor_name).uniq.to_s
+        # @data["ingr_eng_name"] = item.ingr_eng_name
+        # @data["atc_code"] = item.atc_code
+        # @data["taking"] = item.currents.count
+        # @data["watching"] = item.watch_drugs.pluck(:user_id)
+        # if(!item.drug_imprint.nil?)
+        #   @data["drug_imprint"] = item.drug_imprint
+        # end
+        return
       elsif(item.class == Supplement && search == item.name)
         @sup = item
         break

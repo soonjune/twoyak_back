@@ -66,7 +66,7 @@ class User::WatchDrugsController < ApplicationController
     # end
 
     def authority_check
-      if current_user.has_role?("admin") || current_user.user_info_ids.include?(params[:user_info_id].to_i)
+      if current_user.has_role?("admin") || current_user.id == params[:watch_drug][:user_id]
         return
       else
         render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized

@@ -22,7 +22,7 @@ development:
   development:
   driver: mysql2
   username: root
-  password: MyNewPass
+  password: <%= ENV['DB_PASSWORD'] %>
   database: twoyak_db_development
   port: 3306
 
@@ -54,8 +54,8 @@ test:
 #
 production: &production
   <<: *default
-  host: twoyak-db.cpcaio0c9shs.ap-northeast-2.rds.amazonaws.com
-  username: TWOYAK
+  host: 127.0.0.1
+  username: root
   password: <%= ENV['DB_PASSWORD'] %>
-  database: twoyak_db_development
+  database: twoyak_test
   port: 3306

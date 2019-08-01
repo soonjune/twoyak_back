@@ -19,7 +19,7 @@ class User::PastDiseasesController < ApplicationController
   # POST /past_diseases
   def create
     if @past_disease << Disease.find(@search_id)
-      set_time_memo = PastDisease.where(user_info_id: params[:user_info_id], past_disease_id: @search_id).last
+      set_time_memo = PastDisease.where(sub_user_id: params[:sub_user_id], past_disease_id: @search_id).last
       set_time_memo.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now)
       render json: @past_disease, status: :created
     else
@@ -38,17 +38,19 @@ class User::PastDiseasesController < ApplicationController
 
   # DELETE /past_diseases/1
   def destroy
-    PastDisease.find(@id_to_modify).delete
+    if PastDisease.find(@id_to_modify).delete
+      render json: @past_disease, status: 200
+    end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_past_disease
       if current_user.has_role? "admin"
-        @past_disease = UserInfo.find(params[:user_info_id]).past_disease
+        @past_disease = SubUser.find(params[:sub_user_id]).past_disease
       else
-        if current_user.user_info_ids.include? params[:user_info_id].to_i
-          @past_disease = UserInfo.find(params[:user_info_id]).past_disease
+        if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+          @past_disease = SubUser.find(params[:sub_user_id]).past_disease
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
@@ -58,8 +60,13 @@ class User::PastDiseasesController < ApplicationController
 
     def update_past_disease
       @past_disease_params = params.permit(:from, :to)
+<<<<<<< HEAD
+      if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+        @past_disease = SubUser.find(params[:sub_user_id]).past_diseases.find(params[:id])
+=======
       if (current_user.has_role? "admin") || (current_user.user_info_ids.include? params[:user_info_id].to_i)
         @past_disease = UserInfo.find(params[:user_info_id]).past_diseases.find(params[:id])
+>>>>>>> master
       end
     end
 

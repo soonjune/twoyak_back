@@ -2,6 +2,7 @@ class DrugReviewsController < ApplicationController
   before_action :set_drug_review, only: [:show]
   before_action :authenticate_request!, only: [:all, :create, :update, :destroy, :my_reviews]
   before_action :authority_check, only: [:update, :destroy]
+  before_action :liked_drug_reviews, only: [:recent, :high_rating, :popular, :my_reviews]
 
 
   #전체 보여주기
@@ -18,6 +19,7 @@ class DrugReviewsController < ApplicationController
   def recent
     @result = []
     @drug_reviews = DrugReview.order("id DESC").limit(100)
+<<<<<<< HEAD
     @drug_reviews.map { |review|
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
@@ -26,23 +28,112 @@ class DrugReviewsController < ApplicationController
         temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
           $1 + "*"*4
         }
-        if (user_info = user.user_infos.first)
-          temp["sex"] = user_info.sex unless user_info.sex.nil?
-          temp["age"] = age_range(age(user_info.birth_date)) unless user_info.birth_date.nil?
-          temp["diseases"] = user_info.current_disease.pluck(:name)
+        if (sub_user = user.sub_users.first)
+          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
+          temp["diseases"] = sub_user.current_disease.pluck(:name)
         end
       else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      temp["liked_users"] = review.l_users.count
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
       @result << temp
     }
 
     render json: @result
   end
 
+  def high_rating
+    @result = []
+    @drug_reviews = DrugReview.order(efficacy: :desc).limit(100).order(id: :desc)
+    @drug_reviews.map { |review|
+      temp = review.as_json
+      temp["drug"] = Drug.find(review.drug_id).name
+      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
+      if !user.nil?
+        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+          $1 + "*"*4
+        }
+        if (sub_user = user.sub_users.first)
+          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
+          temp["diseases"] = sub_user.current_disease.pluck(:name)
+        end
+      else
+        temp["user_email"] = "탈퇴한 회원입니다"
+      end
+
+      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
+      @result << temp
+    }
+
+    render json: @result
+  end
+
+  def popular
+    @result = []
+    @drug_reviews = DrugReview.order(drug_review_likes_count: :desc).limit(100)
+=======
+>>>>>>> master
+    @drug_reviews.map { |review|
+      temp = review.as_json
+      temp["drug"] = Drug.find(review.drug_id).name
+      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
+      if !user.nil?
+        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
+          $1 + "*"*4
+        }
+<<<<<<< HEAD
+        if (sub_user = user.sub_users.first)
+          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
+          temp["diseases"] = sub_user.current_disease.pluck(:name)
+=======
+        if (user_info = user.user_infos.first)
+          temp["sex"] = user_info.sex unless user_info.sex.nil?
+          temp["age"] = age_range(age(user_info.birth_date)) unless user_info.birth_date.nil?
+          temp["diseases"] = user_info.current_disease.pluck(:name)
+>>>>>>> master
+        end
+      else
+        temp["user_email"] = "탈퇴한 회원입니다"
+      end
+
+      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
+<<<<<<< HEAD
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
+=======
+      temp["liked_users"] = review.l_users.count
+>>>>>>> master
+      @result << temp
+    }
+
+    render json: @result
+  end
+
+<<<<<<< HEAD
+  def my_reviews
+    @result = []
+    @drug_reviews = current_user.drug_reviews
+=======
   def high_rating
     @result = []
     @drug_reviews = DrugReview.order(efficacy: :desc).limit(100).order(id: :desc)
@@ -74,6 +165,7 @@ class DrugReviewsController < ApplicationController
   def popular
     @result = []
     @drug_reviews = DrugReview.order(drug_review_likes_count: :desc).limit(100)
+>>>>>>> master
     @drug_reviews.map { |review|
       temp = review.as_json
       temp["drug"] = Drug.find(review.drug_id).name
@@ -82,16 +174,31 @@ class DrugReviewsController < ApplicationController
         temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
           $1 + "*"*4
         }
+<<<<<<< HEAD
+        if (sub_user = user.sub_users.first)
+          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
+          temp["diseases"] = sub_user.current_disease.pluck(:name)
+=======
         if (user_info = user.user_infos.first)
           temp["sex"] = user_info.sex unless user_info.sex.nil?
           temp["age"] = age_range(age(user_info.birth_date)) unless user_info.birth_date.nil?
           temp["diseases"] = user_info.current_disease.pluck(:name)
+>>>>>>> master
         end
       else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
+<<<<<<< HEAD
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
+=======
       temp["liked_users"] = review.l_users.count
       @result << temp
     }
@@ -121,6 +228,7 @@ class DrugReviewsController < ApplicationController
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       temp["liked_users"] = review.l_users.count
+>>>>>>> master
       @result << temp
     }
 
@@ -139,18 +247,34 @@ class DrugReviewsController < ApplicationController
         temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
           $1 + "*"*4
         }
+<<<<<<< HEAD
+        if (sub_user = user.sub_users.first)
+          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
+          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
+          temp["diseases"] = sub_user.current_disease.pluck(:name)
+=======
         if (user_info = user.user_infos.first)
           temp["sex"] = user_info.sex unless user_info.sex.nil?
           temp["age"] = age_range(age(user_info.birth_date)) unless user_info.birth_date.nil?
           temp["diseases"] = user_info.current_disease.pluck(:name)
+>>>>>>> master
         end
       else
         temp["user_email"] = "탈퇴한 회원입니다"
       end
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
+<<<<<<< HEAD
+      #내가 좋아요 했는지
+      if liked_drug_reviews.include?(review.id)
+        temp["liked"] = true
+      else
+        temp["liked"] = false
+      end
+=======
       temp["liked_users"] = review.l_users.count
 
+>>>>>>> master
       @result << temp
     }
 
@@ -161,7 +285,16 @@ class DrugReviewsController < ApplicationController
   def show
     @result = Hash.new
     @result = @drug_review.attributes
+<<<<<<< HEAD
+    #내가 좋아요 했는지
+    if liked_drug_reviews.include?(review.id)
+      temp["liked"] = true
+    else
+      temp["liked"] = false
+    end    
+=======
     @result["liked_users"] = @drug_review.l_users.count
+>>>>>>> master
     render json: @result
   end
 
@@ -169,6 +302,16 @@ class DrugReviewsController < ApplicationController
   def create
     if drug_review_params[:user_id] == current_user.id
       @drug_review = DrugReview.new(drug_review_params)
+<<<<<<< HEAD
+      #평점 저장하기
+      drug_found = Drug.find(drug_review_params[:drug_id])
+      review_efficacies = drug_found.reviews.pluck(:efficacy)
+      count = review_efficacies.count
+      rating = ((review_efficacies.sum.to_f + drug_review_params[:efficacy]) / (count + 1)).round(2)
+      Drug.find(drug_review_params[:drug_id]).update(drug_rating: rating)
+
+=======
+>>>>>>> master
       @drug_review.adverse_effect_ids = drug_review_params[:adverse_effect_ids]
     else
       render json: { errors: ['리뷰 작성 권한이 없습니다.'] }, status: :unauthorized
@@ -230,5 +373,21 @@ class DrugReviewsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def drug_review_params
       params.require(:drug_review).permit(:user_id, :drug_id, :body, :efficacy, :adverse_effect_ids => [])
+<<<<<<< HEAD
+    end 
+
+    def liked_drug_reviews
+      begin
+        check_token!
+        if !current_user.nil?
+          return current_user.l_drug_review_ids
+        else
+          return null
+        end
+      rescue
+        return []
+      end
+=======
+>>>>>>> master
     end
 end

@@ -1,29 +1,7 @@
 class Interaction < ApplicationRecord
-    resourcify
+    belongs_to :interactable, polymorphic: true
 
-    require 'json'
-
-    def kor_map(enumerable)
-        result = []
-        if(enumerable.class == String)
-            JSON.parse(enumerable).each do |element| 
-            element.nil? ? next : result.push(*(element))
-            end
-        else
-            enumerable.each do |element| 
-            element.nil? ? next : result.push(*(element))
-            end
-        end
-        result
-    end
-
-    searchkick language: "korean", word_middle: [:first_ingr, :second_ingr]
-
-
-    def search_data
-        {
-            first_ingr: kor_map(first_ingr),
-            second_ingr: kor_map(second_ingr)
-        }
-    end
+    #약 성분과 상호작용 연결
+    has_many :drug_interactions
+    has_many :drug_ingrs, through: :drug_interactions
 end

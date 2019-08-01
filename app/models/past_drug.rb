@@ -1,4 +1,6 @@
 class PastDrug < ApplicationRecord
-    belongs_to :user_info
+    belongs_to :sub_user
     belongs_to :past_drug, :class_name => "Drug"
+    has_many :drug_taking_reasons, as: :reasonable, dependent: :destroy
+    has_many :diseases, through: :drug_taking_reasons
 end

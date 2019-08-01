@@ -13,6 +13,13 @@ class ApplicationController < ActionController::API
     render json: { errors: ['Not Authenticated'] }, status: :unauthorized
   end
 
+  def check_token!
+    if user_id_in_token?
+      @current_user = User.find(auth_token[:user][:id])
+      return
+    end
+  end
+
   private
   
   def http_token
