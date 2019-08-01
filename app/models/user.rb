@@ -82,18 +82,18 @@ class User < ApplicationRecord
           user.skip_confirmation!
           user.save!
           if(auth.provider == "naver")
-            info = UserInfo.new(user_name: auth.info.nickname)
-            info.user_id = user.id
+            sub_user = auth.info.nickname.blank? ? SubUser.new(user_name: email[/[^@]+/]) : SubUser.new(user_name: auth.info.nickname)
+            sub_user.user = user
             if (auth.extra.raw_info.response.gender == "M")
-              info.sex = 1
+              sub_user.sex = 1
             elsif (auth.extra.raw_info.response.gender == "F")
-              info.sex = 0
+              sub_user.sex = 0
             end
-            info.save!
+            sub_user.save!
           else
-            info = UserInfo.new(user_name: auth.info.name)
-            info.user_id = user.id
-            info.save!
+            sub_user = SubUser.new(user_name: auth.info.name)
+            sub_user.user_id = user.id
+            sub_user.save!
           end
 
         end
