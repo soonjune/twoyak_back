@@ -42,7 +42,7 @@ class User::CurrentDrugsController < ApplicationController
     elsif @current_drug << drug_found
       #dur 정보 추가
       dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([drug_found.id]))
-      drug_found.dur_info = dur_info unless dur_info.nil?
+      drug_found.dur_info = dur_info unless dur_info.blank?
       drug_found.save
 
       selected =  @sub_user.current_drugs.order("created_at").last
