@@ -271,7 +271,7 @@ class DrugReviewsController < ApplicationController
 
     def liked_drug_reviews
       begin
-        authenticate_request!
+        check_token!
         return current_user.l_drug_reviews
       rescue
         return []
