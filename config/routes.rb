@@ -93,15 +93,16 @@ Rails.application.routes.draw do
   get "reviews/high_rating" => "drug_reviews#high_rating"
   #나의 리뷰 모아보기(내가 남긴 리뷰) // 토큰 필요
   get "reviews/my_reviews" => "drug_reviews#my_reviews"
-
+  resources :drug_reviews, :except =>[:index, :show, :create, :update, :destroy] do
+    #좋아요 눌렀는지 확인
+    get '/like' => 'drug_review_likes#show'
+    post '/like' => 'drug_review_likes#like_toggle'
+  end
 
   #drug 사진
   get "drugs/:id/pics" => "drugs#show_pics"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
-    #좋아요 눌렀는지 확인
-    get '/"id/like' => 'drug_review_likes#show'
-    post '/:id/like' => 'drug_review_likes#like_toggle'
   end
   resources :supplements, :except => [:index] do
     resources :sup_reviews
