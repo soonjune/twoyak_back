@@ -38,7 +38,7 @@ class DrugReviewsController < ApplicationController
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       #내가 좋아요 했는지
-      if liked_drug_review_ids.include?(review.id)
+      if liked_drug_reviews.include?(review.id)
         temp["liked"] = true
       else
         temp["liked"] = false
@@ -71,7 +71,7 @@ class DrugReviewsController < ApplicationController
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       #내가 좋아요 했는지
-      if liked_drug_review_ids.include?(review.id)
+      if liked_drug_reviews.include?(review.id)
         temp["liked"] = true
       else
         temp["liked"] = false
@@ -104,7 +104,7 @@ class DrugReviewsController < ApplicationController
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       #내가 좋아요 했는지
-      if liked_drug_review_ids.include?(review.id)
+      if liked_drug_reviews.include?(review.id)
         temp["liked"] = true
       else
         temp["liked"] = false
@@ -137,7 +137,7 @@ class DrugReviewsController < ApplicationController
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       #내가 좋아요 했는지
-      if liked_drug_review_ids.include?(review.id)
+      if liked_drug_reviews.include?(review.id)
         temp["liked"] = true
       else
         temp["liked"] = false
@@ -171,7 +171,7 @@ class DrugReviewsController < ApplicationController
 
       temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
       #내가 좋아요 했는지
-      if liked_drug_review_ids.include?(review.id)
+      if liked_drug_reviews.include?(review.id)
         temp["liked"] = true
       else
         temp["liked"] = false
@@ -187,7 +187,7 @@ class DrugReviewsController < ApplicationController
     @result = Hash.new
     @result = @drug_review.attributes
     #내가 좋아요 했는지
-    if liked_drug_review_ids.include?(review.id)
+    if liked_drug_reviews.include?(review.id)
       temp["liked"] = true
     else
       temp["liked"] = false
@@ -272,7 +272,7 @@ class DrugReviewsController < ApplicationController
     def liked_drug_reviews
       begin
         check_token!
-        return current_user.l_drug_reviews unless current_unser.nil?
+        return current_user.l_drug_review_ids unless current_unser.nil?
       rescue
         return []
       end
