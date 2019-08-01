@@ -272,7 +272,7 @@ class DrugReviewsController < ApplicationController
     def liked_drug_reviews
       begin
         check_token!
-        return current_user.l_drug_review_ids unless current_unser.nil?
+        return current_user.l_drug_review_ids unless current_user.nil?
       rescue
         return []
       end
