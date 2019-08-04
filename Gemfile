@@ -8,7 +8,7 @@ gem 'rack-cors'
 gem "http"
 
 #Use elasticsearch
-gem 'elasticsearch'
+gem 'elasticsearch', '~> 6.1.0'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'searchkick', path: '~/searchkick_forked'
@@ -26,9 +26,6 @@ gem 'omniauth-naver'
 #for admin page
 gem 'cancancan'
 gem 'rolify'
-
-#for dur_analysis string similarity comparison(%)
-gem 'fuzzy-string-match'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
