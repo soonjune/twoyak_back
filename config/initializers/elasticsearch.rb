@@ -2,7 +2,7 @@ require "faraday_middleware/aws_signers_v4"
 
 class AmazonElasticSearchClient
   def self.client
-    return Elasticsearch::Client.new(url: ENV["AWS_ELASTICSEARCH_URL"]) do |f|
+    return Elasticsearch::Client.new(url: "https://vpc-twoyak-tgdpdr7k4moi4flysnhc4lsosu.ap-northeast-2.es.amazonaws.com") do |f|
       f.request :aws_signers_v4,
                 service_name: 'es',
                 credentials: Aws::Credentials.new(ENV["AWS_ACCESS_KEY_ID"], ENV["AWS_SECRET_ACCESS_KEY"]),
