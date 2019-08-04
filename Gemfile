@@ -8,7 +8,7 @@ gem 'rack-cors'
 gem "http"
 
 #Use elasticsearch
-gem 'elasticsearch'
+gem 'elasticsearch', '~> 6.1.0'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'searchkick', path: '~/searchkick_forked'
