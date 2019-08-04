@@ -14,7 +14,7 @@ class DrugsController < ApplicationController
   # GET /drugs/1
   def show
     # for development only
-    Searchkick.disable_callbacks
+    # Searchkick.disable_callbacks
 
     #안전정보 우선 확인
     if @drug.dur_info.blank?
