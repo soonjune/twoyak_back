@@ -48,7 +48,7 @@ class User::CurrentDrugsController < ApplicationController
       selected =  @sub_user.current_drugs.order("created_at").last
       selected.update(from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
       #먹는 이유 추가하기(질환추가)
-      selected.disease_ids = JSON.parse(params[:disease_ids])
+      selected.disease_ids = JSON.parse(params[:disease_ids]) unless params[:disease_ids].blank?
 
       render json: @current_drug.pluck(:id, :name), status: :created
     else
