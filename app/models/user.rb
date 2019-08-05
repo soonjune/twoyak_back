@@ -17,7 +17,7 @@ class User < ApplicationRecord
   has_many :sup_review_comments
 
   #건의 사항 남기기
-  has_many :suggestions
+  has_many :suggestions, dependent: :destroy 
 
   #관심 의약품/건강기능식품
   has_many :watch_drugs
