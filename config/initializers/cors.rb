@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'localhost:3000', '127.0.0.1:3000',
+    origins 'localhost:3000', '127.0.0.1:3000', 'xenodochial-leakey-4d32bd.netlify.com',
             /\Ahttp:\/\/163\.152\.83\.\168(:\d+)?\z/
 
     resource '*',
