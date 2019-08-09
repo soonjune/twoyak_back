@@ -202,7 +202,7 @@ class DrugReviewsController < ApplicationController
       #평점 저장하기
       drug_found = Drug.find(drug_review_params[:drug_id])
       review_efficacies = drug_found.reviews.pluck(:efficacy)
-      count = review_efficacies.count
+      count = review_efficacies.size
       rating = ((review_efficacies.sum.to_f + drug_review_params[:efficacy]) / (count + 1)).round(2)
       Drug.find(drug_review_params[:drug_id]).update(drug_rating: rating)
 

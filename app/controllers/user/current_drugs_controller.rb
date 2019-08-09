@@ -23,7 +23,7 @@ class User::CurrentDrugsController < ApplicationController
       drug_reviews = drug_found.reviews
       review_efficacies = drug_reviews.pluck(:efficacy)
       drug["drug_name"] = drug_found.name
-      drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.count).round(2)
+      drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.size).round(2)
       drug["dur_info"] = drug_found.dur_info
       drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
       drug["disease"] = CurrentDrug.find(drug["id"]).diseases.first unless CurrentDrug.find(drug["id"]).diseases.blank?

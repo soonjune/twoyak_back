@@ -52,7 +52,7 @@ class DrugsController < ApplicationController
       end
     end
     #현재 복용중인 인원
-    @data["sub_users_taking"] = @drug.currents.count
+    @data["sub_users_taking"] = @drug.currents.size
     #상호작용 추가
     inputs = []
     @drug.interactions.each { |interaction|
