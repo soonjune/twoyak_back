@@ -14,7 +14,7 @@ class Users::PasswordsController < Devise::PasswordsController
         self.resource = resource_class.new
         set_minimum_password_length
         resource.reset_password_token = params[:reset_password_token]
-        uri = URI("http://localhost:3000/reset-password")
+        uri = URI("http://localhost:3001/reset-password")
         uri.query = URI.encode_www_form(:token => params[:reset_password_token])
         redirect_to uri.to_s
       end
@@ -31,12 +31,13 @@ class Users::PasswordsController < Devise::PasswordsController
             set_flash_message!(:notice, flash_message)
             resource.after_database_authentication
             sign_in(resource_name, resource)
+            resource.remember_me!
           else
             set_flash_message!(:notice, :updated_not_active)
           end
           render json: {
             success: true,
-            data: resource,
+            data: resource.as_json,
             message: I18n.t("devise_token_auth.passwords.successfully_updated")
           }
         else
