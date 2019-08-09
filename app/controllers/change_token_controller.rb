@@ -31,6 +31,7 @@ class ChangeTokenController < ApplicationController
         {
                     :iss => "twoyak.com",
                     :user => {id: user.id, email: user.email, user_name: user.sub_users.first.user_name, sub_user_id: user.sub_users.first.id },
+                    :iat => Time.now.to_i
         }
         end
 end

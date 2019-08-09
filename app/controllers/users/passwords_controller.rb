@@ -31,6 +31,7 @@ class Users::PasswordsController < Devise::PasswordsController
             set_flash_message!(:notice, flash_message)
             resource.after_database_authentication
             sign_in(resource_name, resource)
+            resource.remember_me!
           else
             set_flash_message!(:notice, :updated_not_active)
           end

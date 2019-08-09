@@ -13,6 +13,7 @@ module Payload
         {
                     :iss => "twoyak.com",
                     :user => {id: user.id, email: user.email, sub_users: user.sub_users.select(:id, :user_name).as_json },
+                    :iat => Time.now.to_i
         }
     end
 
