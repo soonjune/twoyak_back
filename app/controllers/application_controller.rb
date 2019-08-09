@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
       @current_user = User.find(auth_token[:user][:id])
     else
       # 비밀번호 변경되었는지 확인 token issue 시간이 비번 변경 시간보다 뒤처지면 다시 로그인
-      if User.find(auth_token[:user][:id]).remember_created_at.to_i > auth_token[:user][:iat].to_i
+      if User.find(auth_token[:user][:id]).remember_created_at.to_i > auth_token[:iat].to_i
         render json: {errors: ['비밀번호가 변경되었습니다. 다시 로그인 해주세요.']}, status: :unauthorized
       else
         @current_user = User.find(auth_token[:user][:id])
@@ -24,8 +24,16 @@ class ApplicationController < ActionController::API
 
   def check_token!
     if user_id_in_token?
-      @current_user = User.find(auth_token[:user][:id])
-      return
+      if User.find(auth_token[:user][:id]).remember_created_at.blank?
+        @current_user = User.find(auth_token[:user][:id])
+      else
+        # 비밀번호 변경되었는지 확인 token issue 시간이 비번 변경 시간보다 뒤처지면 다시 로그인
+        if User.find(auth_token[:user][:id]).remember_created_at.to_i > auth_token[:iat].to_i
+          render json: {errors: ['비밀번호가 변경되었습니다. 다시 로그인 해주세요.']}, status: :unauthorized
+        else
+          @current_user = User.find(auth_token[:user][:id])
+        end
+      end
     end
   end
 
