@@ -2,6 +2,14 @@ class User::MypageController < ApplicationController
   before_action :authenticate_request!
   before_action :set_sub_user, only: [:create, :update, :destroy]
 
+  def show
+    user = current_user
+    options = {}
+    options[:include] = [:sub_users]
+    
+    render json: UserSerializer.new(user, options).serialized_json
+  end
+
   def create
     @sub_user = current_user.sub_users.create(sub_user_params)
 
