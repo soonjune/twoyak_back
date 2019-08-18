@@ -1,6 +1,6 @@
 class WatchDrugSerializer
   include FastJsonapi::ObjectSerializer
-  attribute :drug_names do |object|
+  attribute :name do |object|
     "#{object.watch_drug.name}"
   end
 

@@ -1,5 +1,4 @@
 class WatchDrug < ApplicationRecord
-    attr_accessor :id, :user_id, :watch_drug_id
 
     belongs_to :user
     belongs_to :watch_drug, :class_name => "Drug"

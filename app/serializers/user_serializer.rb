@@ -4,7 +4,10 @@ class UserSerializer
   attributes :id, :email
   meta do |user|
     {
-      watch_drugs: user.watch_drug.pluck(:id, :name)
+      :watch_drugs => 
+        user.watch_drugs.map { |watch_drug|
+          WatchDrugSerializer.new(watch_drug)
+        }
     }
   end
 
