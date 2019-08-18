@@ -4,10 +4,7 @@ class UserSerializer
   attributes :id, :email
   meta do |user|
     {
-      :watch_drugs => 
-        user.watch_drugs.map { |watch_drug|
-          WatchDrugSerializer.new(watch_drug)
-        },
+      watch_drugs: user.watch_drug.select(:id, :name),
       drug_reviews_count: user.drug_reviews.size
     }
   end
