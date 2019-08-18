@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   namespace :user do
     resources :mypage
+    get 'mypage/test' => 'mypage#test'
     resources :sub_users, :except => [:index]
     #의약품으로 직접 안전정보(DUR) 가져오기
     get 'analysis/get_by_drug'
