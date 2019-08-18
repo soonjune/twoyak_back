@@ -3,7 +3,7 @@ class User::MypageController < ApplicationController
   before_action :set_sub_user, only: [:create, :update, :destroy]
 
   def test
-    user = current_user.pluck(:id, :name)
+    user = current_user
     options = {}
     options[:include] = [:sub_users]
 
