@@ -5,7 +5,7 @@ class User::MypageController < ApplicationController
   def test
     user = current_user
     options = {}
-    options[:include] = [:sub_users]
+    options[:include] = [:sub_users, :'sub_users.family_med_histories']
 
     render json: UserSerializer.new(user, options).serialized_json
   end

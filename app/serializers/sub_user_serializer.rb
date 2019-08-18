@@ -4,9 +4,6 @@ class SubUserSerializer
   attributes :user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine, :sex
   meta do |sub_user|
     {
-      family_med_histories: sub_user.family_med_histories.map { |med_his|
-        FamilyMedHistorySerializer.new(med_his)
-      },
       current_drugs_count: sub_user.current_drugs.size
     }
   end
@@ -14,7 +11,7 @@ class SubUserSerializer
   # belongs_to :user, record_type: :user
   #이용자 정보 등록하기
   #가족력
-  # has_many :family_med_histories, serializer: FamilyMedHistorySerializer
+  has_many :family_med_histories, serializer: FamilyMedHistorySerializer
   # do |record|
   #   byebug
   #   FamilyMedHistorySerializer.new(record).as_json["data"]
