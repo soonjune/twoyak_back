@@ -13,8 +13,8 @@ class User < ApplicationRecord
   has_many :drug_reviews
   has_many :sup_reviews
   #리뷰 댓글 남기기
-  # has_many :drug_review_comments
-  # has_many :sup_review_comments
+  has_many :drug_review_comments
+  has_many :sup_review_comments
 
   #건의 사항 남기기
   has_many :suggestions, dependent: :destroy 

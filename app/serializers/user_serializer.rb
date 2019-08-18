@@ -4,7 +4,7 @@ class UserSerializer
   attributes :id, :email
   meta do |user|
     {
-      watch_drugs: user.watch_drugs
+      watch_drugs: user.watch_drug.pluck(:id, :name)
     }
   end
 
@@ -17,7 +17,7 @@ class UserSerializer
   # has_many :sup_review_comments
 
   #건의 사항 남기기
-  has_many :suggestions, dependent: :destroy 
+  # has_many :suggestions, dependent: :destroy 
 
   #관심 의약품/건강기능식품
   # has_many :watch_drugs
@@ -25,7 +25,7 @@ class UserSerializer
   # has_many :watch_supplements
   # has_many :watch_supplement, :through => :watch_supplements
 
-  has_many :identities, dependent: :destroy
+  # has_many :identities, dependent: :destroy
 
   #리뷰 좋아요
   has_many :drug_review_likes
