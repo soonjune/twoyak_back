@@ -4,7 +4,7 @@ class UserSerializer
   attributes :id, :email
   meta do |user|
     {
-      user.watch_drugs
+      watch_drugs: user.watch_drugs
     }
   end
 
