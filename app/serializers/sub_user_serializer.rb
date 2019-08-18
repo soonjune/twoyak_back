@@ -4,6 +4,9 @@ class SubUserSerializer
   attributes :user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine, :sex
   meta do |sub_user|
     {
+      family_med_histories: sub_user.family_med_histories.map { |med_his|
+        FamilyMedHistorySerializer.new(med_his)
+      },
       current_drugs_count: sub_user.current_drugs.size
     }
   end
