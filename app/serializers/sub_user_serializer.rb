@@ -6,7 +6,8 @@ class SubUserSerializer
     {
       family_med_histories: sub_user.family_med_histories.map { |med_his|
         FamilyMedHistorySerializer.new(med_his)
-      }
+      },
+      current_drugs_count: sub_user.current_drugs.size
     }
   end
 
