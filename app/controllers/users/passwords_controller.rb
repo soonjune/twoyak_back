@@ -29,6 +29,7 @@ class Users::PasswordsController < Devise::PasswordsController
           flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
           set_flash_message(:notice, flash_message) if is_flashing_format?
           sign_in(resource_name, resource)
+          resource.forget_me!
           resource.remember_me!
           render json: {
             success: true,
