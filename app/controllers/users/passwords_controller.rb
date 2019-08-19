@@ -21,28 +21,19 @@ class Users::PasswordsController < Devise::PasswordsController
     
       # PUT /user/password
       def update
-        self.resource = resource_class.reset_password_by_token(resource_params)
+        self.resource = resource_class.reset_password_by_token(HashWithIndifferentAccess.new(JSON.parse(resource_params)))
         yield resource if block_given?
     
         if resource.errors.empty?
           resource.unlock_access! if unlockable?(resource)
-          if Devise.sign_in_after_reset_password
-            flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
-            set_flash_message!(:notice, flash_message)
-            resource.after_database_authentication
-            sign_in(resource_name, resource)
-            resource.remember_me!
-          else
-            set_flash_message!(:notice, :updated_not_active)
-          end
-          render json: {
-            success: true,
-            data: resource.as_json,
-            message: I18n.t("devise_token_auth.passwords.successfully_updated")
-          }
+          flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
+          set_flash_message(:notice, flash_message) if is_flashing_format?
+          sign_in(resource_name, resource)
+          resource.remember_me!
+          respond_with resource, location: after_resetting_password_path_for(resource)
         else
-          set_minimum_password_length
           respond_with resource
+        end
         end
     end
     
