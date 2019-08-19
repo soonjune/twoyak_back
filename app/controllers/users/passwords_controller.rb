@@ -34,7 +34,6 @@ class Users::PasswordsController < Devise::PasswordsController
         else
           respond_with resource
         end
-        end
     end
     
     
