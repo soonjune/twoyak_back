@@ -30,9 +30,17 @@ class Users::PasswordsController < Devise::PasswordsController
           set_flash_message(:notice, flash_message) if is_flashing_format?
           sign_in(resource_name, resource)
           resource.remember_me!
-          respond_with resource, location: after_resetting_password_path_for(resource)
+          render json: {
+            success: true,
+            data: resource.as_json,
+            message: I18n.t("devise_token_auth.passwords.successfully_updated")
+          }
         else
-          respond_with resource
+          set_minimum_password_length
+          render json: {
+            success: false,
+            message: "유효하지 않은 토큰입니다. 비밀번호 찾기 메일을 재발송 해주세요"
+          }
         end
     end
     
