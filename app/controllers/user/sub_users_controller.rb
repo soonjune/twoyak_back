@@ -11,7 +11,7 @@ class User::SubUsersController < ApplicationController
 
   # GET /sub_users/1
   def show
-    render json: @sub_user
+    render json: SubUserSerializer.new(SubUser.find(params[:id])).serialized_json
   end
 
   # POST /sub_users
@@ -47,7 +47,7 @@ class User::SubUsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_sub_user
       if current_user.sub_user_ids.include? params[:id].to_i
-        @sub_user = SubUserSerializer.new(SubUser.find(params[:id]), options).serializable_hash
+        @sub_user = SubUser.find(params[:id])
       end
     end
 
