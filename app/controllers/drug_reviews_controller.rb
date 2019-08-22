@@ -2,7 +2,7 @@ class DrugReviewsController < ApplicationController
   before_action :set_drug_review, only: [:show]
   before_action :authenticate_request!, only: [:all, :create, :update, :destroy, :my_reviews]
   before_action :authority_check, only: [:update, :destroy]
-  before_action :liked_drug_reviews, only: [:recent, :high_rating, :popular, :my_reviews]
+  before_action :liked_drug_reviews, only: [:recent, :high_rating, :popular, :my_reviews, :index]
 
   #전체 보여주기
   def all
