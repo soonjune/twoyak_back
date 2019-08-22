@@ -2,8 +2,6 @@ class DrugReviewsController < ApplicationController
   before_action :set_drug_review, only: [:show]
   before_action :authenticate_request!, only: [:all, :create, :update, :destroy, :my_reviews]
   before_action :authority_check, only: [:update, :destroy]
-  before_action :liked_drug_reviews, only: [:recent, :high_rating, :popular, :my_reviews]
-
 
   #전체 보여주기
   def all
@@ -15,177 +13,24 @@ class DrugReviewsController < ApplicationController
     end
   end
 
-  def test2
+  def recent
     drug_reviews = DrugReviewSerializer.new(DrugReview.order("id DESC").limit(100)).serializable_hash
     render json: drug_reviews
   end
 
-  def test
-    @result = []
-    drug_reviews = DrugReviewSerializer.new(DrugReview.order("id DESC").limit(100)).serializable_hash
-    drug_reviews[:data].map { |review|
-      temp = {}
-      temp[:id] = review[:id].to_i
-      temp[:efficacy] = review[:attributes][:efficacy]
-      temp[:body] = review[:attributes][:body]
-      temp[:drug_review_likes_count] = review[:attributes][:drug_review_likes_count]
-      temp[:drug] = Drug.find(review[:relationships][:drug][:data][:id]).name
-      user = (User.exists?(review[:relationships][:user][:data][:id]) ? User.find(review[:relationships][:user][:data][:id]) : nil )
-      if !user.nil?
-        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-          $1 + "*"*4
-        }
-        if (sub_user = user.sub_users.first)
-          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
-          temp["diseases"] = sub_user.current_disease.pluck(:name)
-        end
-      else
-        temp["user_email"] = "탈퇴한 회원입니다"
-      end
-
-      temp["adverse_effects"] = review[:meta][:adverse_effects].select(:id, :symptom_name)
-      if liked_drug_reviews.include?(review[:id])
-        temp["liked"] = true
-      else
-        temp["liked"] = false
-      end
-      @result << temp
-    }
-    render json: @result
-  end
-
-  #최근 리뷰 보여주기
-  def recent
-    @result = []
-    @drug_reviews = DrugReview.order("id DESC").limit(100)
-    @drug_reviews.map { |review|
-      temp = review.as_json
-      temp["drug"] = Drug.find(review.drug_id).name
-      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
-      if !user.nil?
-        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-          $1 + "*"*4
-        }
-        if (sub_user = user.sub_users.first)
-          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
-          temp["diseases"] = sub_user.current_disease.pluck(:name)
-        end
-      else
-        temp["user_email"] = "탈퇴한 회원입니다"
-      end
-
-      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      #내가 좋아요 했는지
-      if liked_drug_reviews.include?(review.id)
-        temp["liked"] = true
-      else
-        temp["liked"] = false
-      end
-      @result << temp
-    }
-
-    render json: @result
-  end
-
   def high_rating
-    @result = []
-    @drug_reviews = DrugReview.order(efficacy: :desc).limit(100).order(id: :desc)
-    @drug_reviews.map { |review|
-      temp = review.as_json
-      temp["drug"] = Drug.find(review.drug_id).name
-      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
-      if !user.nil?
-        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-          $1 + "*"*4
-        }
-        if (sub_user = user.sub_users.first)
-          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
-          temp["diseases"] = sub_user.current_disease.pluck(:name)
-        end
-      else
-        temp["user_email"] = "탈퇴한 회원입니다"
-      end
-
-      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      #내가 좋아요 했는지
-      if liked_drug_reviews.include?(review.id)
-        temp["liked"] = true
-      else
-        temp["liked"] = false
-      end
-      @result << temp
-    }
-
-    render json: @result
+    drug_reviews = DrugReviewSerializer.new(DrugReview.order(efficacy: :desc).limit(100).order(id: :desc)).serializable_hash
+    render json: drug_reviews
   end
 
   def popular
-    @result = []
-    @drug_reviews = DrugReview.order(drug_review_likes_count: :desc).limit(100)
-    @drug_reviews.map { |review|
-      temp = review.as_json
-      temp["drug"] = Drug.find(review.drug_id).name
-      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
-      if !user.nil?
-        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-          $1 + "*"*4
-        }
-        if (sub_user = user.sub_users.first)
-          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
-          temp["diseases"] = sub_user.current_disease.pluck(:name)
-        end
-      else
-        temp["user_email"] = "탈퇴한 회원입니다"
-      end
-
-      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      #내가 좋아요 했는지
-      if liked_drug_reviews.include?(review.id)
-        temp["liked"] = true
-      else
-        temp["liked"] = false
-      end
-      @result << temp
-    }
-
-    render json: @result
+    drug_reviews = DrugReviewSerializer.new(DrugReview.order(drug_review_likes_count: :desc).limit(100)).serializable_hash
+    render json: drug_reviews
   end
-
+ 
   def my_reviews
-    @result = []
-    @drug_reviews = current_user.drug_reviews
-    @drug_reviews.map { |review|
-      temp = review.as_json
-      temp["drug"] = Drug.find(review.drug_id).name
-      user = (User.exists?(review.user_id) ? User.find(review.user_id) : nil )
-      if !user.nil?
-        temp["user_email"] = user.email.sub(/\A(....)(.*)\z/) { 
-          $1 + "*"*4
-        }
-        if (sub_user = user.sub_users.first)
-          temp["sex"] = sub_user.sex unless sub_user.sex.nil?
-          temp["age"] = age_range(age(sub_user.birth_date)) unless sub_user.birth_date.nil?
-          temp["diseases"] = sub_user.current_disease.pluck(:name)
-        end
-      else
-        temp["user_email"] = "탈퇴한 회원입니다"
-      end
-
-      temp["adverse_effects"] = review.adverse_effects.select(:id, :symptom_name)
-      #내가 좋아요 했는지
-      if liked_drug_reviews.include?(review.id)
-        temp["liked"] = true
-      else
-        temp["liked"] = false
-      end
-      @result << temp
-    }
-
-    render json: @result
+    drug_reviews = DrugReviewSerializer.new(current_user.drug_reviews).serializable_hash
+    render json: drug_reviews
   end
 
   # GET /:drug_id/drug_reviews

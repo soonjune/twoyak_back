@@ -86,8 +86,6 @@ Rails.application.routes.draw do
 
   #전체 리뷰(관리자용)
   get "reviews" => "drug_reviews#all"
-  #fast jsonapi test용2
-  get "reviews/test" => "drug_reviews#test2"
   #최근 리뷰 받기
   get "reviews/recent" => "drug_reviews#recent"
   #좋아요 순으로 받기
