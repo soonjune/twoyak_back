@@ -2,6 +2,7 @@ class DrugReviewsController < ApplicationController
   before_action :set_drug_review, only: [:show]
   before_action :authenticate_request!, only: [:all, :create, :update, :destroy, :my_reviews]
   before_action :authority_check, only: [:update, :destroy]
+  before_action :liked_drug_reviews, only: [:recent, :high_rating, :popular, :my_reviews]
 
   #전체 보여주기
   def all
@@ -14,28 +15,28 @@ class DrugReviewsController < ApplicationController
   end
 
   def recent
-    @drug_reviews = DrugReviewSerializer.new(DrugReview.order("id DESC").limit(100)).serialized_json
+    @drug_reviews = DrugReviewSerializer.new(DrugReview.order("id DESC").limit(100), {params: {liked_drug_reviews: liked_drug_reviews}}).serialized_json
     render json: @drug_reviews
   end
 
   def high_rating
-    @drug_reviews = DrugReviewSerializer.new(DrugReview.order(efficacy: :desc).limit(100).order(id: :desc)).serialized_json
+    @drug_reviews = DrugReviewSerializer.new(DrugReview.order(efficacy: :desc).limit(100).order(id: :desc), {params: {liked_drug_reviews: liked_drug_reviews}}).serialized_json
     render json: @drug_reviews
   end
 
   def popular
-    @drug_reviews = DrugReviewSerializer.new(DrugReview.order(drug_review_likes_count: :desc).limit(100)).serialized_json
+    @drug_reviews = DrugReviewSerializer.new(DrugReview.order(drug_review_likes_count: :desc).limit(100), {params: {liked_drug_reviews: liked_drug_reviews}}).serialized_json
     render json: @drug_reviews
   end
  
   def my_reviews
-    @drug_reviews = DrugReviewSerializer.new(current_user.drug_reviews).serialized_json
+    @drug_reviews = DrugReviewSerializer.new(current_user.drug_reviews, {params: {liked_drug_reviews: liked_drug_reviews}}).serialized_json
     render json: @drug_reviews
   end
 
   # GET /:drug_id/drug_reviews
   def index
-    @drug_reviews = DrugReviewSerializer.new(DrugReview.where(drug_id: params[:drug_id])).serialized_json
+    @drug_reviews = DrugReviewSerializer.new(DrugReview.where(drug_id: params[:drug_id]), {params: {liked_drug_reviews: liked_drug_reviews}}).serialized_json
     render json: @drug_reviews
   end
 

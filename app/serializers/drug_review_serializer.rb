@@ -18,28 +18,16 @@ module AgeHelper
       end
     end
 
-    def liked_drug_reviews
-      begin
-        check_token!
-        if !current_user.nil?
-          return current_user.l_drug_review_ids
-        else
-          return null
-        end
-      rescue
-        return []
-      end
-    end
-
   end
+
 end
 
-class DrugReviewSerializer
+class DrugReviewSerializer 
   include FastJsonapi::ObjectSerializer
   include AgeHelper
 
   attributes :id, :efficacy, :body, :drug_review_likes_count
-  meta do |drug_review|
+  meta do |drug_review, params|
      user = (!drug_review.user.blank? ? drug_review.user : nil )
      temp = Hash.new
      if !user.nil?
@@ -56,7 +44,7 @@ class DrugReviewSerializer
         temp["user_email"] = "탈퇴한 회원입니다"
       end
       #내가 좋아요 했는지
-      if liked_drug_reviews.include?(drug_review.id)
+      if params[:liked_drug_reviews].include?(drug_review.id)
         temp["liked"] = true
       else
         temp["liked"] = false
