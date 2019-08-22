@@ -47,8 +47,6 @@ class User::SubUsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_sub_user
       if current_user.sub_user_ids.include? params[:id].to_i
-        options = {}
-        options[:include] = [:family_med_histories, :'family_med_history.med_his.name']
         @sub_user = SubUserSerializer.new(SubUser.find(params[:id]), options).serializable_hash
       end
     end
