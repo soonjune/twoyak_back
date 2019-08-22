@@ -14,7 +14,7 @@ class SubUserSerializer
   # belongs_to :user, record_type: :user
   #이용자 정보 등록하기
   #가족력
-  has_many :family_med_histories, serializer: FamilyMedHistorySerializer
+  # has_many :family_med_histories, serializer: FamilyMedHistorySerializer
   # do |record|
   #   byebug
   #   FamilyMedHistorySerializer.new(record).as_json["data"]
