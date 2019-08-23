@@ -58,8 +58,10 @@ class DrugsController < ApplicationController
   end
 
   def show_pics
+
     require 'nokogiri'
     require 'open-uri'
+    require 'base64'
 
     doc = Nokogiri::HTML(open("https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetail?itemSeq=#{@drug.item_seq}"))
     pics = doc.css('.pc-img img')
@@ -67,11 +69,16 @@ class DrugsController < ApplicationController
       doc = Nokogiri::HTML(open("https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetail?itemSeq=#{@drug.item_seq}"))
       pics = doc.css('.pc-img img')
     end
-    @url = []
+    @result = []
+    metadata = "data:image/jpeg\;base64,"
     pics.each { |pic|
-      @url << pic.attr('src')
+      base64_string = pic.attr('src')[metadata.size..-1]
+      blob = Base64.decode64(base64_string)
+      image = MiniMagick::Image.read(blob)
+      @result << "data:image/jpeg\;base64,".concat(Base64.encode64(image.resize("200x200").to_blob).split("\n").join)
     }
-    render json: { pics: @url }
+
+    render json: @result
   end
 
   # POST /drugs
