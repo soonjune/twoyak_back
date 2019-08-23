@@ -15,7 +15,7 @@ class DrugReviewsController < ApplicationController
   end
 
   def recent
-    @drug_reviews = DrugReviewSerializer.new(DrugReview.order("id DESC").limit(100), {params: {liked_drug_reviews: liked_drug_reviews}}).serialized_json
+    @drug_reviews = DrugReviewSerializer.new(DrugReview.last(100).reverse, {params: {liked_drug_reviews: liked_drug_reviews}}).serialized_json
     render json: @drug_reviews
   end
 
