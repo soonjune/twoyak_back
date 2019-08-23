@@ -8,6 +8,6 @@ class CurrentDrugSerializer
     DiseaseSerializer.new(current_drug.diseases)
   end
   attribute :my_review do |current_drug, params|
-    DrugReviewSerializer.new(DrugReview.where(user_id: params[:current_user].id, drug_id: current_drug.current_drug_id))
+    DrugReviewSerializer.new(DrugReview.where(user_id: params[:current_user].id, drug_id: current_drug.current_drug_id), {params: {liked_drug_reviews: params[:current_user].l_drug_review_ids}})
   end
 end
