@@ -1,6 +1,7 @@
 class User::PastDrugsController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_past_drug, :search_id, only: [:create, :show, :destroy]
+  before_action :set_past_drug, :search_id, only: [:create, :update, :destroy]
+  before_action :set_past_drug_for_show, only: [:show]
   before_action :update_past_drug, only: [:update]
   before_action :id_to_modify, only: [:update, :destroy]
 
@@ -13,23 +14,7 @@ class User::PastDrugsController < ApplicationController
 
   # GET /past_drugs/1
   def show
-    require 'review_view'
-
-    
-
-    # @result = @sub_user.past_drugs.as_json
-    # my_reviews = current_user.drug_reviews
-    # @result.map { |drug|
-    #   drug_found = Drug.find(drug["past_drug_id"])
-    #   drug_reviews = drug_found.reviews
-    #   review_efficacies = drug_reviews.pluck(:efficacy)
-    #   drug["drug_name"] = drug_found.name
-    #   drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.size)
-    #   drug["dur_info"] = drug_found.dur_info
-    #   drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
-    #   drug["disease"] = PastDrug.find(drug["id"]).diseases.first unless PastDrug.find(drug["id"]).diseases.blank?
-    # }
-    render json: PastDrugSerializer.new(@past_drug)
+    render json: PastDrugSerializer.new(@past_drug_for_show, {params: {current_user: current_user}}).serialized_json
   end
 
   # POST /past_drugs
@@ -71,6 +56,21 @@ class User::PastDrugsController < ApplicationController
         if current_user.sub_user_ids.include? params[:sub_user_id].to_i
           @sub_user = SubUser.find(params[:sub_user_id])
           @past_drug = @sub_user.past_drug
+        else
+          render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+          return
+        end
+      end
+    end
+
+    def set_past_drug_for_show
+      if current_user.has_role? "admin"
+        @sub_user = SubUser.find(params[:sub_user_id])
+        @past_drug_for_show = @sub_user.past_drugs
+      else
+        if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+          @sub_user = SubUser.find(params[:sub_user_id])
+          @past_drug_for_show = @sub_user.past_drugs
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return

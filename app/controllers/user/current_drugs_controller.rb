@@ -1,6 +1,7 @@
 class User::CurrentDrugsController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_current_drug, :search_id, only: [:create, :show, :update, :destroy, :destroy_to_past]
+  before_action :set_current_drug, :search_id, only: [:create, :update, :destroy, :destroy_to_past]
+  before_action :set_current_drug_for_show, only: [:show]
   before_action :update_current_drug, only: [:update]
   before_action :id_to_modify, only: [:update, :destroy, :destroy_to_past]
   
@@ -13,21 +14,7 @@ class User::CurrentDrugsController < ApplicationController
 
   # GET /current_drugs/1
   def show
-
-    @result = @sub_user.current_drugs.as_json
-    my_reviews = current_user.drug_reviews
-    @result.map { |drug|
-      #여기서 drug는 current_drug object를 as_json을 통해 Hash로 변환한 상태이다.
-      drug_found = Drug.find(drug["current_drug_id"])
-      drug_reviews = drug_found.reviews
-      review_efficacies = drug_reviews.pluck(:efficacy)
-      drug["drug_name"] = drug_found.name
-      drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.size).round(2)
-      drug["dur_info"] = drug_found.dur_info
-      drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
-      drug["disease"] = CurrentDrug.find(drug["id"]).diseases.first unless CurrentDrug.find(drug["id"]).diseases.blank?
-    }
-    render json: @result 
+    render json: CurrentDrugSerializer.new(@current_drug_for_show, {params: {current_user: current_user}}).serialized_json
   end
 
   # POST /current_drugs
@@ -98,6 +85,21 @@ class User::CurrentDrugsController < ApplicationController
         if current_user.sub_user_ids.include? params[:sub_user_id].to_i
           @sub_user = SubUser.find(params[:sub_user_id])
           @current_drug = @sub_user.current_drug
+        else
+          render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+          return
+        end
+      end
+    end
+
+    def set_current_drug_for_show
+      if current_user.has_role? "admin"
+        @sub_user = SubUser.find(params[:sub_user_id])
+        @current_drug_for_show = @sub_user.current_drugs
+      else
+        if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+          @sub_user = SubUser.find(params[:sub_user_id])
+          @current_drug_for_show = @sub_user.current_drugs
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
