@@ -49,7 +49,7 @@ class User::MypageController < ApplicationController
         drug["drug_name"] = drug_found.name
         drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.size).round(2)
         drug["dur_info"] = drug_found.dur_info
-        drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
+        drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["past_drug_id"]), {params: {liked_drug_reviews: current_user.l_drug_review_ids}}).serializable_hash[:data] unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
         drug["diseases"] = PastDrug.find(drug["id"]).diseases
         @past_drugs << drug
       }
@@ -63,7 +63,7 @@ class User::MypageController < ApplicationController
         drug["drug_name"] = drug_found.name
         drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.size).round(2)
         drug["dur_info"] = drug_found.dur_info
-        drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
+        drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["current_drug_id"]), {params: {liked_drug_reviews: current_user.l_drug_review_ids}}).serializable_hash[:data] unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
         drug["diseases"] = CurrentDrug.find(drug["id"]).diseases
         @current_drugs << drug
       }
