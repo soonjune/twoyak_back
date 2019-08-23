@@ -38,35 +38,8 @@ class User::MypageController < ApplicationController
       sub_user.current_diseases.each { |d|
         @current_diseases << { id: d.id, parent_id: d.current_disease.id, name: d.current_disease.name, from: d.from, to: d.to }
       }
-
-      @past_drugs = []
-      sub_user.past_drugs.each { |drug|
-        drug = drug.as_json
-        #여기서 drug는 current_drug object를 as_json을 통해 Hash로 변환한 상태이다.
-        drug_found = Drug.find(drug["past_drug_id"])
-        drug_reviews = drug_found.reviews
-        review_efficacies = drug_reviews.pluck(:efficacy)
-        drug["drug_name"] = drug_found.name
-        drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.size).round(2)
-        drug["dur_info"] = drug_found.dur_info
-        drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["past_drug_id"]), {params: {liked_drug_reviews: current_user.l_drug_review_ids}}).serializable_hash[:data] unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
-        drug["diseases"] = PastDrug.find(drug["id"]).diseases
-        @past_drugs << drug
-      }
-      @current_drugs = []
-      sub_user.current_drugs.each { |drug|
-        drug = drug.as_json
-       #여기서 drug는 current_drug object를 as_json을 통해 Hash로 변환한 상태이다.
-        drug_found = Drug.find(drug["current_drug_id"])
-        drug_reviews = drug_found.reviews
-        review_efficacies = drug_reviews.pluck(:efficacy)
-        drug["drug_name"] = drug_found.name
-        drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.size).round(2)
-        drug["dur_info"] = drug_found.dur_info
-        drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["current_drug_id"]), {params: {liked_drug_reviews: current_user.l_drug_review_ids}}).serializable_hash[:data] unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
-        drug["diseases"] = CurrentDrug.find(drug["id"]).diseases
-        @current_drugs << drug
-      }
+      @past_drugs = PastDrugSerializer.new(sub_user.past_drugs, {params: {current_user: current_user}})
+      @current_drugs = CurrentDrugSerializer.new(sub_user.current_drugs, {params: {current_user: current_user}})
       @past_supplements = []
       sub_user.past_supplements.each { |d|
         @past_supplements << { id: d.id, parent_id: d.past_supplement.id, name: d.past_supplement.name, from: d.from, to: d.to, memo: d.memo  }
@@ -86,12 +59,9 @@ class User::MypageController < ApplicationController
       infos << info_data
     }
     @data_sent[:infos] = infos
-    @data_sent[:watch_drugs] = current_user.watch_drug
+    @data_sent[:watch_drugs] = DrugSerializer.new(current_user.watch_drug)
     @data_sent[:watch_supplements] = current_user.watch_supplement
     @data_sent[:drug_reviews] = DrugReviewSerializer.new(my_reviews, {params: {liked_drug_reviews: current_user.l_drug_review_ids}})
-    my_reviews.each_with_index { |review, index|
-      @data_sent[:drug_reviews][index][:adverse_effects] = review.adverse_effects.select(:id, :symptom_code, :symptom_name)
-    }
     @data_sent[:sup_reviews] = current_user.sup_reviews
     
     render json: @data_sent
