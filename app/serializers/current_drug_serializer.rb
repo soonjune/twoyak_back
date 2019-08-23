@@ -4,7 +4,7 @@ class CurrentDrugSerializer
   attribute :drug do |current_drug|
     DrugSerializer.new(Drug.find(current_drug.current_drug_id))
   end
-  attribute :diseases do |current_drug|
+  attribute :disease do |current_drug|
     DiseaseSerializer.new(current_drug.diseases.limit(1)).serializable_hash[:data].first
   end
   attribute :my_review do |current_drug, params|
