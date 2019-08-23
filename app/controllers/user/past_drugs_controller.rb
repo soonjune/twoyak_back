@@ -15,19 +15,21 @@ class User::PastDrugsController < ApplicationController
   def show
     require 'review_view'
 
-    @result = @sub_user.past_drugs.as_json
-    my_reviews = current_user.drug_reviews
-    @result.map { |drug|
-      drug_found = Drug.find(drug["past_drug_id"])
-      drug_reviews = drug_found.reviews
-      review_efficacies = drug_reviews.pluck(:efficacy)
-      drug["drug_name"] = drug_found.name
-      drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.size)
-      drug["dur_info"] = drug_found.dur_info
-      drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
-      drug["disease"] = PastDrug.find(drug["id"]).diseases.first unless PastDrug.find(drug["id"]).diseases.blank?
-    }
-    render json: @result
+    
+
+    # @result = @sub_user.past_drugs.as_json
+    # my_reviews = current_user.drug_reviews
+    # @result.map { |drug|
+    #   drug_found = Drug.find(drug["past_drug_id"])
+    #   drug_reviews = drug_found.reviews
+    #   review_efficacies = drug_reviews.pluck(:efficacy)
+    #   drug["drug_name"] = drug_found.name
+    #   drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.size)
+    #   drug["dur_info"] = drug_found.dur_info
+    #   drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
+    #   drug["disease"] = PastDrug.find(drug["id"]).diseases.first unless PastDrug.find(drug["id"]).diseases.blank?
+    # }
+    render json: PastDrugSerializer.new(@past_drug)
   end
 
   # POST /past_drugs
