@@ -14,9 +14,6 @@ gem 'elasticsearch-rails'
 gem 'searchkick', path: '~/searchkick_forked'
 gem 'faraday_middleware-aws-sigv4'
 
-#for cutting size
-gem "mini_magick"
-
 #for user model and authentication
 gem 'devise'
 gem 'jwt'

@@ -49,7 +49,7 @@ class User::MypageController < ApplicationController
         drug["drug_name"] = drug_found.name
         drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.size).round(2)
         drug["dur_info"] = drug_found.dur_info
-        drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
+        drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
         drug["diseases"] = PastDrug.find(drug["id"]).diseases
         @past_drugs << drug
       }
@@ -63,7 +63,7 @@ class User::MypageController < ApplicationController
         drug["drug_name"] = drug_found.name
         drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum.to_f / review_efficacies.size).round(2)
         drug["dur_info"] = drug_found.dur_info
-        drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
+        drug["my_review"] = DrugReviewSerializer.new(my_reviews.find_by(drug_id: drug["current_drug_id"])) unless my_reviews.find_by(drug_id: drug["current_drug_id"]).nil?
         drug["diseases"] = CurrentDrug.find(drug["id"]).diseases
         @current_drugs << drug
       }
@@ -89,7 +89,7 @@ class User::MypageController < ApplicationController
     @data_sent[:watch_drugs] = current_user.watch_drug
     @data_sent[:watch_supplements] = current_user.watch_supplement
     @data_sent[:drug_reviews] = my_reviews.map { |review|
-      ReviewView.view(review)
+      DrugReviewSerializer.new((review)
     }
     my_reviews.each_with_index { |review, index|
       @data_sent[:drug_reviews][index][:adverse_effects] = review.adverse_effects.select(:id, :symptom_code, :symptom_name)
