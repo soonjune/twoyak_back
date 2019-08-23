@@ -89,7 +89,7 @@ class User::MypageController < ApplicationController
     @data_sent[:watch_drugs] = current_user.watch_drug
     @data_sent[:watch_supplements] = current_user.watch_supplement
     @data_sent[:drug_reviews] = my_reviews.map { |review|
-      DrugReviewSerializer.new((review)
+      DrugReviewSerializer.new(review)
     }
     my_reviews.each_with_index { |review, index|
       @data_sent[:drug_reviews][index][:adverse_effects] = review.adverse_effects.select(:id, :symptom_code, :symptom_name)
