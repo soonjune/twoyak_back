@@ -4,12 +4,11 @@ module DurAnalysis
     require 'http'
 
     def get_by_drug(codes)
-        response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
         begin
-            rest = JSON.parse(response)["data"]["rest"]
-        rescue
             response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
             rest = JSON.parse(response)["data"]["rest"]
+        rescue
+            next
         end
 
         @result = Hash.new
