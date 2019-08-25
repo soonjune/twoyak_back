@@ -150,6 +150,10 @@ module DurAnalysis
 
         drug_ids_array.each { |drug_id|
             select_drug =  Drug.find(drug_id)
+            if select_drug.hira_medicine_code.blank?
+              require 'hira_code_add'
+              HiraCodeAdd.hira_code_add(select_drug)
+            end
             select_code = select_drug.hira_medicine_code
             #hira_med_code 있는 경우 
             if !select_code.nil?
