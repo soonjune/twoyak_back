@@ -18,9 +18,13 @@ class DrugsController < ApplicationController
     #안전정보 우선 확인
     if @drug.dur_info.blank?
       require 'dur_analysis'
-      dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([@drug.id]))
-      @drug.dur_info = dur_info unless dur_info.blank?
-      @drug.save    
+      begin
+        dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([@drug.id]))
+        @drug.dur_info = dur_info unless dur_info.blank?
+        @drug.save   
+      rescue
+        next
+      end 
     end
     
     @data = Hash.new
