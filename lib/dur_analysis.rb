@@ -5,10 +5,12 @@ module DurAnalysis
 
     def get_by_drug(codes)
         begin
+          Timeout::timeout(10) do
             response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
             rest = JSON.parse(response)["data"]["rest"]
-        rescue
-            next
+          end
+        rescue Timeout::Error
+          return
         end
 
         @result = Hash.new
