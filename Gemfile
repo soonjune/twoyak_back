@@ -11,7 +11,7 @@ gem "http"
 gem 'elasticsearch'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
-gem 'searchkick'
+gem 'searchkick', path: '~/searchkick_forked'
 gem 'faraday_middleware-aws-sigv4'
 
 #for faster json and http connection
