@@ -16,7 +16,7 @@ class DiseasesController < ApplicationController
 
   # POST /diseases
   def create
-    if current_user.sub_user_ids.include?(parmas[:sub_user_id])
+    if current_user.sub_user_ids.include?(params[:sub_user_id])
       begin
         @disease = Disease.find_or_create(disease_params)
       rescue

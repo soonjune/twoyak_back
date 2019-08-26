@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     resources :watch_drugs, :except => [:update, :destroy]
     scope ':sub_user_id' do
       #DUR 정보
+      resources :diseases
       get 'analysis/get'
       get "analysis/single/:drug_id" => "single_drug#cautions"
 
@@ -127,7 +128,6 @@ Rails.application.routes.draw do
   resources :dur_ingrs, :except => [:show]
   get "dur_ingrs/:search_term" => "dur_ingrs#show"
   # resources :drugs_dur_ingrs
-  resources :diseases
   resources :classifications
   get 'search_terms' => 'search_terms#index'
   get 'singleSearch/' => 'drugs#find_drug_mobile'
