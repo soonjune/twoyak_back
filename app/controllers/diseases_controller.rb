@@ -16,12 +16,16 @@ class DiseasesController < ApplicationController
 
   # POST /diseases
   def create
-    @disease = Disease.new(disease_params)
-
-    if @disease.save
+    if current_user.sub_user_ids.include?(parmas[:sub_user_id])
+      begin
+        @disease = Disease.find_or_create(disease_params)
+      rescue
+        render json: @disease.errors, status: :unprocessable_entity
+      end
+      SubUser.find(params[:sub_user_id]).current_disease << @disease
       render json: @disease, status: :created, location: @disease
     else
-      render json: @disease.errors, status: :unprocessable_entity
+      render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized
     end
   end
 
