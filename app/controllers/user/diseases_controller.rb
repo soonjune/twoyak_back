@@ -16,9 +16,9 @@ class User::DiseasesController < ApplicationController
 
   # POST /diseases
   def create
-    if current_user.sub_user_ids.include?(params[:sub_user_id])
+    if current_user.sub_user_ids.include?(params[:sub_user_id].to_i)
       begin
-        @disease = Disease.find_or_create(disease_params)
+        @disease = Disease.find_or_create_by(disease_params)
       rescue
         render json: @disease.errors, status: :unprocessable_entity
       end
