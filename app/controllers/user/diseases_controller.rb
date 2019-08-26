@@ -1,4 +1,4 @@
-class DiseasesController < ApplicationController
+class User::DiseasesController < ApplicationController
   before_action :authenticate_request!, only: [:create, :update, :destroy]
   before_action :set_disease, only: [:show, :update, :destroy]
 
