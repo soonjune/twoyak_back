@@ -23,7 +23,7 @@ class User::DiseasesController < ApplicationController
         render json: @disease.errors, status: :unprocessable_entity
       end
       SubUser.find(params[:sub_user_id]).current_disease << @disease
-      render json: @disease, status: :created, location: @disease
+      render json: @disease, status: :created
     else
       render json: { errors: ['권한이 없습니다.'] }, status: :unauthorized
     end
