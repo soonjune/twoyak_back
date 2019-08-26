@@ -17,7 +17,7 @@ class AdverseEffectsController < ApplicationController
   # POST /adverse_effects
   def create
     @adverse_effect = AdverseEffect.new(adverse_effect_params)
-
+    @adverse_effect.symptom_code = "U".concat("#{current_user.id}")
     if @adverse_effect.save
       render json: @adverse_effect, status: :created, location: @adverse_effect
     else
@@ -47,7 +47,7 @@ class AdverseEffectsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def adverse_effect_params
-      params.require(:adverse_effect).permit(:symptom_code, :symptom_name)
+      params.require(:adverse_effect).permit(:symptom_name)
     end
 
     def is_admin?
