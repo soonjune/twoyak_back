@@ -124,7 +124,7 @@ class DrugsController < ApplicationController
             # misspellings: {below: 5}
           })
         end
-      rescue
+      rescue Timeout::Error
         searched = Drug.where("name LIKE ?", "%#{search}%")
     end
 
