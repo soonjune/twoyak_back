@@ -8,11 +8,17 @@ gem 'rack-cors'
 gem "http"
 
 #Use elasticsearch
-gem 'elasticsearch', '~> 6.3.1'
+gem 'elasticsearch'
 gem 'elasticsearch-model'
-gem 'elasticsearch-rails', '~> 6.1.0'
-gem 'searchkick', path: '~/searchkick_forked'
+gem 'elasticsearch-rails'
+gem 'searchkick'
 gem 'faraday_middleware-aws-sigv4'
+
+#for faster json and http connection
+gem 'oj'
+gem 'typhoeus'
+
+
 
 #for user model and authentication
 gem 'devise'
