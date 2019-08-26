@@ -10,7 +10,7 @@ gem "http"
 #Use elasticsearch
 gem 'elasticsearch'
 gem 'elasticsearch-model'
-gem 'elasticsearch-rails'
+gem 'elasticsearch-rails', -v '~> 7.0.0'
 gem 'searchkick', path: '~/searchkick_forked'
 gem 'faraday_middleware-aws-sigv4'
 
