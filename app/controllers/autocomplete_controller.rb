@@ -79,7 +79,7 @@ class AutocompleteController < ApplicationController
   def adverse_effect
     @adverse_effects = Hash.new
     @adverse_effects["standard_adverse_effects"] = AdverseEffect.limit(79)
-    @adverse_effects["my_adverse_effects"] = current_user.adverse_effects.where("id > 79") unless current_user.nil?
+    @adverse_effects["my_adverse_effects"] = current_user.adverse_effects.where("adverse_effect_id > 79") unless current_user.nil?
     
     render json: @adverse_effects
   end
