@@ -1,6 +1,6 @@
 class AdverseEffectsController < ApplicationController
   before_action :set_adverse_effect, only: [:show, :update, :destroy]
-  before_action :authenticate_request!, :is_admin?, only: [:create, :update, :destroy]
+  before_action :authenticate_request!, only: [:create, :update, :destroy]
 
   # GET /adverse_effects
   def index
@@ -50,11 +50,11 @@ class AdverseEffectsController < ApplicationController
       params.require(:adverse_effect).permit(:symptom_name)
     end
 
-    def is_admin?
-      if current_user.has_role? "admin"
-        return
-      else
-        render json: { errors: ['접속 권한이 없습니다.'] }, status: :unauthorized
-      end
-    end
+    # def is_admin?
+    #   if current_user.has_role? "admin"
+    #     return
+    #   else
+    #     render json: { errors: ['접속 권한이 없습니다.'] }, status: :unauthorized
+    #   end
+    # end
 end
