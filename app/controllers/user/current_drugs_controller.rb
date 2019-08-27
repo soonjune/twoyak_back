@@ -33,7 +33,7 @@ class User::CurrentDrugsController < ApplicationController
       begin
         disease = Disease.find_or_create_by(name: params[:disease_name])
         #먹는 이유 추가하기(질환추가)
-        createed.diseases << disease unless disease.blank?
+        created.diseases << disease unless disease.blank?
       end
 
       render json: @current_drug.pluck(:id, :name), status: :created
