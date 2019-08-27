@@ -202,7 +202,7 @@ class DrugsController < ApplicationController
     # Searchkick.search(search, where: {name: /.*#{search}.*/, ingredients: /.*#{search}.*/})
     searched = if search
       Searchkick.search(search, {
-        index_name: [Drug, Supplement],
+        index_name: [Drug],
         fields: [{name: :word_middle}],
         limit: 50
         # misspellings: {below: 5}
