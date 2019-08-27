@@ -114,19 +114,13 @@ class DrugsController < ApplicationController
     # query = "SELECT * FROM drugs WHERE item_name = " + "'" + search + "'"
     # @rep = Drug.find_by_sql(query) //이전 searchkick 쓰고나서 다음과 같다.
     # Searchkick.search(search, where: {name: /.*#{search}.*/, ingredients: /.*#{search}.*/})
-    begin
-      Timeout::timeout(5) do
-        searched = if search
-          Searchkick.search(search, {
-            index_name: [Drug, Supplement],
-            fields: [{name: :word_middle}],
-            limit: 50
-            # misspellings: {below: 5}
-          })
-        end
-      end
-      rescue Timeout::Error
-        searched = Drug.where("name LIKE ?", "%#{search}%")
+    searched = if search
+      Searchkick.search(search, {
+        index_name: [Drug, Supplement],
+        fields: [{name: :word_middle}],
+        limit: 50
+        # misspellings: {below: 5}
+      })
     end
 
     # 뭐 검색됐는지 확인용
