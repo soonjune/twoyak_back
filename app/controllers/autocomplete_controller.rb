@@ -78,8 +78,8 @@ class AutocompleteController < ApplicationController
 
   def adverse_effect
     @adverse_effects = Hash.new
-    @adverse_effects["standard_adverse_effects"] = AdverseEffectSerializer.new(AdverseEffect.all).serializable_hash[:data]
-    @adverse_effects["my_adverse_effects"] = AdverseEffectSerializer.new(current_user.adverse_effects).serializable_hash[:data] unless current_user.blank?
+    @adverse_effects["standard_adverse_effects"] = AdverseEffect.limit(79)
+    @adverse_effects["my_adverse_effects"] = current_user.adverse_effects.where("id > 79")
     
     render json: @adverse_effects
   end

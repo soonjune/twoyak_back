@@ -16,9 +16,7 @@ class AdverseEffectsController < ApplicationController
 
   # POST /adverse_effects
   def create
-    @adverse_effect = AdverseEffect.new(adverse_effect_params)
-    @adverse_effect.symptom_code = "U".concat("#{current_user.id}")
-    if @adverse_effect.save
+    if @adverse_effect = AdverseEffect.find_or_create_by(adverse_effect_params)
       render json: @adverse_effect, status: :created, location: @adverse_effect
     else
       render json: @adverse_effect.errors, status: :unprocessable_entity
