@@ -79,7 +79,7 @@ class AutocompleteController < ApplicationController
   def adverse_effect
     @adverse_effects = Hash.new
     @adverse_effects["standard_adverse_effects"] = AdverseEffectSerializer.new(AdverseEffect.all).serializable_hash[:data]
-    @adverse_effects["my_adverse_effects"] = AdverseEffectSerializer.new(current_user.adverse_effects).serializable_hash[:data]
+    @adverse_effects["my_adverse_effects"] = AdverseEffectSerializer.new(current_user.adverse_effects).serializable_hash[:data] unless current_user.blank?
     
     render json: @adverse_effects
   end
