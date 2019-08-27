@@ -31,7 +31,7 @@ class User::CurrentDrugsController < ApplicationController
       drug_found.dur_info = dur_info unless dur_info.nil?
       drug_found.save
       begin
-        disease = Disease.find_or_create_by(params[:disease_name])
+        disease = Disease.find_or_create_by(disease_name: params[:disease_name])
         #먹는 이유 추가하기(질환추가)
         createed.diseases << disease unless disease.blank?
       end
