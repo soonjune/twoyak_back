@@ -117,7 +117,7 @@ class DrugsController < ApplicationController
     searched = if search
       Searchkick.search(search, {
         index_name: [Drug],
-        fields: [{name: :word_middle}, :ingr_eng_name],
+        fields: [{name: :word_middle}, {ingr_eng_name: :word_middle}],
         limit: 50
         # misspellings: {below: 5}
       })
@@ -203,7 +203,7 @@ class DrugsController < ApplicationController
     searched = if search
       Searchkick.search(search, {
         index_name: [Drug],
-        fields: [{name: :word_middle}, :ingr_eng_name],
+        fields: [{name: :word_middle}, {ingr_eng_name: :word_middle}],
         limit: 50
         # misspellings: {below: 5}
       })
