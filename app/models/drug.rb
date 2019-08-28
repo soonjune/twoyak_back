@@ -35,7 +35,9 @@ class Drug < ApplicationRecord
   has_many :interactions, through: :drug_ingrs
   has_and_belongs_to_many :dur_ingrs, join_table: "drug_associations", foreign_key: "drug_id", association_foreign_key: "dur_ingr_id"
 
-  searchkick synonyms: [["aspirin", "acetylsalicylic acid"],["paracetamol", "acetaminophen"], ["viagra", "sildenafil"], ["cialis", "tadalafil"], ["valproic acid", "divalproex"]], language: "korean", word_start: [:name], word_middle: [:name, :ingr_kor_name, :ingr_eng_name], word: [:name]
+  synonyms: [["aspirin", "acetylsalicylic acid"],["paracetamol", "acetaminophen"], ["viagra", "sildenafil"], ["cialis", "tadalafil"], ["valproic acid", "divalproex"]]
+
+  searchkick language: "korean", word_start: [:name], word_middle: [:name, :ingr_kor_name, :ingr_eng_name], word: [:name], word: [:synonyms]
 
   def search_data
       {
