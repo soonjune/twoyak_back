@@ -118,8 +118,7 @@ class DrugsController < ApplicationController
       Searchkick.search(search, {
         index_name: [Drug],
         fields: [{name: :word_middle}, {ingr_eng_name: :word_middle}],
-        limit: 50,
-        synonyms: [["aspirin", "acetylsalicylic acid"],["paracetamol", "acetaminophen", "tylenol"], ["viagra", "sildenafil"], ["cialis", "tadalafil"], ["valproic acid", "divalproex"]]
+        limit: 50
         # misspellings: {below: 5}
       })
     end
