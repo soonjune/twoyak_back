@@ -28,6 +28,8 @@ gem 'cancancan'
 gem 'rolify'
 #for faster JSON api response
 gem 'fast_jsonapi'
+#for pagination
+gem 'will_paginate'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'

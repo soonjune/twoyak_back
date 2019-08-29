@@ -3,7 +3,7 @@ class SupplementsController < ApplicationController
 
   # GET /supplements
   def index
-    @supplements = Supplement.all
+    @supplements = SupplementSerializer.new(SupplementIngr.find(params[:supplement_ingr_id]).supplements.paginate(page: params[:page], per_page: 12)).serialized_json
 
     render json: @supplements
   end
