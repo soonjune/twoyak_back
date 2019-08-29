@@ -1,6 +1,5 @@
 class SupplementsController < ApplicationController
-  before_action :set_supplement, only: [:update, :destroy]
-  before_action :set_search, only: [:show]
+  before_action :set_supplement, only: [:show, :update, :destroy]
 
   # GET /supplements
   def index
@@ -47,10 +46,6 @@ class SupplementsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def supplement_params
-      params.require(:supplement).permit(:production_code, :name, :enterprise_name, :benefits, :suggested_use, :ingredients, :storage, :shelf_life, :description, :warnings, :standard, :approval_date)
-    end
-
-    def set_search
-      @supplement = Supplement.search(params[:search_term], fields: [name: :exact])
+      params.require(:supplement).permit(:shopping_site, :name, :price, :product_url, :photo_url, :rating, :shoppingmall_reviews)
     end
 end
