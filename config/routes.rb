@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :contents
   resources :health_news
   resources :hospitals
   resources :adverse_effects, :except => [:index]
