@@ -6,6 +6,7 @@ class ContentsController < ApplicationController
   # GET /contents
   def index
     @contents = ContentSerializer.new(Content.paginate(page: params[:page], per_page: 6)).serialized_json
+    response.set_header('Total-Count', Content.all.size)
 
     render json: @contents
   end
