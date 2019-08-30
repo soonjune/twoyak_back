@@ -14,9 +14,15 @@ class DrugsController < ApplicationController
   def dur_check
     require 'dur_analysis'
     check_token!
-    if current_user.sub_user_ids.include? params[:sub_user_id]
-      DurAnalysis.get_by_drug(DurAnalysis.drug_code(current_drug_ids.append(@drug.id)))
+    if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+      dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code(SubUser.find(params[:sub_user_id]).current_drug_ids.append(@drug.id)))
+      @data = Hash.new
+      @data[:interaction] = dur_info["interactions"]
+      @data[:same_ingr] = dur_info["same_ingr"]
+      @data[:duplicate] = dur_info["duplicate"]
     end
+
+    render json: @data
   end
 
   # GET /drugs/1
@@ -29,7 +35,7 @@ class DrugsController < ApplicationController
       require 'dur_analysis'
       dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([@drug.id]))
       @drug.dur_info = dur_info unless dur_info.blank?
-      @drug.save    
+      @drug.save
     end
     
     @data = Hash.new

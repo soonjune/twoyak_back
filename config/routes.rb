@@ -104,6 +104,8 @@ Rails.application.routes.draw do
 
   #drug 사진
   get "drugs/:id/pics" => "drugs#show_pics"
+  #drug dur
+  get "drugs/:id/dur_check" => "drugs#dur_check"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
   end
