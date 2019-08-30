@@ -1,5 +1,5 @@
 class DrugsController < ApplicationController
-  before_action :set_drug, only: [:show, :update, :destroy, :show_pics]
+  before_action :set_drug, only: [:show, :update, :destroy, :show_pics, :dur_check]
   before_action :authenticate_request!,  only: [:create, :update, :destroy]
   before_action :check_authority, only: [:create, :update, :destroy]  
   # before_action :set_search, only: [:show]
@@ -9,6 +9,14 @@ class DrugsController < ApplicationController
     @drugs = Drug.all
 
     render json: @drugs
+  end
+
+  def dur_check
+    require 'dur_analysis'
+    check_token!
+    if current_user.sub_user_ids.include? params[:sub_user_id]
+      DurAnalysis.get_by_drug(DurAnalysis.drug_code(current_drug_ids.append(@drug.id)))
+    end
   end
 
   # GET /drugs/1
