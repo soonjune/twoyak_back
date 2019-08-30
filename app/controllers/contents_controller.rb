@@ -5,7 +5,7 @@ class ContentsController < ApplicationController
 
   # GET /contents
   def index
-    @contents = Content.all
+    @contents = ContentSerializer.new(Content.paginate(page: params[:page], per_page: 6)).serialized_json
 
     render json: @contents
   end
@@ -48,7 +48,7 @@ class ContentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def content_params
-      params.require(:content).permit(:title, :body)
+      params.require(:content).permit(:title, :thumbnail_url, :body)
     end
 
     def is_admin?
