@@ -18,7 +18,9 @@ module DurAnalysis
       if !parent.nil?
         put = []
         parent.each { |yak|
-          dur = [yak["durNmA"], yak["durNmB"]]
+          dur = Hash.new
+          dur["name"] = [yak["durNmA"], yak["durNmB"]]
+          dur["description"] = yak["durSdEft"]
           put << dur
         }
         put.uniq!
@@ -30,7 +32,9 @@ module DurAnalysis
       if !parent.nil?
         put = []
         parent.each { |yak|
-          dur = [yak["durNmA"], yak["durNmB"]]
+          dur = Hash.new
+          dur["name"] = [yak["durNmA"], yak["durNmB"]]
+          dur["description"] = "약의 효능효과·성분이 동일한 약물이 2가지 이상 있는 경우로 결과는 단순 참고용입니다"
           put << dur
         }
         put.uniq!
@@ -42,7 +46,9 @@ module DurAnalysis
       if !parent.nil?
         put = []
         parent.each { |yak|
-          dur = [yak["durNmA"], yak["durNmB"]]
+          dur = Hash.new
+          dur["name"] = [yak["durNmA"], yak["durNmB"]]
+          dur["description"] = "약의 성분은 다르나 효능이 동일한 약물이 2가지 이상 있는 경우"
           put << dur
         }
         put.uniq!
