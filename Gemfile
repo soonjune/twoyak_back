@@ -6,6 +6,12 @@ gem 'figaro'
 gem 'rack-cors'
 #http request
 gem "http"
+#for http2 coupang
+gem 'net-http2'
+gem 'async-http'
+
+#for s3 upload
+gem "aws-sdk-s3", require: false
 
 #Use elasticsearch
 gem 'elasticsearch', '~> 6.1.0'
@@ -30,6 +36,10 @@ gem 'rolify'
 gem 'fast_jsonapi'
 #for pagination
 gem 'will_paginate'
+#for faster json and http connection
+gem 'oj'
+gem 'typhoeus'
+
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
