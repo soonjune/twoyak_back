@@ -1,4 +1,7 @@
 class ContentSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :title, :thumbnail_url
+  attributes :category, :title, :body
+  attribute :thumbnail_url do |object|
+    url_for(object.thumbnail_image)
+  end
 end
