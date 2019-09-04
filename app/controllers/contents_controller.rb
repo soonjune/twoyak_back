@@ -51,7 +51,7 @@ class ContentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def content_params
-      params.require(:content).permit(:title, :thumbnail_url, :body, :thumbnail_image)
+      params.require(:content).permit(:title, :category, :thumbnail_url, :body, :thumbnail_image)
     end
 
     def is_admin?
