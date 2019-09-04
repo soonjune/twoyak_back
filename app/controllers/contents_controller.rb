@@ -13,6 +13,7 @@ class ContentsController < ApplicationController
 
   # GET /contents/1
   def show
+    @content.thumbnail_url = url_for(@content.thumbnail_image)
     render json: @content
   end
 
@@ -49,7 +50,7 @@ class ContentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def content_params
-      params.require(:content).permit(:title, :thumbnail_url, :body)
+      params.require(:content).permit(:title, :thumbnail_url, :body, :thumbnail_image)
     end
 
     def is_admin?
