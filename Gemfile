@@ -7,8 +7,8 @@ gem 'rack-cors'
 #http request
 gem "http"
 #for http2 coupang
-gem 'net-http2'
-gem 'async-http'
+# gem 'net-http2'
+# gem 'async-http'
 
 #for s3 upload
 gem "aws-sdk-s3", require: false
