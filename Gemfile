@@ -14,7 +14,7 @@ gem "http"
 gem "aws-sdk-s3", require: false
 
 #Use elasticsearch
-gem 'elasticsearch', '~> 6.1.0'
+gem 'elasticsearch'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails', '~> 7.0.0'
 gem 'searchkick', path: '~/searchkick_forked'
