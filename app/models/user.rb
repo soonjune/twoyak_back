@@ -11,6 +11,9 @@ class User < ApplicationRecord
   has_many :sub_users
   #의약품/건강기능식품 리뷰
   has_many :drug_reviews
+  #내가 남긴 리뷰 이상반응들
+  has_many :adverse_effects, :through => :drug_reviews
+
   has_many :sup_reviews
   #리뷰 댓글 남기기
   has_many :drug_review_comments
@@ -31,6 +34,8 @@ class User < ApplicationRecord
   has_many :drug_review_likes
   has_many :l_drug_reviews, through: :drug_review_likes, source: :drug_review
 
+  
+
   #이메일 형식
   # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   # validates :email, presence: true,
@@ -38,6 +43,8 @@ class User < ApplicationRecord
   
   # after_create :set_default_role, if: Proc.new { User.count > 1 }
 
+  # #for fast json
+  # attr_accessor :id, :email, :sub_user_ids, :drug_review_ids, :sup_review_ids, :drug_review_comment_ids, :sup_review_comment_ids, :suggestion_ids, :watch_drug_ids, :watch_supplement_ids, :identity_ids, :drug_review_like_ids, :l_drug_review_ids
 
   #소셜 로그인시 두개로 로그인하지 않도록
   def self.find_for_oauth(auth, signed_in_resource = nil)

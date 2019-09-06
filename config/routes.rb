@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :contents
   resources :health_news
   resources :hospitals
   resources :adverse_effects, :except => [:index]
@@ -18,7 +19,8 @@ Rails.application.routes.draw do
   post "admin/push_all" => "admin#push_all"
 
   namespace :user do
-    resources :mypage
+    resources :mypage, :except => [:show]
+    get 'mypage/test' => 'mypage#test'
     resources :sub_users, :except => [:index]
     #의약품으로 직접 안전정보(DUR) 가져오기
     get 'analysis/get_by_drug'
@@ -26,6 +28,7 @@ Rails.application.routes.draw do
     resources :watch_drugs, :except => [:update, :destroy]
     scope ':sub_user_id' do
       #DUR 정보
+      resources :diseases
       get 'analysis/get'
       get "analysis/single/:drug_id" => "single_drug#cautions"
 
@@ -101,13 +104,15 @@ Rails.application.routes.draw do
 
   #drug 사진
   get "drugs/:id/pics" => "drugs#show_pics"
+  #drug dur
+  get "drugs/:id/dur_check" => "drugs#dur_check"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
     #좋아요 눌렀는지 확인
     get '/"id/like' => 'drug_review_likes#show'
     post '/:id/like' => 'drug_review_likes#like_toggle'
   end
-  resources :supplements, :except => [:index] do
+  resources :supplements do
     resources :sup_reviews
   end
   # get "drugs/:search_term" => "drugs#show"
@@ -118,18 +123,16 @@ Rails.application.routes.draw do
   get 'autocomplete/disease' => 'autocomplete#disease'
   get 'autocomplete/drug' => 'autocomplete#drug'
   get 'autocomplete/sup' => 'autocomplete#sup'
-  get 'autocomplete/adverse_effect' => 'adverse_effects#index'
+  get 'autocomplete/adverse_effect' => 'autocomplete#adverse_effect'
 
   resources :supplements, :except => [:show, :index]
   get "supplements/:search_term" => "supplements#show"
   # resources :supplement_ingrs_supplements
-  resources :supplement_ingrs, :except => [:show, :index]
-  get "supplement_ingrs/:search_term" => "supplement_ingrs#show"
+  resources :supplement_ingrs, :except => [:index]
   resources :interactions
   resources :dur_ingrs, :except => [:show]
   get "dur_ingrs/:search_term" => "dur_ingrs#show"
   # resources :drugs_dur_ingrs
-  resources :diseases
   resources :classifications
   get 'search_terms' => 'search_terms#index'
   get 'singleSearch/' => 'drugs#find_drug_mobile'

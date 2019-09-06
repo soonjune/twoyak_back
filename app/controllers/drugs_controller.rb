@@ -1,5 +1,5 @@
 class DrugsController < ApplicationController
-  before_action :set_drug, only: [:show, :update, :destroy, :show_pics]
+  before_action :set_drug, only: [:show, :update, :destroy, :show_pics, :dur_check]
   before_action :authenticate_request!,  only: [:create, :update, :destroy]
   before_action :check_authority, only: [:create, :update, :destroy]  
   # before_action :set_search, only: [:show]
@@ -11,6 +11,19 @@ class DrugsController < ApplicationController
     render json: @drugs
   end
 
+  def dur_check
+    require 'dur_analysis'
+    check_token!
+    if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+      dur_info = DurAnalysis.drug_controller(DurAnalysis.drug_code(SubUser.find(params[:sub_user_id]).current_drug_ids.append(@drug.id)))
+      @data = Hash.new
+      @data[:dur_info] = dur_info
+      @data[:drug_searched] = @drug.name 
+    end
+
+    render json: @data
+  end
+
   # GET /drugs/1
   def show
     Searchkick.disable_callbacks
@@ -20,7 +33,7 @@ class DrugsController < ApplicationController
       require 'dur_analysis'
       dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([@drug.id]))
       @drug.dur_info = dur_info unless dur_info.blank?
-      @drug.save    
+      @drug.save
     end
     
     @data = Hash.new

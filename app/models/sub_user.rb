@@ -1,6 +1,8 @@
 class SubUser < ApplicationRecord
     #rolify 이용하기 위한 
     resourcify
+    #fast json
+    # attr_accessor :id, :user_name, :profile_image, :birth_date, :drink, :smoke, :caffeine, :sex
 
     belongs_to :user
     #이용자 정보 등록하기
@@ -25,5 +27,7 @@ class SubUser < ApplicationRecord
     #현재 복용중인 건강기능식품
     has_many :current_supplements
     has_many :current_sup, :through => :current_supplements, :source => :current_supplement
+    #사진 첨부
+    has_many_attached :prescription_photo
 
 end

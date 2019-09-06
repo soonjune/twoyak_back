@@ -1,17 +1,14 @@
 PATH
   remote: ../../searchkick_forked
   specs:
-    searchkick (3.1.21)
-      activemodel (>= 4.2)
-      elasticsearch (>= 5)
+    searchkick (4.1.0)
+      activemodel (>= 5)
+      elasticsearch (>= 6)
       hashie
 
 GEM
   remote: https://rubygems.org/
   specs:
-    RubyInline (3.12.4)
-      ZenTest (~> 4.3)
-    ZenTest (4.11.2)
     actioncable (5.2.2)
       actionpack (= 5.2.2)
       nio4r (~> 2.0)
@@ -92,11 +89,11 @@ GEM
     faraday_middleware-aws-sigv4 (0.2.4)
       aws-sigv4 (~> 1.0)
       faraday (>= 0.9)
+    fast_jsonapi (1.5)
+      activesupport (>= 4.2)
     ffi (1.9.25)
     figaro (1.1.1)
       thor (~> 0.14)
-    fuzzy-string-match (1.0.1)
-      RubyInline (>= 3.8.6)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     hashie (3.6.0)
@@ -233,12 +230,12 @@ DEPENDENCIES
   byebug
   cancancan
   devise
-  elasticsearch
+  elasticsearch (~> 6.1.0)
   elasticsearch-model
   elasticsearch-rails
   faraday_middleware-aws-sigv4
+  fast_jsonapi
   figaro
-  fuzzy-string-match
   http
   jwt
   letter_opener

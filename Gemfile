@@ -6,9 +6,15 @@ gem 'figaro'
 gem 'rack-cors'
 #http request
 gem "http"
+#for http2 coupang
+# gem 'net-http2'
+# gem 'async-http'
+
+#for s3 upload
+gem "aws-sdk-s3", require: false
 
 #Use elasticsearch
-gem 'elasticsearch'
+gem 'elasticsearch', '~> 6.1.0'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails', '~> 7.0.0'
 gem 'searchkick', path: '~/searchkick_forked'
@@ -32,6 +38,13 @@ gem 'omniauth-naver'
 #for admin page
 gem 'cancancan'
 gem 'rolify'
+#for faster JSON api response
+gem 'fast_jsonapi'
+#for pagination
+gem 'will_paginate'
+#for faster json and http connection
+gem 'oj'
+gem 'typhoeus'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'

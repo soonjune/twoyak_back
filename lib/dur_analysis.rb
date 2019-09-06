@@ -3,7 +3,8 @@ module DurAnalysis
   require 'json'
   require 'http'
 
-  def get_by_drug(codes)
+    def drug_controller(codes)
+
       response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
       begin
           rest = JSON.parse(response)["data"]["rest"]
@@ -11,6 +12,62 @@ module DurAnalysis
           response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
           rest = JSON.parse(response)["data"]["rest"]
       end
+
+      @result = Hash.new
+      #병용금기
+      parent = rest["A"]
+      if !parent.nil?
+        put = []
+        parent.each { |yak|
+          dur = Hash.new
+          dur["name"] = [yak["durNmA"], yak["durNmB"]]
+          dur["description"] = yak["durSdEft"]
+          put << dur
+        }
+        put.uniq!
+        @result["interactions"] = put
+      end
+      
+      #동일성분중복
+      parent = rest["G"]
+      if !parent.nil?
+        put = []
+        parent.each { |yak|
+          dur = Hash.new
+          dur["name"] = [yak["durNmA"], yak["durNmB"]]
+          put << dur
+        }
+        put.uniq!
+        @result["same_ingr"] = put
+      end
+  
+      #효능군중복
+      parent = rest["F"]
+      if !parent.nil?
+        put = []
+        parent.each { |yak|
+          dur = Hash.new
+          dur["name"] = [yak["durNmA"], yak["durNmB"]]
+          put << dur
+        }
+        put.uniq!
+        @result["duplicate"] = put
+      end
+  
+      return @result
+    
+    end
+    
+
+
+    def get_by_drug(codes)
+        response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
+        begin
+            rest = JSON.parse(response)["data"]["rest"]
+        rescue
+            response = HTTP.get("https://www.hira.or.kr/rg/dur/getRestListJson.do?medcCd=#{codes}")
+            rest = JSON.parse(response)["data"]["rest"]
+        end
 
       @result = Hash.new
       #병용금기

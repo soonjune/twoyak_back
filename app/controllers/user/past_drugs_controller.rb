@@ -1,6 +1,7 @@
 class User::PastDrugsController < ApplicationController
   before_action :authenticate_request!
-  before_action :set_past_drug, :search_id, only: [:create, :show, :destroy]
+  before_action :set_past_drug, :search_id, only: [:create, :update, :destroy]
+  before_action :set_past_drug_for_show, only: [:show]
   before_action :update_past_drug, only: [:update]
   before_action :id_to_modify, only: [:update, :destroy]
 
@@ -13,30 +14,23 @@ class User::PastDrugsController < ApplicationController
 
   # GET /past_drugs/1
   def show
-    require 'review_view'
-
-    @result = @sub_user.past_drugs.as_json
-    my_reviews = current_user.drug_reviews
-    @result.map { |drug|
-      drug_found = Drug.find(drug["past_drug_id"])
-      drug_reviews = drug_found.reviews
-      review_efficacies = drug_reviews.pluck(:efficacy)
-      drug["drug_name"] = drug_found.name
-      drug["drug_rating"] = review_efficacies.empty? ? "평가 없음" : (review_efficacies.sum / review_efficacies.size)
-      drug["dur_info"] = drug_found.dur_info
-      drug["my_review"] = ReviewView.view(my_reviews.find_by(drug_id: drug["past_drug_id"])) unless my_reviews.find_by(drug_id: drug["past_drug_id"]).nil?
-      drug["disease"] = PastDrug.find(drug["id"]).diseases.first unless PastDrug.find(drug["id"]).diseases.blank?
-    }
-    render json: @result
+    render json: PastDrugSerializer.new(@past_drug_for_show, {params: {current_user: current_user}}).serialized_json
   end
 
   # POST /past_drugs
   def create
-    if @past_drug << Drug.find(@search_id) 
-      selected = @sub_user.past_drugs.order("created_at").last
-      selected.update(from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:whern], how: params[:how])
-      #먹는 이유 추가하기(질환추가)
-      selected.disease_ids = JSON.parse(params[:disease_ids]) unless params[:disease_ids].blank?
+    require 'dur_analysis'
+
+    if created = PastDrug.create(sub_user_id: @sub_user.id, past_drug_id: @search_id, from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:when], how: params[:how])
+      #dur 정보 추가
+      dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([drug_found.id]))
+      drug_found.dur_info = dur_info unless dur_info.nil?
+      drug_found.save
+      begin
+        disease = Disease.find_or_create_by(name: params[:disease_name])
+        #먹는 이유 추가하기(질환추가)
+        created.diseases << disease unless disease.blank?
+      end
       render json: @past_drug.pluck(:id, :name), status: :created
     else
       render json: @past_drug.errors, status: :unprocessable_entity
@@ -69,6 +63,21 @@ class User::PastDrugsController < ApplicationController
         if current_user.sub_user_ids.include? params[:sub_user_id].to_i
           @sub_user = SubUser.find(params[:sub_user_id])
           @past_drug = @sub_user.past_drug
+        else
+          render json: { errors: "잘못된 접근입니다." }, status: :bad_request
+          return
+        end
+      end
+    end
+
+    def set_past_drug_for_show
+      if current_user.has_role? "admin"
+        @sub_user = SubUser.find(params[:sub_user_id])
+        @past_drug_for_show = @sub_user.past_drugs
+      else
+        if current_user.sub_user_ids.include? params[:sub_user_id].to_i
+          @sub_user = SubUser.find(params[:sub_user_id])
+          @past_drug_for_show = @sub_user.past_drugs
         else
           render json: { errors: "잘못된 접근입니다." }, status: :bad_request
           return
