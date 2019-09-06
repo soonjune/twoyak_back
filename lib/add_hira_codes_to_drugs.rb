@@ -5,13 +5,21 @@ require 'net/http'
 Searchkick.disable_callbacks
 
 Drug.find_each do |drug|
+    puts drug.name
     uri = URI("https://www.hira.or.kr/rg/dur/getDrugListJson.do")
     # http = Net::HTTP.new(uri.host, uri.port)
     res = Net::HTTP.post_form(uri, "txtArtcNm" => URI::encode(drug.name) )
 
     # req.body = {"txtArtcNm" => Drug.first.name }.to_json
     # res = http.request(req)
-    parsed = JSON.parse(res.body)
+
+    begin
+        parsed = JSON.parse(res.body)
+    rescue
+        res = Net::HTTP.post_form(uri, "txtArtcNm" => URI::encode(drug.name) )
+        parsed = JSON.parse(res.body)
+    end
+
     searched = parsed["data"]["rest"]["LIST"]
     if searched.nil?
         #검색 안되면 코드로 검색
@@ -32,7 +40,13 @@ Drug.find_each do |drug|
                 }
                 @codes.each { |code|
                     res = Net::HTTP.post_form(uri, "txtArtcNm" => code )
-                    parsed = JSON.parse(res.body)
+
+                    begin
+                        parsed = JSON.parse(res.body)
+                    rescue
+                        res = Net::HTTP.post_form(uri, "txtArtcNm" => code )
+                        parsed = JSON.parse(res.body)
+                    end
                     searched = parsed["data"]["rest"]["LIST"]
                     if !searched.nil?
                         break

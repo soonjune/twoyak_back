@@ -28,7 +28,7 @@ class User::CurrentDrugsController < ApplicationController
     elsif created = CurrentDrug.create(sub_user_id: @sub_user.id, current_drug_id: drug_found.id, from: params[:from] ? params[:from] : Time.zone.now, to: params[:to], memo: params[:memo], when: params[:when], how: params[:how])
       #dur 정보 추가
       dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([drug_found.id]))
-      drug_found.dur_info = dur_info unless dur_info.nil?
+      drug_found.dur_info = dur_info unless dur_info.blank?
       drug_found.save
       begin
         disease = Disease.find_or_create_by(name: params[:disease_name])

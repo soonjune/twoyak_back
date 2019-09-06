@@ -110,14 +110,6 @@ ActiveRecord::Schema.define(version: 2019_08_30_062910) do
     t.index ["dur_ingr_id"], name: "index_drug_associations_on_dur_ingr_id"
   end
 
-  create_table "drug_disease_interactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "drug_id"
-    t.bigint "disease_id"
-    t.json "info"
-    t.index ["disease_id"], name: "index_drug_disease_interactions_on_disease_id"
-    t.index ["drug_id"], name: "index_drug_disease_interactions_on_drug_id"
-  end
-
   create_table "drug_imprints", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "drug_id"
     t.string "item_name"
