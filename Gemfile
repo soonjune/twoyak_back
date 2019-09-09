@@ -11,7 +11,9 @@ gem "http"
 # gem 'async-http'
 
 #for s3 upload
+gem 'aws-sdk', '~> 3'
 gem "aws-sdk-s3", require: false
+
 
 #Use elasticsearch
 gem 'elasticsearch', '~> 6.1.0'
@@ -55,7 +57,7 @@ gem 'puma', '~> 3.11'
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use ActiveStorage variant
-# gem 'mini_magick', '~> 4.8'
+gem 'mini_magick', '~> 4.8'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
