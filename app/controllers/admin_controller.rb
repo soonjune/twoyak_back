@@ -9,9 +9,10 @@ class AdminController < ApplicationController
     @result = Hash.new
     @result["photos"] = []
     PrescriptionPhoto.all.order("id DESC").as_json.map { |photo|
-      sub_user_temp = SubUser.find(photo["sub_user_id"])
-      photo["user_id"] = sub_user_temp.user_id
-      photo["user_name"] = sub_user_temp.user_name
+      photo["sub_user_id"] = user_temp.sub_user_ids.first
+      user_temp = User.find(photo["sub_user_id"])
+      photo["user_id"] = user_temp.user_id
+      photo["sub_user"] = user_temp.sub_users.first
       @result["photos"] << photo
     }
     @result["current_drugs"] = []
