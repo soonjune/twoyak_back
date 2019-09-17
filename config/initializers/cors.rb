@@ -9,7 +9,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins 'localhost:3000', '127.0.0.1:3000', 'xenodochial-leakey-4d32bd.netlify.com',
             #허재혁 netlify
-            'unruffled-minsky-753432.netlify.com',
+            'dazzling-hopper-8c8ab3.netlify.com',
             #관리자 페이지
             'mvponstreet.s3-website.ap-northeast-2.amazonaws.com',
             /\Ahttp:\/\/163\.152\.83\.\168(:\d+)?\z/
