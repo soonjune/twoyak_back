@@ -19,7 +19,7 @@ for i in 1..497
     hashed_response['response']['body']['items']['item'].each do |item|
         drug_to_change = Drug.find_by(item_seq: item['ITEM_SEQ'])
         puts drug_to_change.class
-        if !drug_to_change.nil? && drug_to_change.id < 56931
+        if !drug_to_change.nil? && drug_to_change.id < 56932
             package = (drug_to_change.package_insert.class == String) ? JSON.parse(drug_to_change.package_insert) : drug_to_change.package_insert
             package['DRB_ITEM']['BAR_CODE'] = item['BAR_CODE']
             if !item['EDI_CODE'].nil?
