@@ -20,13 +20,13 @@ for i in 1..497
         drug_to_change = Drug.find_by(item_seq: item['ITEM_SEQ'])
         puts drug_to_change.class
         if !drug_to_change.nil? && drug_to_change.id < 56931
-            package = drug_to_change.package_insert.class == String ? JSON.parse(drug_to_change.package_insert) : drug_to_change.package_insert
+            package = (drug_to_change.package_insert.class == String) ? JSON.parse(drug_to_change.package_insert) : drug_to_change.package_insert
             package['DRB_ITEM']['BAR_CODE'] = item['BAR_CODE']
             if !item['EDI_CODE'].nil?
                 package['DRB_ITEM']['EDI_CODE'] = item['EDI_CODE']
             end
             puts drug_to_change.id
-            drug_to_change.update(package_insert: package.to_json)
+            drug_to_change.update(package_insert: package.as_json)
             puts drug_to_change.name
         #2019년 09월 17일 기준
         elsif item['ITEM_SEQ'].to_i > 201903558
@@ -47,7 +47,7 @@ for i in 1..497
             #설명서 추가
             a = Hash.new
             a["DRB_ITEM"] = item
-            new_item.package_insert = a.to_json
+            new_item.package_insert = a.as_json
             puts new_item.save
         end
     end
