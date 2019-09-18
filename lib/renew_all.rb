@@ -21,10 +21,10 @@ for i in 1..497
         puts drug_to_change.class
         if !drug_to_change.nil? && drug_to_change.id < 56932
             package = (drug_to_change.package_insert.class == String) ? JSON.parse(drug_to_change.package_insert) : drug_to_change.package_insert
-            package['DRB_ITEM']['BAR_CODE'] = item['BAR_CODE']
-            if !item['EDI_CODE'].nil?
-                package['DRB_ITEM']['EDI_CODE'] = item['EDI_CODE']
-            end
+            # package['DRB_ITEM']['BAR_CODE'] = item['BAR_CODE']
+            # if !item['EDI_CODE'].nil?
+            #     package['DRB_ITEM']['EDI_CODE'] = item['EDI_CODE']
+            # end
             puts drug_to_change.id
             drug_to_change.update(package_insert: package.as_json)
             puts drug_to_change.name
