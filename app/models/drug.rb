@@ -41,7 +41,8 @@ class Drug < ApplicationRecord
       {
           name: name,
           ingr_kor_name: kor_map(ingr_kor_name),
-          ingr_eng_name: eng_map(ingr_eng_name)
+          ingr_eng_name: eng_map(ingr_eng_name),
+          item_seq: item_seq,
       }
   end
 

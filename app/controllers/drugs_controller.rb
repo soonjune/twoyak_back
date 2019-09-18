@@ -131,6 +131,7 @@ class DrugsController < ApplicationController
       Searchkick.search(search, {
         index_name: [Drug],
         fields: [{name: :word_middle}, :ingr_eng_name],
+        boost_by: [:item_seq],
         limit: 50
         # misspellings: {below: 5}
       })
