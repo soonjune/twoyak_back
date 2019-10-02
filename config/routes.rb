@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   resources :adverse_effects, :except => [:index]
   resources :suggestions
   resources :drug_ingrs
+  #s3 upload
+  resources :uploads
+
 
   # 속하는 의약품 보여주기
   get "related_drugs/:drug_ingr_id" => "drug_associations#show"
@@ -13,6 +16,12 @@ Rails.application.routes.draw do
   #관리자용
   get "admin" => "admin#index"
   get "admin/user_analysis" => "admin#user_analysis"
+
+  #유저 업데이트
+  get "users/:id" => "users#show"
+  patch "users/:id" => "users#update"
+  #모바일 버전 정보
+  get "mobile/version" => "mobile#version"
 
   post "admin/check" => "admin#check"
   post "admin/push" => "admin#push"
@@ -76,7 +85,7 @@ Rails.application.routes.draw do
   scope :api, defaults: { format: :json } do
     devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks', confirmations: 'users/confirmations', passwords: 'users/passwords' },
                        path_names: { sign_in: :login }
-    resources :user, only: [:show, :update]
+    # resources :user, only: [:show, :update]
     # social login
     post 'social' => 'users/social_login#sign_in'
   end

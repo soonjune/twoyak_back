@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_request!
 
     def finish_signup
         if request.patch? && params[:user] #&& params[:user][:email]
@@ -24,7 +24,6 @@ class UsersController < ApplicationController
     end
 
     def show
-        
     end
 
     def update
@@ -42,7 +41,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-        params.require(:user).permit(:email, :password, :password_confirmation)
+        params.require(:user).permit(:push_token, :os)
     end
 end
   
