@@ -24,17 +24,15 @@ class UsersController < ApplicationController
     end
 
     def show
+
     end
 
     def update
-        if current_user.id == params[:id].to_i
-            if current_user.update_attributes(user_params)
-                render :show
-            else
-                render json: { errors: current_user.errors }, status: :unprocessable_entity
-            end
+        if current_user.update_attributes(user_params)
+            current_user.update(os: request.headers['User-Agent'])
+            render :show
         else
-            render json: { errors: ['Not Authenticated'] }, status: :unauthorized
+            render json: { errors: current_user.errors }, status: :unprocessable_entity
         end
     end
 
@@ -45,7 +43,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-        params.require(:user).permit(:push_token, :os)
+        params.require(:user).permit(:push_token)
     end
 end
   
