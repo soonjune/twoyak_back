@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
   #유저 업데이트
   get "users/:id" => "users#show"
-  patch "users/:id" => "users#update"
+  patch "users" => "users#update"
   #모바일 버전 정보
   get "mobile/version" => "mobile#version"
 
