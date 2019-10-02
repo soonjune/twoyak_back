@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    before_action :authenticate_user!, except: [:infos_for_mobile]
+    before_action :authenticate_request!
 
     def finish_signup
         if request.patch? && params[:user] #&& params[:user][:email]
@@ -13,13 +13,6 @@ class UsersController < ApplicationController
         end
     end
 
-    def infos_for_mobile
-        user_id = params[:id]
-        infos = User.find(user_id).user_info_ids.first
-
-        render json: { user_info_id: infos }
-    end
-
     def create
         user = User.new(user_params)
       
@@ -31,14 +24,17 @@ class UsersController < ApplicationController
     end
 
     def show
-        
     end
 
     def update
-        if current_user.update_attributes(user_params)
-            render :show
+        if current_user.id == params[:id].to_i
+            if current_user.update_attributes(user_params)
+                render :show
+            else
+                render json: { errors: current_user.errors }, status: :unprocessable_entity
+            end
         else
-            render json: { errors: current_user.errors }, status: :unprocessable_entity
+            render json: { errors: ['Not Authenticated'] }, status: :unauthorized
         end
     end
 
@@ -49,7 +45,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-        params.require(:user).permit(:email, :password, :password_confirmation)
+        params.require(:user).permit(:push_token, :os)
     end
 end
   

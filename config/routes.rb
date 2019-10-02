@@ -14,6 +14,12 @@ Rails.application.routes.draw do
   get "admin" => "admin#index"
   get "admin/user_analysis" => "admin#user_analysis"
 
+  #유저 업데이트
+  get "users/:id" => "users#show"
+  patch "users/:id" => "users#update"
+  #모바일 버전 정보
+  get "mobile/version" => "mobile#version"
+
   post "admin/check" => "admin#check"
   post "admin/push" => "admin#push"
   post "admin/push_all" => "admin#push_all"
@@ -76,7 +82,7 @@ Rails.application.routes.draw do
   scope :api, defaults: { format: :json } do
     devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks', confirmations: 'users/confirmations', passwords: 'users/passwords' },
                        path_names: { sign_in: :login }
-    resources :user, only: [:show, :update]
+    # resources :user, only: [:show, :update]
     # social login
     post 'social' => 'users/social_login#sign_in'
   end
@@ -108,9 +114,9 @@ Rails.application.routes.draw do
   get "drugs/:id/dur_check" => "drugs#dur_check"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
-    #좋아요 눌렀는지 확인
-    get '/"id/like' => 'drug_review_likes#show'
-    post '/:id/like' => 'drug_review_likes#like_toggle'
+     #좋아요 눌렀는지 확인
+     get '/"id/like' => 'drug_review_likes#show'
+     post '/:id/like' => 'drug_review_likes#like_toggle'
   end
   resources :supplements do
     resources :sup_reviews
