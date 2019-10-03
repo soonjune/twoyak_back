@@ -5,7 +5,11 @@ class ContentsController < ApplicationController
 
   # GET /contents
   def index
-    @contents = ContentSerializer.new(Content.where(category: params[:category]).paginate(page: params[:page], per_page: 6)).serialized_json
+    if params[:category].nil?
+      @contents = ContentSerializer.new(Content.all.paginate(page: params[:page].nil? ? 1 : params[:page], per_page: 20)).serialized_json
+    else
+      @contents = ContentSerializer.new(Content.where(category: params[:category]).paginate(page: params[:page], per_page: 6)).serialized_json
+    end
     response.set_header('Total-Count', Content.all.size)
 
     render json: @contents
@@ -13,9 +17,9 @@ class ContentsController < ApplicationController
 
   # GET /contents/1
   def show
-    @content.thumbnail_url = url_for(@content.thumbnail_image)
+    @content.thumbnail_url = rails_blob_url(@content.thumbnail_image)
     @content.save
-    render json: @content
+    render json: ContentSerializer.new(@content).serialized_json
   end
 
   # POST /contents
@@ -23,7 +27,7 @@ class ContentsController < ApplicationController
     @content = Content.new(content_params)
 
     if @content.save
-      render json: @content, status: :created, location: @content
+      render json: ContentSerializer.new(@content).serialized_json, status: :created, location: @content
     else
       render json: @content.errors, status: :unprocessable_entity
     end
@@ -51,7 +55,7 @@ class ContentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def content_params
-      params.require(:content).permit(:title, :category, :thumbnail_url, :body, :thumbnail_image)
+      params.permit(:title, :category, :thumbnail_url, :body, :thumbnail_image)
     end
 
     def is_admin?
