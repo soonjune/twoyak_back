@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :drug_ingrs
   #s3 upload
   resources :uploads
+  resources :prescription_photos
 
 
   # 속하는 의약품 보여주기
