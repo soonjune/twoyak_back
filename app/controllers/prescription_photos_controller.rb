@@ -13,7 +13,6 @@ class PrescriptionPhotosController < ApplicationController
   # GET /prescription_photos/1
   def show
     if current_user.sub_user_ids.include?(@prescription_photo.sub_user_id)
-      if @prescription_photo.update(url: rails_blob_url(@prescription_photo.photo))
         render json: PrescriptionPhotoSerializer.new(@prescription_photo).serialized_json
       end
     else
