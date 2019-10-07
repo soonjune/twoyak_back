@@ -12,6 +12,8 @@ gem "http"
 
 #for s3 upload
 gem "aws-sdk-s3", require: false
+#for active storage validation
+gem 'active_storage_validations'
 
 #Use elasticsearch
 gem 'elasticsearch'
