@@ -3,17 +3,16 @@ class PrescriptionPhotosController < ApplicationController
   before_action :set_prescription_photo, only: [:show, :update, :destroy]
 
   # GET /prescription_photos
-  def index
-    is_admin?
-    @prescription_photos = PrescriptionPhoto.all
+  # def index
+  #   @prescription_photos = PrescriptionPhoto.all
 
-    render json: @prescription_photos
-  end
+  #   render json: @prescription_photos
+  # end
 
   # GET /prescription_photos/1
   def show
     if current_user.sub_user_ids.include?(@prescription_photo.sub_user_id)
-        render json: PrescriptionPhotoSerializer.new(@prescription_photo).serialized_json
+      render json: PrescriptionPhotoSerializer.new(@prescription_photo).serialized_json
     else
       render json: { errors: ['접속 권한이 없습니다.'] }, status: :unauthorized
     end
@@ -60,13 +59,5 @@ class PrescriptionPhotosController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def prescription_photo_params
       params.permit(:sub_user_id, :memo, :photo)
-    end
-
-    def is_admin?
-      if current_user.has_role? "admin"
-        return
-      else
-        render json: { errors: ['접속 권한이 없습니다.'] }, status: :unauthorized
-      end
     end
 end
