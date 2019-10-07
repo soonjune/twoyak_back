@@ -14,7 +14,6 @@ class PrescriptionPhotosController < ApplicationController
   def show
     if current_user.sub_user_ids.include?(@prescription_photo.sub_user_id)
         render json: PrescriptionPhotoSerializer.new(@prescription_photo).serialized_json
-      end
     else
       render json: { errors: ['접속 권한이 없습니다.'] }, status: :unauthorized
     end
