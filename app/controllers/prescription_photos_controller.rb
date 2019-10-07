@@ -1,10 +1,10 @@
 class PrescriptionPhotosController < ApplicationController
   before_action :authenticate_request!
   before_action :set_prescription_photo, only: [:show, :update, :destroy]
-  before_action :is_admin?, only: [:index]
 
   # GET /prescription_photos
   def index
+    is_admin?
     @prescription_photos = PrescriptionPhoto.all
 
     render json: @prescription_photos
