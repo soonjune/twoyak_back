@@ -31,8 +31,6 @@ class PrescriptionPhotosController < ApplicationController
         @prescription_photo.photo.purge
         render json: @prescription_photo.errors, status: :unprocessable_entity
       end
-    else
-      render json: { errors: ['접속 권한이 없습니다.'] }, status: :unauthorized
     end
   end
 
