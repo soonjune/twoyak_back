@@ -8,14 +8,13 @@ class AdminController < ApplicationController
   def index
     @result = Hash.new
     @result["photos"] = []
-    #여기서 문제는 앱에서 sub_user_id에 user_id를 보낸다는 것 이를 수정하기 위한 로직이 들어감
     PrescriptionPhoto.all.order("id DESC").as_json.map { |photo|
-      user_temp = User.where(id: photo["sub_user_id"]).blank? ? nil : User.find(photo["sub_user_id"])
+      sub_user = SubUser.where(id: photo["sub_user_id"]).blank? ? nil : SubUser.find(photo["sub_user_id"])
       photo["sub_user_id"] = nil
-      if !user_temp.nil?
-        photo["sub_user_id"] = user_temp.sub_user_ids.first
-        photo["user_id"] = user_temp.id
-        photo["sub_user"] = user_temp.sub_users.first
+      if !sub_user.nil?
+        photo["sub_user_id"] = sub_user.id
+        photo["user_id"] = sub_user.user_id
+        photo["sub_user"] = sub_user
       end
       @result["photos"] << photo
     }
