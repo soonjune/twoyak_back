@@ -55,15 +55,7 @@ class ApplicationController < ActionController::API
     rescue
       return false
     end
-  end
-
-  #S3 bucket selection
-  def s3_service
-    service = ActiveStorage::Blob.service
-    return unless service.class.to_s ==   'ActiveStorage::Service::S3Service'
-    service
-  end
-  
+  end  
 
   # #Override Devise's authenticate_user! method
   # def authenticate_user!(options = {})
