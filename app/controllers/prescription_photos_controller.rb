@@ -22,8 +22,6 @@ class PrescriptionPhotosController < ApplicationController
   # POST /prescription_photos
   def create
     if current_user.sub_user_ids.include?(params[:sub_user_id].to_i)
-      s3 = Aws::S3::Resource.new(region:'ap-northeast-2')
-      s3_service.set_bucket(s3.bucket('prescriptionphotos'))
       @prescription_photo = PrescriptionPhoto.new(prescription_photo_params)
       @prescription_photo.url = rails_blob_url(@prescription_photo.photo)
       if @prescription_photo.save
