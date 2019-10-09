@@ -1,7 +1,7 @@
 class PrescriptionPhotosController < ApplicationController
   before_action :authenticate_request!
   before_action :set_prescription_photo, only: [:show, :update, :destroy]
-  before_action :is_admin?, only: [:index]
+  before_action :is_admin?, only: [:index, :delete]
 
 
   # GET /prescription_photos
@@ -46,9 +46,9 @@ class PrescriptionPhotosController < ApplicationController
   # end
 
   # DELETE /prescription_photos/1
-  # def destroy
-  #   @prescription_photo.destroy
-  # end
+  def destroy
+    @prescription_photo.destroy
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
