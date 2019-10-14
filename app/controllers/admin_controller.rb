@@ -79,10 +79,9 @@ class AdminController < ApplicationController
   end
 
   def check
-      pr_to_change = PrescriptionPhoto.find(check_params[:id])
-      pr_to_change.check = check_params[:check]
-      pr_to_change.save
-  end
+    pr_to_change = PrescriptionPhoto.find(check_params[:id])
+    pr_to_change.update(check: check_params[:check])
+end
 
 
   def push
