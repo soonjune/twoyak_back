@@ -80,8 +80,9 @@ class AdminController < ApplicationController
 
   def check
     pr_to_change = PrescriptionPhoto.find(check_params[:id])
-    pr_to_change.update(check: check_params[:check])
-end
+    pr_to_change.check = check_params[:check]
+    pr_to_change.save(validate: false)
+  end
 
 
   def push
