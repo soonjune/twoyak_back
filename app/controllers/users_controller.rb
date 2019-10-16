@@ -29,7 +29,6 @@ class UsersController < ApplicationController
 
     def update
         if current_user.update_attributes(user_params)
-            current_user.update(os: request.headers['User-Agent'])
             render :show
         else
             render json: { errors: current_user.errors }, status: :unprocessable_entity
@@ -43,7 +42,6 @@ class UsersController < ApplicationController
     end
 
     def user_params
-        params.require(:user).permit(:push_token)
+        params.require(:user).permit(:push_token, :os)
     end
 end
-  
