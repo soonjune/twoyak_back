@@ -26,6 +26,7 @@ class PrescriptionPhotosController < ApplicationController
       @prescription_photo = PrescriptionPhoto.new(prescription_photo_params)
       @prescription_photo.url = rails_blob_url(@prescription_photo.photo)
       if @prescription_photo.save
+        UserMailer.photo_added(params[:sub_user_id]).deliver_now
         render json: PrescriptionPhotoSerializer.new(@prescription_photo).serialized_json, status: :created, location: @prescription_photo
       else
         @prescription_photo.photo.purge
