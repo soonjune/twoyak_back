@@ -26,7 +26,6 @@ class DrugsController < ApplicationController
 
   # GET /drugs/1
   def show
-    # for development only
     Searchkick.disable_callbacks
 
     #안전정보 우선 확인
@@ -66,7 +65,7 @@ class DrugsController < ApplicationController
       end
     end
     #현재 복용중인 인원
-    @data["sub_users_taking"] = @drug.currents.count
+    @data["sub_users_taking"] = @drug.currents.size
     #상호작용 추가
     inputs = []
     @drug.interactions.each { |interaction|
@@ -131,7 +130,8 @@ class DrugsController < ApplicationController
     searched = if search
       Searchkick.search(search, {
         index_name: [Drug],
-        fields: [{name: :word_middle}],
+        fields: [{name: :word_middle}, :ingr_eng_name],
+        boost_by: [:item_seq],
         limit: 50
         # misspellings: {below: 5}
       })
@@ -175,7 +175,11 @@ class DrugsController < ApplicationController
     
     if(!@rep.nil?)
       if !@rep['package_insert'].nil?
-        @information = @rep['package_insert']['DRB_ITEM']
+        if @rep["package_insert"].class == Hash
+          @information = @rep["package_insert"]["DRB_ITEM"]
+        else
+          @information = JSON.parse(@rep["package_insert"])["DRB_ITEM"]
+        end
         @ITEM_NAME = @rep.name
 
         @data["item_name"] = @ITEM_NAME
@@ -212,8 +216,8 @@ class DrugsController < ApplicationController
     # Searchkick.search(search, where: {name: /.*#{search}.*/, ingredients: /.*#{search}.*/})
     searched = if search
       Searchkick.search(search, {
-        index_name: [Drug, Supplement],
-        fields: [{name: :word_middle}],
+        index_name: [Drug],
+        fields: [{name: :word_middle}, :ingr_eng_name],
         limit: 50
         # misspellings: {below: 5}
       })
@@ -238,7 +242,7 @@ class DrugsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_drug
-      @drug = Drug.find(params[:id])
+      @drug = Drug.select(Drug.column_names - ["hira_medicine_code","hira_main_ingr_code"]).find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.

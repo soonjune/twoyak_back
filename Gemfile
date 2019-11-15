@@ -17,11 +17,17 @@ gem "aws-sdk-s3", require: false
 gem 'active_storage_validations'
 
 #Use elasticsearch
-gem 'elasticsearch', '~> 6.1.0'
+gem 'elasticsearch'
 gem 'elasticsearch-model'
-gem 'elasticsearch-rails'
+gem 'elasticsearch-rails', '~> 7.0.0'
 gem 'searchkick', path: '~/searchkick_forked'
 gem 'faraday_middleware-aws-sigv4'
+
+#for faster json and http connection
+gem 'oj'
+gem 'typhoeus'
+
+
 
 #for user model and authentication
 gem 'devise'
@@ -42,7 +48,6 @@ gem 'will_paginate'
 #for faster json and http connection
 gem 'oj'
 gem 'typhoeus'
-
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'

@@ -79,9 +79,9 @@ class AdminController < ApplicationController
   end
 
   def check
-      pr_to_change = PrescriptionPhoto.find(check_params[:id])
-      pr_to_change.check = check_params[:check]
-      pr_to_change.save
+    pr_to_change = PrescriptionPhoto.find(check_params[:id])
+    pr_to_change.check = check_params[:check]
+    pr_to_change.save(validate: false)
   end
 
 
@@ -166,5 +166,6 @@ class AdminController < ApplicationController
         end
       end
     end
+
 
 end

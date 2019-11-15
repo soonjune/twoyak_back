@@ -7,7 +7,8 @@ Rails.application.routes.draw do
   resources :drug_ingrs
   #s3 upload
   resources :uploads
-  resources :prescription_photos
+  resources :prescription_photos, :except => [:update]
+
   # 속하는 의약품 보여주기
   get "related_drugs/:drug_ingr_id" => "drug_associations#show"
 
@@ -116,6 +117,9 @@ Rails.application.routes.draw do
   get "drugs/:id/dur_check" => "drugs#dur_check"
   resources :drugs, :except => [:index] do
     resources :drug_reviews
+     #좋아요 눌렀는지 확인
+     get '/"id/like' => 'drug_review_likes#show'
+     post '/:id/like' => 'drug_review_likes#like_toggle'
   end
   resources :supplements do
     resources :sup_reviews
