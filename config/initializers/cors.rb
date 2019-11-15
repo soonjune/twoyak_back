@@ -9,7 +9,8 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins 'mvponstreet.s3-website.ap-northeast-2.amazonaws.com',
             'https://twoyak.com',
-            'api.twoyak.com'
+            'api.twoyak.com',
+            'localhost:21865'
 
     resource '*',
       headers: :any,
