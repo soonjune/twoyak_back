@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   resources :suggestions
   resources :drug_ingrs
   #s3 upload
+  resources :uploads
   resources :prescription_photos, :except => [:update]
-
 
   # 속하는 의약품 보여주기
   get "related_drugs/:drug_ingr_id" => "drug_associations#show"

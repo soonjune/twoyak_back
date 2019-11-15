@@ -8,8 +8,8 @@ Drug.find_each do |drug|
     puts drug.name
     uri = URI("https://www.hira.or.kr/rg/dur/getDrugListJson.do")
     # http = Net::HTTP.new(uri.host, uri.port)
-    res = Net::HTTP.post_form(uri, "txtArtcNm" => URI::encode(drug.name) )
-
+    begin
+        res = Net::HTTP.post_form(uri, "txtArtcNm" => URI::encode(drug.name) )
     # req.body = {"txtArtcNm" => Drug.first.name }.to_json
     # res = http.request(req)
 
