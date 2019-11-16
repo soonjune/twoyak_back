@@ -40,7 +40,13 @@ class AdminController < ApplicationController
   # end
 
   def user_analysis
-    @result = SubUserSerializer.new(SubUser.all.paginate(page: params[:page].nil? ? 1 : params[:page], per_page: 50)).serialized_json
+    paginated_sub_users = SubUser.all.paginate(page: params[:page].nil? ? 1 : params[:page], per_page: 50)
+    @result = SubUserSerializer.new(paginated_sub_users).serializable_hash
+    @result[:data].map { |sub_user|
+      selected = SubUser.find(sub_user[:id])
+      sub_user["current_drugs"] = CurrentDrugSerializer.new(selected.current_drugs)
+      sub_user["past_drugs"] = PastDrugSerializer.new(selected.past_drugs)
+    }
     render json: @result
 
   end
