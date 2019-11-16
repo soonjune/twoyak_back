@@ -46,8 +46,8 @@ class AdminController < ApplicationController
       puts sub_user
       selected = SubUser.find(sub_user[:id])
       sub_user["user_id"] = selected.user_id
-      sub_user["current_drugs"] = CurrentDrugSerializer.new(selected.current_drugs, {params: {current_user: sub_user["user_id"]}})
-      sub_user["past_drugs"] = PastDrugSerializer.new(selected.past_drugs, {params: {current_user: sub_user["user_id"]}})
+      sub_user["current_drugs"] = CurrentDrugSerializer.new(selected.current_drugs, {params: {current_user: User.find(sub_user["user_id"])}})
+      sub_user["past_drugs"] = PastDrugSerializer.new(selected.past_drugs, {params: {current_user: User.find(sub_user["user_id"])}})
     }
     render json: @result
 
