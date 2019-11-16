@@ -21,6 +21,8 @@ class User::PastDrugsController < ApplicationController
   def create
     require 'dur_analysis'
 
+    drug_found = Drug.find(@search_id)
+
     if created = PastDrug.create(sub_user_id: @sub_user.id, past_drug_id: @search_id, from: params[:from], to: params[:to] ? params[:to] : Time.zone.now, memo: params[:memo], when: params[:when], how: params[:how])
       #dur 정보 추가
       dur_info = DurAnalysis.get_by_drug(DurAnalysis.drug_code([drug_found.id]))
