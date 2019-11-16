@@ -8,7 +8,7 @@ class User < ApplicationRecord
          :confirmable, :trackable, :omniauthable,
          :omniauth_providers => [:facebook, :google_oauth2, :naver]
 
-  has_many :sub_users
+  has_many :sub_users, :dependent => :destroy
   #의약품/건강기능식품 리뷰
   has_many :drug_reviews
   #내가 남긴 리뷰 이상반응들

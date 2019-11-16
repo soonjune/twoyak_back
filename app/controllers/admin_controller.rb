@@ -43,7 +43,6 @@ class AdminController < ApplicationController
     paginated_sub_users = SubUser.all.paginate(page: params[:page].nil? ? 1 : params[:page], per_page: 50)
     @result = SubUserSerializer.new(paginated_sub_users).serializable_hash
     @result[:data].map { |sub_user|
-      puts sub_user
       selected = SubUser.find(sub_user[:id])
       sub_user["user_id"] = selected.user_id
       sub_user["current_drugs"] = CurrentDrugSerializer.new(selected.current_drugs, {params: {current_user: User.find(sub_user["user_id"])}})
