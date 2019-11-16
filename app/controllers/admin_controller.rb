@@ -40,41 +40,8 @@ class AdminController < ApplicationController
   # end
 
   def user_analysis
-    @data_sent = Hash.new
-    sub_users = SubUser.all
-    infos = []
-    sub_users.map { |sub_user|
-      @past_diseases = []
-      sub_user.past_diseases.each { |d|
-        @past_diseases << { id: d.id, parent_id: d.past_disease.id, name: d.past_disease.name, from: d.from, to: d.to }
-      }
-      @current_diseases = []
-      sub_user.current_diseases.each { |d|
-        @current_diseases << { id: d.id, parent_id: d.current_disease.id, name: d.current_disease.name, from: d.from, to: d.to }
-      }
-      @past_drugs = []
-      sub_user.past_drugs.each { |d|
-        @past_drugs << { id: d.id, parent_id: d.past_drug.id, name: d.past_drug.name, drug_class: if !d.past_drug.package_insert.nil? then d.past_drug.package_insert["DRB_ITEM"]["CLASS_NO"] else "분류 없음" end, from: d.from, to: d.to, memo: d.memo }
-      }
-      @current_drugs = []
-      sub_user.current_drugs.each { |d|
-        @current_drugs << { id: d.id, parent_id: d.current_drug.id, name: d.current_drug.name, drug_class: if !d.current_drug.package_insert.nil? then d.current_drug.package_insert["DRB_ITEM"]["CLASS_NO"] else "분류 없음" end, from: d.from, to: d.to, memo: d.memo  }
-      }
-      info_data = { sub_user: { basic_info: sub_user, family_med_his: sub_user.med_his.select(:id, :name), past_diseases: @past_diseases, 
-        current_diseases: @current_diseases, 
-        past_drugs: @past_drugs, 
-        current_drugs: @current_drugs}
-      }
-        #각각의 데이터를 넣어줌
-        infos << info_data
-      @data_sent[:infos] = infos
-      @data_sent[:watch_drugs] = current_user.watch_drug
-      @data_sent[:watch_supplements] = current_user.watch_supplement
-      @data_sent[:drug_reviews] = current_user.drug_reviews
-      @data_sent[:sup_reviews] = current_user.sup_reviews
-    }
-
-    render json: @data_sent
+    @result = SubUserSerializer.new(SubUser.all.paginate(page: params[:page].nil? ? 1 : params[:page], per_page: 50)).serialized_json
+    render json: @result
 
   end
 
